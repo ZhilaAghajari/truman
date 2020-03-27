@@ -314,6 +314,9 @@ exports.getScript = (req, res, next) => {
       });
 
       console.log("Script Size is now: "+finalfeed.length);
+      //Testing stories .. !!!! Might need to remove the second argument in below ..
+      //We render one of these based on the conditions ..
+      res.render('stories',{stories:finalfeed})
       res.render('script', { script: finalfeed});
 
       });//end of Script.find()

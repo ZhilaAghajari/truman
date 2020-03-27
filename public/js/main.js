@@ -14,8 +14,6 @@ $(window).on("load", function() {
     // this parameter will enable/disable the closing for the previous .united modals when the next will be opened :)
     allowMultiple: false,
   });
-  // $('.ui.left.button').setAttribute("disabled", "disabled")
-
   //@@@@@@@@@@@ User see posts by clicks - No time restrictions @@@@@@@@@@
   // // why doesn't this allow me to write or like or anything? 
   // $('#modal1').modal('show')
@@ -30,7 +28,6 @@ $(window).on("load", function() {
   //   $('#modal2').modal('attach events', '#modal3');     
   // });
   // time-based transitions WORKS
-  // is while true needed to star over after all posts have been watched?
   $('.ui.gray.progress')
   .progress({
     total: 10
@@ -62,18 +59,14 @@ $(window).on("load", function() {
           },1000) //
        })(10) ;
   }
-
-  $('#modal1').modal('show');
-  move(1);
+  // these two lines should all go to a function which is called from a button which activates them ..
+  $('#stratButton.button.fluid.ui.button').on('click', function(){
+    $('#modal1').modal('show');
+    move(1);
+  });
   flag=new Array(5).fill(0)
 
   $('.ui.right.button').on('click', function(){    
-    // $('#modal3').modal('attach events', '#next2');
-    // $('#modal4').modal('attach events', '#next3');
-    // $('#modal5').modal('attach events', '#next4');
-    // $('#modal2').modal('attach events', '#next1');
-    // we won't have it for the last pots...
-    //$('#modal1').modal('attach events', '#next5');
     // NEXT OF LAST post should show an alert that these are the posts for today...
     if($(this)[0].id == 'next5')
     {
@@ -98,22 +91,6 @@ $(window).on("load", function() {
     else if(curr_id=='next4' && flag[4]==0)
      { flag[4]=1;
            move(5);}
-    // else if(curr_id =='next5' && flag[0]==1)
-    //   {flag[0]=1;
-    //         move(1);}
-
-
-// if (curr_id =='next3' && (document.getElementById(next_id).classList[4] == "disabled"))
-//       move(4);
-//     else if(curr_id == 'next1' && (document.getElementById(next_id).classList[2] == "disabled"))
-//       move(2);
-//     else if (curr_id =='next2' && (document.getElementById(next_id).classList[3] == "disabled"))
-//       move(3);
-//     else if(curr_id=='next4' && (document.getElementById(next_id).classList[5] == "disabled"))
-//       move(5);
-//     else if(curr_id =='next5' && (document.getElementById(next_id).classList[1] == "disabled"))
-//       move(1);
-
 
   });
 
@@ -128,22 +105,9 @@ $(window).on("load", function() {
     var curr_id= $(this)[0].id;
     console.log('current next id is');
     console.log(curr_id);
-    // if(curr_id == 'pre1')
-    //   move(5);
-    // else if (curr_id =='pre2')
-    //   move(1);
-    // else if(curr_id=='pre3')
-    //   move(2);
-    // else if(curr_id=='pre4')
-    //   move(3);
-    // else if(curr_id=='pre5')
-    //   move(4);
 
-  });
-///
- 
+  }); 
   // lierally time-based (show each post for 5 seconds...
-  // is while true needed to star over after all posts have been watched?
   // (function loop(i) {
   // console.log('itr'+i);          
   //    setTimeout(function () {   

@@ -194,23 +194,24 @@ Place Experimental Varibles Here!
     createdAt: (Date.now())
   });
 
-  //J: will need to uncomment this part after testing!!!
-  // User.findOne({ email: req.body.email }, (err, existingUser) => {
-  //   if (err) { return next(err); }
-  //   if (existingUser) {
-  //     req.flash('errors', { msg: 'Account with that email address already exists.' });
-  //     return res.redirect('/signup');
-  //   }
-  //   user.save((err) => {
-  //     if (err) { return next(err); }
-  //     req.logIn(user, (err) => {
-  //       if (err) {
-  //         return next(err);
-  //       }
-  //       res.redirect('/account/signup_info');
-  //     });
-  //   });
-  // });
+  
+  User.findOne({ email: req.body.email }, (err, existingUser) => {
+    if (err) { return next(err); }
+    //ZH: will need to uncomment this part after testing!!!
+    // if (existingUser) {
+    //   req.flash('errors', { msg: 'Account with that email address already exists.' });
+    //   return res.redirect('/signup');
+    // }
+    user.save((err) => {
+      if (err) { return next(err); }
+      req.logIn(user, (err) => {
+        if (err) {
+          return next(err);
+        }
+        res.redirect('/account/signup_info');
+      });
+    });
+  });
 };
 
 

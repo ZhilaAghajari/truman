@@ -28,7 +28,7 @@ function shuffle(array) {
  * List of Script posts for Feed
 */
 exports.getScript = (req, res, next) => {
-  console.log('@@@@@@@@@@@@777777')
+
   //req.user.createdAt
   var time_now = Date.now();
   var time_diff = time_now - req.user.createdAt;
@@ -70,8 +70,8 @@ exports.getScript = (req, res, next) => {
   
     //filter the script based on experimental group
     scriptFilter = user.group;
-    console.log('@@@@@@@@@@ User group is:@@@@@@@@@@@@@ ', scriptFilter);
       
+    
 
     //User is no longer active - study is over
     if (!user.active)
@@ -119,8 +119,7 @@ exports.getScript = (req, res, next) => {
 
   
   
-    //Get the newsfeed //ZH: here we get the actor's posts if they are in the same group (condtion). 
-    var users_posts = [];
+    //Get the newsfeed
     Script.find()
       .where("experiment_group").equals(scriptFilter)
       .where('time').lte(time_diff).gte(time_limit)
@@ -133,80 +132,36 @@ exports.getScript = (req, res, next) => {
          model: 'Actor'
        } 
     })
-      .exec(function (err, script_feed) { //ZH: line 123 to 137 are to provide this script_feed which is ???
+      .exec(function (err, script_feed) {
         if (err) { return next(err); }
         //Successful, so render
 
         //update script feed to see if reading and posts has already happened
         var finalfeed = [];
 
-        user_posts = [];
+        var user_posts = [];
 
         //Look up Notifications??? And do this as well?
 
-        user_posts = user.getPostInPeriod(time_limit, time_diff); //ZH: this user is the user we get from DB 
-        //based on its id which is in req.user.id . So now, we need to get the users based on their groups. 
-        //And iterate over them to gather their posts in users_posts.. and do the rests for userS_posts?
-        //see what is the type of this user_posts and append them to userS_posts now
-        User.find()
-            .where("group").equals(scriptFilter)
-            .populate({ 
-             path: 'posts.reply',
-             model: 'Script',
-             populate: {
-               path: 'actor',
-               model: 'Actor'
-             } 
-          })
-        .populate({ 
-             path: 'posts.actorAuthor',
-             model: 'Actor'
-          })
-        .populate({ 
-             path: 'posts.comments.actor',
-             model: 'Actor'
-          })
-        .exec(function (err, users) {
-          //
-          var users_posts =[]
-          //iterate over all the users in 'users' to run getPostInPeriod for each and append their results...
-          console.log('############ Length of all USERs the posts is:');
-          console.log(users.length);
-          for (var i = 0; i < users.length; i++){
-            current_posts=(users[i].getPostInPeriod(time_limit, time_diff));
-            if(!(typeof current_posts[0] === 'undefined'))
-            {
-              for(var j = 0; j<current_posts.length; j++)
-              {
-                //ZH: next step: now each post is shown under this active user's name! For instance if Bob is active, he sees Jean's posts as his own posts incorrectly!
-                users_posts.push(current_posts[j]);
-              }
-            }
-            console.log(users_posts);
-            
-          }
-          // ZH: move them here.. from line 200 to 376 ..
-          users_posts.sort(function (a, b) {
+        user_posts = user.getPostInPeriod(time_limit, time_diff);
+
+        user_posts.sort(function (a, b) {
             return b.relativeTime - a.relativeTime;
           });
-        console.log('00000000 after function users_posts is:');
-        console.log(users_posts)
-        //ZH: I changed user_posts to users_posts
-        while(script_feed.length || users_posts.length) {
+
+        while(script_feed.length || user_posts.length) {
           //console.log(typeof user_posts[0] === 'undefined');
           //console.log(user_posts[0].relativeTime);
           //console.log(feed[0].time)
           if(typeof script_feed[0] === 'undefined') {
               console.log("Script_Feed is empty, push user_posts");
-              finalfeed.push(users_posts[0]);
-              users_posts.splice(0,1);
+              finalfeed.push(user_posts[0]);
+              user_posts.splice(0,1);
           }
-          else if(!(typeof users_posts[0] === 'undefined') && (script_feed[0].time < users_posts[0].relativeTime)){
+          else if(!(typeof user_posts[0] === 'undefined') && (script_feed[0].time < user_posts[0].relativeTime)){
               console.log("Push user_posts");
-              finalfeed.push(users_posts[0]);
-              console.log(users_posts[0]);//ZH: remove it
-              console.log("&&&&")
-              users_posts.splice(0,1);
+              finalfeed.push(user_posts[0]);
+              user_posts.splice(0,1);
           }
           else{
             
@@ -362,189 +317,7 @@ exports.getScript = (req, res, next) => {
       //Testing stories .. !!!! Might need to remove the second argument in below ..
       //We render one of these based on the conditions ..
       //res.render('stories',{stories:finalfeed})
-      //ZH: remove this print statement 
-      console.log('FFFFFFFFFF')
-      console.log(finalfeed);
       res.render('script', { script: finalfeed});
-        });
-        //ZH: I changed user_posts to users_posts
-      //   users_posts.sort(function (a, b) {
-      //       return b.relativeTime - a.relativeTime;
-      //     });
-      //   console.log('00000000 after function users_posts is:');
-      //   console.log(users_posts)
-      //   //ZH: I changed user_posts to users_posts
-      //   while(script_feed.length || users_posts.length) {
-      //     //console.log(typeof user_posts[0] === 'undefined');
-      //     //console.log(user_posts[0].relativeTime);
-      //     //console.log(feed[0].time)
-      //     if(typeof script_feed[0] === 'undefined') {
-      //         console.log("Script_Feed is empty, push user_posts");
-      //         finalfeed.push(users_posts[0]);
-      //         users_posts.splice(0,1);
-      //     }
-      //     else if(!(typeof users_posts[0] === 'undefined') && (script_feed[0].time < users_posts[0].relativeTime)){
-      //         console.log("Push user_posts");
-      //         finalfeed.push(users_posts[0]);
-      //         console.log(users_posts[0]);//ZH: remive it
-      //         console.log("&&&&")
-      //         users_posts.splice(0,1);
-      //     }
-      //     else{
-            
-      //       //console.log("ELSE PUSH FEED");
-      //       var feedIndex = _.findIndex(user.feedAction, function(o) { return o.post == script_feed[0].id; });
-
-             
-      //       if(feedIndex!=-1)
-      //       {
-      //         console.log("WE HAVE AN ACTION!!!!!");
-              
-      //         //check to see if there are comments - if so remove ones that are not in time yet.
-      //         //Do all comment work here for feed
-      //         //if (Array.isArray(script_feed[0].comments) && script_feed[0].comments.length) {
-      //         if (Array.isArray(user.feedAction[feedIndex].comments) && user.feedAction[feedIndex].comments) 
-      //         {
-
-      //           //console.log("WE HAVE COMMENTS!!!!!");
-      //           //iterate over all comments in post - add likes, flag, etc
-      //           for (var i = 0; i < user.feedAction[feedIndex].comments.length; i++) {
-      //             //i is now user.feedAction[feedIndex].comments index
-
-      //               //is this action of new user made comment we have to add???
-      //               if (user.feedAction[feedIndex].comments[i].new_comment)
-      //               {
-      //                 //comment.new_comment
-      //                 //console.log("adding User Made Comment into feed: "+user.feedAction[feedIndex].comments[i].new_comment_id);
-      //                 //console.log(JSON.stringify(user.feedAction[feedIndex].comments[i]))
-      //                 //script_feed[0].comments.push(user.feedAction[feedIndex].comments[i]);
-
-      //                 var cat = new Object();
-      //                 cat.body = user.feedAction[feedIndex].comments[i].comment_body;
-      //                 cat.new_comment = user.feedAction[feedIndex].comments[i].new_comment;
-      //                 cat.time = user.feedAction[feedIndex].comments[i].time;
-      //                 cat.commentID = user.feedAction[feedIndex].comments[i].new_comment_id;
-      //                 cat.likes = 0;
-
-      //                 script_feed[0].comments.push(cat);
-      //                 //console.log("Already have COMMENT ARRAY");
-                
-
-      //               }
-
-      //               else
-      //               {
-      //                 //Do something
-      //                 //var commentIndex = _.findIndex(user.feedAction[feedIndex].comments, function(o) { return o.comment == script_feed[0].comments[i].id; });
-      //                 var commentIndex = _.findIndex(script_feed[0].comments, function(o) { return o.id == user.feedAction[feedIndex].comments[i].comment; });
-      //                 //If user action on Comment in Script Post
-      //                 if(commentIndex!=-1)
-      //                 {
-
-      //                   //console.log("WE HAVE AN ACTIONS ON COMMENTS!!!!!");
-      //                   //Action is a like (user liked this comment in this post)
-      //                   if (user.feedAction[feedIndex].comments[i].liked)
-      //                   { 
-      //                     script_feed[0].comments[commentIndex].liked = true;
-      //                     script_feed[0].comments[commentIndex].likes++;
-      //                     //console.log("Post %o has been LIKED", script_feed[0].id);
-      //                   }
-
-      //                   //Action is a FLAG (user Flaged this comment in this post)
-      //                   if (user.feedAction[feedIndex].comments[i].flagged)
-      //                   { 
-      //                     console.log("Comment %o has been LIKED", user.feedAction[feedIndex].comments[i].id);
-      //                     script_feed[0].comments.splice(commentIndex,1);
-      //                   }
-      //                 }
-      //               }//end of ELSE
-
-      //           }//end of for loop
-
-      //         }//end of IF Comments
-
-      //         if (user.feedAction[feedIndex].readTime[0])
-      //         { 
-      //           script_feed[0].read = true;
-      //           script_feed[0].state = 'read';
-      //           //console.log("Post: %o has been READ", script_feed[0].id);
-      //         }
-      //         else 
-      //         {
-      //           script_feed[0].read = false;
-      //           //script_feed[0].state = 'read';
-      //         }
-
-      //         if (user.feedAction[feedIndex].liked)
-      //         { 
-      //           script_feed[0].like = true;
-      //           script_feed[0].likes++;
-      //           //console.log("Post %o has been LIKED", script_feed[0].id);
-      //         }
-
-      //         if (user.feedAction[feedIndex].replyTime[0])
-      //         { 
-      //           script_feed[0].reply = true;
-      //           //console.log("Post %o has been REPLIED", script_feed[0].id);
-      //         }
-
-      //         //If this post has been flagged - remove it from FEED array (script_feed)
-      //         if (user.feedAction[feedIndex].flagTime[0])
-      //         { 
-      //           script_feed.splice(0,1);
-      //           //console.log("Post %o has been FLAGGED", script_feed[0].id);
-      //         }
-
-      //         //post is from blocked user - so remove  it from feed
-      //         else if (user.blocked.includes(script_feed[0].actor.username))
-      //         {
-      //           script_feed.splice(0,1);
-      //         }
-
-      //         else
-      //         {
-      //           //console.log("Post is NOT FLAGGED, ADDED TO FINAL FEED");
-      //           finalfeed.push(script_feed[0]);
-      //           script_feed.splice(0,1);
-      //         }
-
-      //       }//end of IF we found Feed_action
-
-      //       else
-      //       {
-      //         //console.log("NO FEED ACTION SO, ADDED TO FINAL FEED");
-      //         if (user.blocked.includes(script_feed[0].actor.username))
-      //         {
-      //           script_feed.splice(0,1);
-      //         }
-
-      //         else
-      //         {
-      //           finalfeed.push(script_feed[0]);
-      //           script_feed.splice(0,1);
-      //         }
-      //       }
-      //       }//else in while loop
-      // }//while loop
-
-      
-      // //shuffle up the list
-      // //finalfeed = shuffle(finalfeed);
-
-
-      // user.save((err) => {
-      //   if (err) {
-      //     console.log("ERROR IN USER SAVE IS "+err);
-      //     return next(err);
-      //   }
-      //   //req.flash('success', { msg: 'Profile information has been updated.' });
-      // });
-
-      // console.log("Script Size is now: "+finalfeed.length);
-      // //Testing stories .. !!!! Might need to remove the second argument in below ..
-      // //We render one of these based on the conditions ..
-      // //res.render('stories',{stories:finalfeed})
-      // res.render('script', { script: finalfeed});
 
       });//end of Script.find()
 
@@ -747,16 +520,8 @@ exports.newPost = (req, res) => {
  * Update user's profie feed posts Actions.
  */
 exports.postUpdateFeedAction = (req, res, next) => {
-  console.log("You are in postUpdateFeedAction");
-  //ZH:instead of posting only the posts of this specific user, post all posts from people in this group!
-  //ZH: We need to do the same for getposts
-  // User.findById(req.user.id, (err, user) => { 
-  //   //get the group of this current user ..
-  //   //update everything like before , comments, replies, everything. 
-  //   //but find other objects (users) who have the same group in the user Schema. and push the new in
 
-  // }
-  User.findById(req.user.id, (err, user) => { 
+  User.findById(req.user.id, (err, user) => {
     //somehow user does not exist here
     if (err) { return next(err); }
 

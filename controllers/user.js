@@ -119,7 +119,7 @@ exports.postLogin = (req, res, next) => {
       req.flash('errors', info); 
       return res.redirect('/login');
     }
-    if (!(user.active)) { //? how can it access attributes of user object
+    if (!(user.active)) { //? how can it access attributes of user object.. it has something to do with session from 'express-session' in app.js?
       console.log("FINAL");
       //Need to capture this in a var
       var post_url = process.env.POST_SURVEY+user.mturkID;
@@ -197,12 +197,15 @@ Place Experimental Varibles Here!
   
   User.findOne({ email: req.body.email }, (err, existingUser) => {
     if (err) { return next(err); }
-    //ZH: will need to uncomment this part after testing!!!
+    //ZH: MAKE SURE to uncomment this if statement after testing!!!
     // if (existingUser) {
     //   req.flash('errors', { msg: 'Account with that email address already exists.' });
     //   return res.redirect('/signup');
     // }
-    user.save((err) => {
+    //ZH: the new user will be added to the DB here, right? ... if there are more than one user, they all will be added. 
+    //what I need to do is not about the DB, it is about the final feed. they shouldn't be per user,
+    // they should be per experiment and inlclude all the users activities (posts, comments, everything).
+    user.save((err) => { 
       if (err) { return next(err); }
       req.logIn(user, (err) => {
         if (err) {
@@ -237,13 +240,14 @@ exports.postSignupInfo = (req, res, next) => {
     }
 
     user.save((err) => {
-      if (err) {
-        if (err.code === 11000) {
-          req.flash('errors', { msg: 'The email address you have entered is already associated with an account.' });
-          return res.redirect('/signup_info');
-        }
-        return next(err);
-      }
+      //ZH: uncomment it after testing
+      // if (err) {
+      //   if (err.code === 11000) {
+      //     req.flash('errors', { msg: 'The email address you have entered is already associated with an account.' });
+      //     return res.redirect('/signup_info');
+      //   }
+      //   return next(err);
+      // }
       req.flash('success', { msg: 'Profile information has been updated.' });
       res.redirect('/com');
     });

@@ -1,7 +1,75 @@
 const Script = require('../models/Script.js');
 const User = require('../models/User');
 const Notification = require('../models/Notification');
+const Cohort = require('../models/Cohort')
 const _ = require('lodash');
+
+//initialize an object of cohort collection if not created
+// var result = ['var1', 'var2','var3', 'var4']
+// var collection = new Cohort({
+//   collection_group: '',
+//         users:[]
+// });
+var collection;
+
+// Cohort.find()
+//   .where("collection_group").equals(result[0])
+//   .exec(function(err, collection){
+//     console.log('whats the length of this collection: ', Object.entries(collection).length);
+//     console.log('whats inside this collection: ', collection);
+//     if(Object.entries(collection).length === 0)
+//     {
+//       //create one with this group --> make this one universal .... 
+//       var collection = new Cohort({
+//         collection_group: collection_group,
+//         users:[]
+//       });
+//       console.log('Initialized object of group0 ?');
+//     }
+// Cohort.find()
+//   .where("collection_group").equals(result[1])
+//   .exec(function(err, collection){
+//     console.log('whats the length of this collection: ', Object.entries(collection).length);
+//     console.log('whats inside this collection: ', collection);
+//     if(Object.entries(collection).length === 0)
+//     {
+//       //create one with this group --> make this one universal .... 
+//       var collection = new Cohort({
+//         collection_group: collection_group,
+//         users:[]
+//       });
+//       console.log('Initialized object of group1 ?');
+//     }
+// Cohort.find()
+//   .where("collection_group").equals(result[2])
+//   .exec(function(err, collection){
+//     console.log('whats the length of this collection: ', Object.entries(collection).length);
+//     console.log('whats inside this collection: ', collection);
+//     if(Object.entries(collection).length === 0)
+//     {
+//       //create one with this group --> make this one universal .... 
+//       var collection = new Cohort({
+//         collection_group: collection_group,
+//         users:[]
+//       });
+//       console.log('Initialized object of group2 ?');
+//     }
+// Cohort.find()
+//   .where("collection_group").equals(result[3])
+//   .exec(function(err, collection){
+//     console.log('whats the length of this collection: ', Object.entries(collection).length);
+//     console.log('whats inside this collection: ', collection);
+//     if(Object.entries(collection).length === 0)
+//     {
+//       //create one with this group --> make this one universal .... 
+//       var collection = new Cohort({
+//         collection_group: collection_group,
+//         users:[]
+//       });
+//       console.log('Initialized object of group3 ?');
+//     }
+
+
 
 function shuffle(array) {
   var currentIndex = array.length, temporaryValue, randomIndex;
@@ -22,28 +90,13 @@ function shuffle(array) {
   return array;
 }
 
-//I don't like this sorting method. Will change it.
-var sort = function (propertyRetriever, arr) {
-    arr.sort(function (a, b) {
-        var valueA = propertyRetriever(a);
-        var valueB = propertyRetriever(b);
-
-        if (valueA < valueB) {
-            return -1;
-        } else if (valueA > valueB) {
-            return 1;
-        } else {
-            return 0;
-        }
-    });
-};
 
 /**
  * GET /
  * List of Script posts for Feed
 */
 exports.getScript = (req, res, next) => {
-
+  console.log('@@@@@@@@@@@@777777')
   //req.user.createdAt
   var time_now = Date.now();
   var time_diff = time_now - req.user.createdAt;
@@ -85,8 +138,8 @@ exports.getScript = (req, res, next) => {
   
     //filter the script based on experimental group
     scriptFilter = user.group;
+    console.log('@@@@@@@@@@ User group is:@@@@@@@@@@@@@ ', scriptFilter);
       
-    
 
     //User is no longer active - study is over
     if (!user.active)
@@ -134,72 +187,105 @@ exports.getScript = (req, res, next) => {
 
   
   
-    //Get the newsfeed
+    //Get the newsfeed //ZH: here we get the actor's posts if they are in the same group (condtion). 
+    var users_posts = [];
     Script.find()
       .where("experiment_group").equals(scriptFilter)
       .where('time').lte(time_diff).gte(time_limit)
-      // .sort('-time')
+      .sort('-time')
       .populate('actor')
       .populate({ 
        path: 'comments.actor',
        populate: {
          path: 'actor',
-         model: 'Actor',
-         // options: { 
-         //    sort: 'username'
-         //  }
-       }
+         model: 'Actor'
+       } 
     })
-      //Actor's posts!!!
-      .exec(function (err, script_feed) {
+      .exec(function (err, script_feed) { //ZH: line 123 to 137 are to provide this script_feed which is ???
         if (err) { return next(err); }
         //Successful, so render
-        var modal_id = 1;
+
         //update script feed to see if reading and posts has already happened
         var finalfeed = [];
 
-        var user_posts = [];
-        //Zh: test sorting by username ...
-        console.log(script_feed);
-        // console.log('script after sort: ', script_feed);
-        var properties = function(script_feed){
-          return script_feed.actor.username;
-        }
-        sort(properties,script_feed);
+        user_posts = [];
 
         //Look up Notifications??? And do this as well?
 
-        user_posts = user.getPostInPeriod(time_limit, time_diff);
+        user_posts = user.getPostInPeriod(time_limit, time_diff); //ZH: this user is the user we get from DB 
+        //based on its id which is in req.user.id . So now, we need to get the users based on their groups. 
+        //And iterate over them to gather their posts in users_posts.. and do the rests for userS_posts?
+        //see what is the type of this user_posts and append them to userS_posts now
 
-        user_posts.sort(function (a, b) {
+        // User.find()
+        User.find()
+            .where("group").equals(scriptFilter)
+            .populate({ 
+             path: 'posts.reply',
+             model: 'Script',
+             populate: {
+               path: 'actor',
+               model: 'Actor'
+             } 
+          })
+        .populate({ 
+             path: 'posts.actorAuthor',
+             model: 'Actor'
+          })
+        .populate({ 
+             path: 'posts.comments.actor',
+             model: 'Actor'
+          })
+        .exec(function (err, users) {
+          //
+          // console.log('current collection: ', users.group)
+          // console.log('users in the current collection', users)
+          var users_posts =[]
+          //iterate over all the users in 'users' to run getPostInPeriod for each and append their results...
+          console.log('############ Length of all USERs in this collection is:');
+          console.log(users.length);
+          for (var i = 0; i < users.length; i++){
+            current_posts=(users[i].getPostInPeriod(time_limit, time_diff));
+            // if(!(typeof current_posts[0] === 'undefined'))
+            if(!(typeof current_posts === 'undefined'))
+            {
+              for(var j = 0; j<current_posts.length; j++)
+              {
+                //ZH: next step: now each post is shown under this active user's name! For instance if Bob is active, he sees Jean's posts as his own posts incorrectly!
+                // console.log('newUSER');
+                // console.log(users[i]);
+                var temp = new Object();
+                var temp_user = new Object();
+                temp_user.user = JSON.parse(JSON.stringify(users[i])); //check if it is not null +ONLY gather essential data from user!
+                const temp_current_post = JSON.parse(JSON.stringify(current_posts[j]));//check if it is not null
+                // console.log('before assign: ', current_posts[j]);
+                current_posts[j] = Object.assign(temp_current_post, temp_user);
+                // console.log('after assign: ', current_posts[j]);
+                users_posts.push(current_posts[j]);
+              }
+            }
+            // console.log(users_posts);
+          }
+          users_posts.sort(function (a, b) {
             return b.relativeTime - a.relativeTime;
           });
-
-        while(script_feed.length || user_posts.length) {
-          console.log(user_posts[0]);
+          // console.log('with USER collection');
+          // console.log('with the NEW collection');
+          // console.log(users_posts);
+        //ZH: I changed user_posts to users_posts
+        while(script_feed.length || users_posts.length) {
           if(typeof script_feed[0] === 'undefined') {
               console.log("Script_Feed is empty, push user_posts");
-              var temp = new Object();
-              temp.modal_id = modal_id;
-              const temp_user_posts = JSON.parse(JSON.stringify(user_posts[0]));
-              user_posts[0] = Object.assign(temp_user_posts,temp);
-              modal_id = modal_id+1;
-              console.log('Expanded2!');
-              console.log(user_posts[0]);
-              finalfeed.push(user_posts[0]);
-              user_posts.splice(0,1);
+              finalfeed.push(users_posts[0]);
+              users_posts.splice(0,1);
           }
-          else if(!(typeof user_posts[0] === 'undefined') && (script_feed[0].time < user_posts[0].relativeTime)){
-              console.log("Push user_posts");
-              var temp = new Object();
-              temp.modal_id = modal_id;
-              const temp_user_posts = JSON.parse(JSON.stringify(user_posts[0]));
-              user_posts[0] = Object.assign(temp_user_posts,temp);
-              modal_id = modal_id+1;
-              console.log('Expanded2!');
-              console.log(user_posts[0]);
-              finalfeed.push(user_posts[0]);
-              user_posts.splice(0,1);
+          else if(!(typeof users_posts[0] === 'undefined') && (script_feed[0].time < users_posts[0].relativeTime)){
+              // console.log("Push user_postss");
+              finalfeed.push(users_posts[0]);
+              // console.log(users_posts[0]);//ZH: remove it
+              // console.log('final feed');
+              // console.log(finalfeed);
+              users_posts.splice(0,1);
           }
           else{
             
@@ -315,15 +401,6 @@ exports.getScript = (req, res, next) => {
               else
               {
                 //console.log("Post is NOT FLAGGED, ADDED TO FINAL FEED");
-                //add modal number to it!
-                var temp = new Object();
-                temp.modal_id = modal_id;
-                const temp_script_feed = JSON.parse(JSON.stringify(script_feed[0]));
-                script_feed[0] = Object.assign(temp_script_feed,temp);
-                console.log('modal added!');
-                console.log(script_feed[0]);
-                modal_id = modal_id+1;
-                console.log('New SCRIPT FEED');
                 finalfeed.push(script_feed[0]);
                 script_feed.splice(0,1);
               }
@@ -340,14 +417,6 @@ exports.getScript = (req, res, next) => {
 
               else
               {
-                //add modal number to it
-                var temp = new Object();
-                temp.modal_id = modal_id;
-                const temp_script_feed = JSON.parse(JSON.stringify(script_feed[0]));
-                script_feed[0] = Object.assign(temp_script_feed,temp);
-                console.log('modal added!');
-                console.log(script_feed[0]);
-                modal_id = modal_id+1;
                 finalfeed.push(script_feed[0]);
                 script_feed.splice(0,1);
               }
@@ -371,8 +440,11 @@ exports.getScript = (req, res, next) => {
       console.log("Script Size is now: "+finalfeed.length);
       //Testing stories .. !!!! Might need to remove the second argument in below ..
       //We render one of these based on the conditions ..
-      res.render('stories',{script:finalfeed})
-      // res.render('script', { script: finalfeed});
+      //res.render('stories',{stories:finalfeed})
+      //ZH: remove this print statement 
+      // console.log(finalfeed);
+      res.render('script', { script: finalfeed});
+        });
 
       });//end of Script.find()
 
@@ -535,12 +607,7 @@ exports.newPost = (req, res) => {
 
               //add to posts
               post.comments.push(tmp_actor_reply);
-
-              
-
             }
-
-            
           }//end of IF
 
           //console.log("numPost is now "+user.numPosts);
@@ -548,11 +615,108 @@ exports.newPost = (req, res) => {
           user.logPostStats(post.postID);
           //console.log("CREATING NEW POST!!!");
 
+          collection_group = user.group;
+          console.log('group of the sender is ', collection_group);
+
+          // UsersCollection.find()
+          //   .where("group").equals(collection_group)
+          //   .exec(function (err, collection) {
+          //     // here we have the schema of the users in the same group and we will add 
+          //     console.log('PREVIOUS COLLECTION:');
+          //     console.log(collection)
+          //     collection.users.push(user)
+          //     console.log('Updated collection: ', collection);
+          //     //add everything related to this post to this collection .... but before that we need to create collection.js
+          //   // at the end save this collection
+          //   });
+
+          // UsersCollection.find()
+          //     .where("group").equals(collection_group)
+          //     .populate({ 
+          //      path: 'posts.reply',
+          //      model: 'Script',
+          //      populate: {
+          //        path: 'actor',
+          //        model: 'Actor'
+          //      } 
+          //   })
+          // .populate({ 
+          //      path: 'posts.actorAuthor',
+          //      model: 'Actor'
+          //   })
+          // .populate({ 
+          //      path: 'posts.comments.actor',
+          //      model: 'Actor'
+          //   })
+          // .exec(function (err, collection) {
+          //   console.log('the group is   ', collection_group)
+          //   console.log('what is inside this new one collection: ');
+          //   console.log(collection);
+          //   if(Object.entries(collection).length === 0){
+          //     console.log('594930030303');
+          //     const collection = new UsersCollection({
+          //       group: collection_group,
+          //       user: user
+          //     });
+          //     // const temp_collection = new UsersCollection;
+          //     // temp_collection.group = collection_group;
+          //     // temp_collection.user = user;
+          //   }
+            // collection.user.posts.unshift(post);
+
+          Cohort.find()
+          .where("collection_group").equals(collection_group)
+          .exec(function(err, collection){
+            console.log('whats the length of this collection: ', Object.entries(collection).length);
+            console.log('whats inside this collection: ', collection);
+            if(Object.entries(collection).length === 0)
+            {
+              //create one with this group --> make this one universal .... 
+              collection = new Cohort({
+                collection_group: collection_group,
+                users:[]
+              });
+              console.log('First initialization?');
+            }
+            // collection = new Cohort({
+            //     collection_group: collection_group,
+            //     users:[]
+            //   });
+            console.log('now the collection is: ', collection);
+            // console.log('collection zero: ', collection[0]);
+            // console.log('give me the group please: ', collection[0].collection_group);
+            // //now we have a collection, add the new user to it!
+            // // console.log('type of collection',typeof collection);
+            // console.log('type of collection.users is with zero ', typeof collection[0].users);
+            // console.log('collection.users after fixing issue : ', collection[0].users)
+            // // console.log('print collection[0].users ', collection[0].users)
+            // console.log('type of userCollection is ', typeof collection);
+            collection.users.push(user); // later I will find this user and push to his posts..
+            console.log('the user that has been added is : ',collection.users);
+            console.log('the new collection is now equal to: ', collection)
+            //save the new collection ...
+            collection.save((err) => {
+            if (err) {
+              console.log('Seriously why:( ', err);
+              }
+            
+            });
+            
+          });
+          
+        Cohort.find()
+            .where("collection_group").equals(collection_group)
+            .exec(function(err, collection){
+              console.log('Would you mind saving this document?');
+              console.log(collection);
+            });
+          
+
           user.save((err) => {
             if (err) {
               return next(err);
             }
-            //req.flash('success', { msg: 'Profile information has been updated.' });
+              
             res.redirect('/');
           });
 
@@ -575,8 +739,16 @@ exports.newPost = (req, res) => {
  * Update user's profie feed posts Actions.
  */
 exports.postUpdateFeedAction = (req, res, next) => {
+  console.log("You are in postUpdateFeedAction 608");
+  //ZH:instead of posting only the posts of this specific user, post all posts from people in this group!
+  //ZH: We need to do the same for getposts
+  // User.findById(req.user.id, (err, user) => { 
+  //   //get the group of this current user ..
+  //   //update everything like before , comments, replies, everything. 
+  //   //but find other objects (users) who have the same group in the user Schema. and push the new in
 
-  User.findById(req.user.id, (err, user) => {
+  // }
+  User.findById(req.user.id, (err, user) => { 
     //somehow user does not exist here
     if (err) { return next(err); }
 
@@ -795,6 +967,7 @@ exports.postUpdateFeedAction = (req, res, next) => {
  getUserPostByID
  */
 exports.postUpdateProFeedAction = (req, res, next) => {
+  console.log('you are in pro feed action 836');
 
   User.findById(req.user.id, (err, user) => {
     //somehow user does not exist here
@@ -903,13 +1076,30 @@ exports.postUpdateProFeedAction = (req, res, next) => {
  * POST /userPost_feed/
  * Update user's POST feed Actions.
  */
+ // here I need to also add the posts to UsersCollection to their specific group.. 
+ //and then read from this collection in getScript instead of going over all the Users
 exports.postUpdateUserPostFeedAction = (req, res, next) => {
+  console.log('you are in 947');
 
   User.findById(req.user.id, (err, user) => {
+    var collection_group;
     //somehow user does not exist here
     if (err) { return next(err); }
 
     console.log("@@@@@@@@@@@ TOP USER profile is  ", req.body.postID);
+    console.log("### User group is:  ", user.group);
+    // collection_group = user.group;
+
+    // UsersCollection.find()
+    //     .where("group").equals(collection_group)
+    //     .exec(function (err, collections) {
+    //       // here we have the schema of the users in the same group and we will add 
+    //       console.log('PREVIOUS COLLECTION:');
+    //       console.log(collections)
+    //       //add everything related to this post to this collection .... but before that we need to create collection.js
+    //     });
+
+
 
     //find the object from the right post in feed 
     var feedIndex = _.findIndex(user.posts, function(o) { return o.postID == req.body.postID; });
@@ -991,6 +1181,21 @@ exports.postUpdateUserPostFeedAction = (req, res, next) => {
 
     }//else 
 
+
+    
+
+    // const collection = new UsersCollection({
+    // group: collection_group,
+    // user: user
+    // });
+
+    // collection.save((err) => {
+    //    if (err) {
+    //         return next(err);
+    //       }
+    //     });
+    console.log('@@@@ Now the COLLECTION IS :  ', collection);
+
     //console.log("@@@@@@@@@@@ ABOUT TO SAVE TO DB on Post ", req.body.postID);
     user.save((err) => {
       if (err) {
@@ -1007,6 +1212,10 @@ exports.postUpdateUserPostFeedAction = (req, res, next) => {
       //console.log("@@@@@@@@@@@ SAVED TO DB!!!!!!!!! ");
       res.send({result:"success"});
     });
+    // add the post to the collection as well...
+    
   });
+  // after we store them in the User schema, we need to store them in the User collection as well ... 
+  
 }
 

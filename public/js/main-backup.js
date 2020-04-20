@@ -14,7 +14,7 @@ $(window).on("load", function() {
     // this parameter will enable/disable the closing for the previous .united modals when the next will be opened :)
     allowMultiple: false,
   });
-  //@@@@@@@@@@@ No time restrictions: users need to click to see the next post @@@@@@@@@@
+  //@@@@@@@@@@@ User see posts by clicks - No time restrictions @@@@@@@@@@
   // // why doesn't this allow me to write or like or anything? 
   // $('#modal1').modal('show')
   // $('.angle.double.left.icon').on('click', function(){
@@ -28,13 +28,18 @@ $(window).on("load", function() {
   //   $('#modal2').modal('attach events', '#modal3');     
   // });
   // time-based transitions WORKS
-  $('.ui.tiny.gray.progress')
+  $('.ui.gray.progress')
   .progress({
     total: 10
   });
+  // Zh: change these to be defined dynamically based on the modal's size!!!
+  $('#modal3').modal('attach events', '#next2');
+    $('#modal4').modal('attach events', '#next3');
+    $('#modal5').modal('attach events', '#next4');
+    $('#modal2').modal('attach events', '#next1');
 
   function move(j) {
-     progressing_id = $("[progressing_id='"+j+"']");
+     progressing_id = '#progressing'+j;
      //j=i;
       (function loop(i) {
         setTimeout(function () { 
@@ -44,67 +49,66 @@ $(window).on("load", function() {
           ;
           if (--i) loop(i); // iteration counter
           else {
-            // nextt_id = 'next'+(j)
-            // prev_id = 'pre'+(j)
-            // console.log(nextt_id);
-            var element_pre = $("[pre_id='"+j+"']");
-            var element_next = $("[next_id='"+j+"']");
-            // var element_pre = document.getElementById(pre_id);
-            element_pre[0].classList.remove("disabled");
-            // var element_next = document.getElementById(next_id);
-            element_next[0].classList.remove("disabled");
+            next_id = 'next'+(j)
+            pre_id = 'pre'+(j)
+            console.log(next_id);
+            var element_pre = document.getElementById(pre_id);
+            element_pre.classList.remove("disabled");
+            var element_next = document.getElementById(next_id);
+            element_next.classList.remove("disabled");
           }
           },1000) //
        })(10) ;
   }
-  
+  // these two lines should all go to a function which is called from a button which activates them ..
   $('#stratButton.button.fluid.ui.button').on('click', function(){
-    var j=1;
-    var first_modal=$(" .ui.tiny.post.modal[modal_id='"+j+"']");
-    first_modal.modal('show');
+    $('#modal1').modal('show');
     move(1);
   });
-  
-  $('#survey.button.fluid.ui.button').on('click',function(){
-    var j ='321'
-    var survey_modal=$(" .ui.tiny.post.modal[modal_id='"+j+"']");
-    survey_modal.modal('show')
-    alert('clicked')
-  });
- // flag should be as large as posts numbers .. 
-  flag=new Array(100).fill(0)
-  //fix this 20 number.. how many posts are we going to show them? 
-  for (let i=0; i<20;i++){
-    j=i+1;
-    // $(" .ui.tiny.post.modal[modal_id='"+j+"']").modal('attach events',$(this)[0]);
-    $(" .ui.tiny.post.modal[modal_id='"+j+"']").modal('attach events',".ui.right.button[next_id='"+i+"']");
-  } 
+  flag=new Array(5).fill(0)
+
   $('.ui.right.button').on('click', function(){    
     // NEXT OF LAST post should show an alert that these are the posts for today...
-    var next_id = $(this)[0].attributes[1].value;
-    var move_id = (parseInt(next_id)+1).toString();
-    if(flag[next_id]==0)
+    if($(this)[0].id == 'next5')
     {
-      flag[next_id]=1;
-      move(move_id);
+      alert('That is all new posts for today. Click on previous button to review posts.'); 
     }
+    // call the processing ...
+    //get the id of the clicked button and activate its next and previous buttons..
+    var curr_id= $(this)[0].id;
+    console.log('current next id is');
+    console.log(curr_id);
+    if (curr_id =='next3' && flag[3]==0)
+      {
+        flag[3]=1;
+        move(4);
+      }
+    else if(curr_id == 'next1' && flag[1]==0)
+      {flag[1]=1;
+            move(2);}
+    else if (curr_id =='next2' && flag[2]==0)
+      {flag[2]=1;
+            move(3);}
+    else if(curr_id=='next4' && flag[4]==0)
+     { flag[4]=1;
+           move(5);}
 
   });
 
   $('.ui.left.button').on('click', function(){
 
-    var next_id = $(this)[0].attributes[1].value;
-    var move_id = (parseInt(next_id)-1).toString();
-    if(move_id>=1)
-    {
-      $(" .ui.tiny.post.modal[modal_id='"+move_id+"']").modal('attach events',$(this)[0]);
-    }
+    // $('#progressing').progress('reset');
+    $('#modal4').modal('attach events', '#pre5');
+    $('#modal3').modal('attach events', '#pre4')
+    $('#modal2').modal('attach events', '#pre3');
+    $('#modal1').modal('attach events', '#pre2');
+    $('#modal5').modal('attach events', '#pre1');
     var curr_id= $(this)[0].id;
     console.log('current next id is');
     console.log(curr_id);
 
   }); 
-  // lierally time-based (show each post for 5 seconds and jumps to next post...
+  // lierally time-based (show each post for 5 seconds...
   // (function loop(i) {
   // console.log('itr'+i);          
   //    setTimeout(function () {   

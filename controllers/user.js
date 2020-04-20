@@ -5,6 +5,8 @@ const passport = require('passport');
 const moment = require('moment');
 const User = require('../models/User'); //mongose... 
 const Notification = require('../models/Notification.js');
+const Cohort = require('../models/Cohort')
+
 
 /**
  * GET /login
@@ -193,7 +195,52 @@ Place Experimental Varibles Here!
     lastNotifyVisit : (Date.now()),
     createdAt: (Date.now())
   });
+  //zhila: can I create the collection of the new user here?
 
+
+  // const collection = new UsersCollection({
+  //   group:result,
+  //   user: user
+  //   // users.user.email:user.email,
+  //   // users.user.password: user.password,
+  //   // users.user.mturkID : user.mturkID,
+  //   // users.user.username: user.username,
+  //   // users.user.group : user.group,
+  //   // users.user.active: user.active,
+  //   // users.user.lastNotifyVisit: user.lastNotifyVisit,
+  //   // users.user.createdAt:user.createdAt
+
+  //   // users: user
+  // });
+
+  // console.log('@@@@ NEW COLLECTION IS :  ', collection);
+  // collection.save((err) => {
+  //    if (err) {
+  //         return next(err);
+  //       }
+  //     });
+
+  //store this collection instance to the UserCollection data base...
+
+  // UsersCollection.find()
+  //       .where("group").equals(result)
+  //       .exec(function (err, collection) {
+  //         // add this new user to the collection
+  //         if(!collection.length)
+  //         {
+  //           //create a new connection
+  //           const collection = new UsersCollection({
+
+  //           });
+  //         }
+  //         else
+  //         {
+  //           //add the new user to this collection
+  //           // add the new user to this collection? exactly like how you add it to User schema
+
+  //         }
+
+  //       }
   
   User.findOne({ email: req.body.email }, (err, existingUser) => {
     if (err) { return next(err); }

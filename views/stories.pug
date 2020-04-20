@@ -17,7 +17,7 @@ block content
       .content(style="white-space:nowrap;")
         span(style="font-size:150%;font-weight: bold;")="What's on "
         a.pro_name_link(href='/user/NoahM1121')
-          span(style="font-size:150%;font-weight: bold;").pro_name="Bahar's"
+          span(style="font-size:150%;font-weight: bold;").pro_name="Mary's"
         span(style="font-size:150%;font-weight: bold;")=" plate? "
         br
         span(style="white-space:normal;")="Kate, we care about helping you connect with others. Browse through Tom's posts. Imagine how Tom feels and what is going on in his life."
@@ -82,542 +82,630 @@ block content
                 p
                 p
    
+    //Read from script and put in the stories format ..
+
+    each val in script
+      -console.log("Modal Values");
+      -console.log(val.modal_id);
+      //- this is a user post ..
+      if val.relativeTime 
+        -var u_class;
+        -if (val.actorAuthor) {u_class = "actorReply"}
+        -else if (val.reply) {u_class = "userReply"}
+        -else {u_class = "userPost"}
+        .ui.container
+          //- #modal1.ui.tiny.post.modal()
+          //- .ui.tiny.post.modal(modal_id=val.modal_id)
+          -console.log(val.modal_id)
+          .ui.tiny.post.modal(modal_id=val.modal_id)
+          // .ui.tiny.post.modal(modal_id='321')
+            // .header val.modal_id
+            .ui.fluid.card(u_postID=val.id, type=u_class, postID=val.postID)
+              .content
+                .right.floated.time.meta= (user.createdAt.getTime() + val.relativeTime)
+                |
+                a.ui.avatar.image(href='/me')
+                -console.log('USER TIME99..');
+                  if user.profile.picture
+                    img(src='/user_post/'+user.profile.picture)
+                  else
+                    img(src=user.gravatar)
+                a(href='/me')
+                  span= user.username || user.id ||user.profile.name 
+              .image
+                img(src='/user_post/'+val.picture)
+              .content
+                .description=val.body
+                  i.icon.checkmark
+                  | Seen by 12
+              .three.ui.bottom.attached.icon.buttons
+                .ui.reply.button(tabindex='0')
+                  i.reply.icon
+                  |  Reply
+                .ui.flag.button(tabindex='0')
+                  i.flag.icon
+                  |  Flag
+                if val.like
+                  .ui.labeled.button(tabindex='0')
+                    .ui.red.like.button
+                      i.heart.icon
+                      |  Like
+                    a.ui.basic.red.left.pointing.label=val.likes
+                else
+                  .ui.labeled.button(tabindex='0')
+                    .ui.like.button
+                      i.heart.icon
+                      |  Like
+                    a.ui.basic.red.left.pointing.label.count=val.likes
+
+              if val.comments.length > 0
+                .content
+                  .ui.comments
+                    each comment in val.comments
+                      //-IF this comment is USER made, do this //Zh: now it could be from any other user not the only subject user that we used to have!!!!
+                      if (user.createdAt.getTime() + comment.time) < Date.now()
+                        if comment.new_comment
+                          -console.log("New COMMENT AREA");
+                          .comment(commentID=comment.new_comment_id)
+                            a.avatar.image(href='/me')
+                              if user.profile.picture
+                                img(src='/user_post/'+user.profile.picture)
+                              else
+                                img(src=user.gravatar(60))
+                            .content
+                              a.author(href='/me')=user.profile.name || user.username || user.id
+                              .metadata
+                                span.date=(user.createdAt.getTime() + comment.time)
+                                .rating
+                                  i.heart.icon
+                                  span.num=0
+                                  |  Likes
+                              .text=comment.body
+                              .actions
+                                a.like.comment Like
+                                a.flag.comment Flag
+                        //- Else this is a normal comment from the script
+                        else
+                          .comment(commentID=comment.id)
+                            a.avatar(href='/user/'+comment.actor.username)
+                              //-img(src=cdn+'/profile_pictures/'+comment.actor.profile.picture)                       
+                              img.lazyload(data-src=cdn+"/profile_pictures/"+comment.actor.profile.picture)
+                            .content
+                              a.author(href='/user/'+comment.actor.username)=comment.actor.profile.name
+                              .metadata
+                                span.date=(user.createdAt.getTime() + comment.time)
+                                .rating
+                                  if comment.liked
+                                    i.red.heart.icon
+                                    span=comment.likes
+                                    |  Likes 
+                                  else
+                                    i.heart.icon
+                                    span.num=comment.likes
+                                    |  Likes
+                              .text=comment.body
+                              .actions
+                                if comment.liked
+                                  a.red.like.comment Like
+                                else
+                                  a.like.comment Like
+                                a.flag.comment Flag
+              .extra.content
+                .ui.fluid.left.labeled.right.icon.input
+                  .ui.label
+                    if user.profile.picture
+                      img.ui.avatar.image(src='/user_post/'+user.profile.picture, name=user.profile.name || user.username || user.id)
+                    else
+                      img.ui.avatar.image(src=user.gravatar(60), name=user.profile.name || user.username || user.id)            
+                  input.newcomment(type='text', placeholder='Write a Comment')
+                  i.big.send.link.icon
+
+              .two.fluid.ui.buttons
+                .ui.left.disabled.button(pre_id=val.modal_id) Previous
+                .ui.right.disabled.button(next_id=val.modal_id)  Next
+                
+              .ui.tiny.gray.progress(progressing_id='progressing{{val.modal_id}}')
+                .bar
+                .label ... 
+      //- These are posts by Actors, not the participants !!!
+      else
+        .ui.container
+          //- .ui.tiny.post.modal(modal_id=val.modal_id)
+          .ui.tiny.post.modal(modal_id=val.modal_id)
+            //- .header val.modal_id
+            .ui.fluid.card.dim(postID=val.id, state=val.state || 'unread', type='actor', actor_un = val.actor.username, actor_name = val.actor.profile.name, actor_pic = val.actor.profile.picture)
+              //- dimmer DIV for flagging
+              .ui.dimmer.flag
+                    .content
+                      .center
+                        h2.ui.inverted.icon.header
+                          i.red.flag.icon
+                          |  You&apos;ve flagged this!
+                          h3.ui.inverted.header
+                            span="The admins will review this post further. We are sorry you had this experience."
+              .content
+                .right.floated.time.meta= (user.createdAt.getTime() + val.time)
+                |  
+                //-a(href='/user/'+val.actor.username)
+                  img.ui.avatar.image(src=cdn+'/profile_pictures/'+val.actor.profile.picture)
+                  span=val.actor.profile.name
+                a(href='/user/'+val.actor.username)     
+                  img.ui.avatar.image.lazyload(data-src=cdn+"/profile_pictures/"+val.actor.profile.picture)
+                  span=val.actor.profile.name
+              //-div(style="position: relative; z-index: 1;")
+                img(src="image.png" style="position: absolute; z-index: 2;")
+                span#overlay_text(style="position: relative; top: -10px; z-index: 3;") OVERLAY
+              //- .img.post
+              .imgage
+                //-img.post(src="/"+val.picture)
+                //img(src='/public/picture.svg', data-src="/post_pictures/"+val.picture, style="max-width:100%;width:100%;")
+                img(src="/post_pictures/"+val.picture, style="max-width:100%;width:100%;")
+                //- img(src="/post_pictures/"+val.picture)
+
+              .content
+                .description=val.body
+              .three.ui.bottom.attached.icon.buttons
+                .ui.reply.button(tabindex='0')
+                  i.reply.icon
+                  |  Reply
+                .ui.flag.button(tabindex='0')
+                  i.flag.icon
+                  |  Flag
+                if val.like
+                  .ui.labeled.button(tabindex='0')
+                    .ui.red.like.button
+                      i.heart.icon
+                      |  Like
+                    a.ui.basic.red.left.pointing.label=val.likes
+                else
+                  .ui.labeled.button(tabindex='0')
+                    .ui.like.button
+                      i.heart.icon
+                      |  Like
+                    a.ui.basic.red.left.pointing.label.count=val.likes
+
+              if val.comments.length > 0
+                .content
+                  .ui.comments
+                    each comment in val.comments
+                      //-IF this comment is USER made, do this
+                      if (user.createdAt.getTime() + comment.time) < Date.now()
+                        if comment.new_comment
+                          -console.log("New COMMENT AREA");
+                          .comment(commentID=comment.new_comment_id)
+                            a.avatar.image(href='/me')
+                              if user.profile.picture
+                                img(src='/user_post/'+user.profile.picture)
+                              else
+                                img(src=user.gravatar(60))
+                            .content
+                              a.author(href='/me')=user.profile.name || user.username || user.id
+                              .metadata
+                                span.date=(user.createdAt.getTime() + comment.time)
+                                .rating
+                                  i.heart.icon
+                                  span.num=0
+                                  |  Likes
+                              .text=comment.body
+                              .actions
+                                a.like.comment Like
+                                a.flag.comment Flag
+                        //- Else this is a normal comment from the script
+                        else
+                          .comment(commentID=comment.id)
+                            a.avatar(href='/user/'+comment.actor.username)
+                              //-img(src=cdn+'/profile_pictures/'+comment.actor.profile.picture)                       
+                              img.lazyload(data-src=cdn+"/profile_pictures/"+comment.actor.profile.picture)
+                            .content
+                              a.author(href='/user/'+comment.actor.username)=comment.actor.profile.name
+                              .metadata
+                                span.date=(user.createdAt.getTime() + comment.time)
+                                .rating
+                                  if comment.liked
+                                    i.red.heart.icon
+                                    span=comment.likes
+                                    |  Likes 
+                                  else
+                                    i.heart.icon
+                                    span.num=comment.likes
+                                    |  Likes
+                              .text=comment.body
+                              .actions
+                                if comment.liked
+                                  a.red.like.comment Like
+                                else
+                                  a.like.comment Like
+                                a.flag.comment Flag
+              .extra.content
+                .ui.fluid.left.labeled.right.icon.input
+                  .ui.label
+                    if user.profile.picture
+                      img.ui.avatar.image(src='/user_post/'+user.profile.picture, name=user.profile.name || user.username || user.id)
+                    else
+                      img.ui.avatar.image(src=user.gravatar(60), name=user.profile.name || user.username || user.id)            
+                  input.newcomment(type='text', placeholder='Write a Comment')
+                  i.big.send.link.icon
+
+
+              .two.fluid.ui.buttons
+                .ui.left.disabled.button(pre_id=val.modal_id) Previous
+                .ui.right.disabled.button(next_id=val.modal_id)  Next
+                
+              .ui.tiny.gray.progress(progressing_id=val.modal_id)
+                .bar
+                .label ... 
+
+
+
+
     // //I am adding  post and 5, and 6 here
-    .ui.container
-      #modal5.ui.tiny.post.modal()
-        //i.close.icon
-        .header Modal5
-        // .content 
-        .ui.fluid.card.test(postID="5")
-          .content
-            .right.floated.meta= "Yesterday"
-            |
-            a(href='/user/casssssssssie')
-              img.ui.avatar.image(src='/profile_pictures/8.jpg')
-              span='Ananya'
-          .image
-            img.post(src="/post_pictures/"+"IMG_20170423_163934.jpg")
-          .content
-            .description="has anyone else tried this rolled ice cream? This one is matcha with berries (and a random oreo that I definitely didn’t ask for, but who can complain?). It was so fun watching them make it!"
-            //-.right.floated.meta
-              i.icon.checkmark
-              | Seen by 12
-          .three.ui.bottom.attached.icon.buttons
-            .ui.reply.button(tabindex='0')
-              i.reply.icon
-              |  Reply
-            .ui.flag.button(tabindex='0')
-              i.flag.icon
-              |  Flag
-            .ui.labeled.button(tabindex='0')
-              .ui.like.button
-                i.heart.icon
-                |  Like
-              a.ui.basic.red.left.pointing.label.count=2
-          .content
-            .ui.comments
-              .comment
-                a.avatar
-                  img(src='/profile_pictures/image-7.png')
-                .content
-                  a.author Aimee Lin
-                  .metadata
-                    span.date 1527025081548
-                    i.heart.icon
-                    |  0 Likes
-                  .text
-                    | when will you get it into your head that nobody likes your stupid ass.
-                  .actions
-                    a.reply Reply
-                    a.like Like
-                    a.flag Flag
-                .ui.bottom.attached.negative.message
-                  i.close.icon
-                  .header
-                    i.icon.red.flag
-                    | Is this Cyberbullying?
-                  br
-                  button.positive.ui.button Yes
-                  button.negative.ui.button No
+    //- .ui.container
+    //-   #modal5.ui.tiny.post.modal()
+    //-     //i.close.icon
+    //-     .header Modal5
+    //-     // .content 
+    //-     .ui.fluid.card.test(postID="5")
+    //-       .content
+    //-         .right.floated.meta= "Yesterday"
+    //-         |
+    //-         a(href='/user/casssssssssie')
+    //-           img.ui.avatar.image(src='/profile_pictures/8.jpg')
+    //-           span='Ananya'
+    //-       .image
+    //-         img.post(src="/post_pictures/"+"IMG_20170423_163934.jpg")
+    //-       .content
+    //-         .description="has anyone else tried this rolled ice cream? This one is matcha with berries (and a random oreo that I definitely didn’t ask for, but who can complain?). It was so fun watching them make it!"
+    //-         //-.right.floated.meta
+    //-           i.icon.checkmark
+    //-           | Seen by 12
+    //-       .three.ui.bottom.attached.icon.buttons
+    //-         .ui.reply.button(tabindex='0')
+    //-           i.reply.icon
+    //-           |  Reply
+    //-         .ui.flag.button(tabindex='0')
+    //-           i.flag.icon
+    //-           |  Flag
+    //-         .ui.labeled.button(tabindex='0')
+    //-           .ui.like.button
+    //-             i.heart.icon
+    //-             |  Like
+    //-           a.ui.basic.red.left.pointing.label.count=2
+    //-       .content
+    //-         .ui.comments
+    //-           .comment
+    //-             a.avatar
+    //-               img(src='/profile_pictures/image-7.png')
+    //-             .content
+    //-               a.author Aimee Lin
+    //-               .metadata
+    //-                 span.date 1527025081548
+    //-                 i.heart.icon
+    //-                 |  0 Likes
+    //-               .text
+    //-                 | when will you get it into your head that nobody likes your stupid ass.
+    //-               .actions
+    //-                 a.reply Reply
+    //-                 a.like Like
+    //-                 a.flag Flag
+    //-             .ui.bottom.attached.negative.message
+    //-               i.close.icon
+    //-               .header
+    //-                 i.icon.red.flag
+    //-                 | Is this Cyberbullying?
+    //-               br
+    //-               button.positive.ui.button Yes
+    //-               button.negative.ui.button No
 
 
-        .content
-          //-.description(style="text-align:center;background:#E8E8E8")="How is Cassie Feeling?"
-          .ui.fluid.left.labeled.right.icon.input
-            .ui.label            
-              img.ui.avatar.image(src='/profile_pictures/image-18.png', name="Jane Doe")
-            input.newcomment(type='text', placeholder='Write a Message')
-            i.big.send.link.icon
+    //-     .content
+    //-       //-.description(style="text-align:center;background:#E8E8E8")="How is Cassie Feeling?"
+    //-       .ui.fluid.left.labeled.right.icon.input
+    //-         .ui.label            
+    //-           img.ui.avatar.image(src='/profile_pictures/image-18.png', name="Jane Doe")
+    //-         input.newcomment(type='text', placeholder='Write a Message')
+    //-         i.big.send.link.icon
 
-        .two.fluid.ui.buttons
-          #pre5.ui.left.disabled.button Previous
-          #next5.ui.right.disabled.button  Next
+    //-     .two.fluid.ui.buttons
+    //-       #pre5.ui.left.disabled.button Previous
+    //-       #next5.ui.right.disabled.button  Next
           
-        #progressing5.ui.tiny.gray.progress
-          .bar
-          .label ... 
-    // I am adding post 4 here 
-    .ui.container
-      #modal4.ui.tiny.post.modal()
-        //i.close.icon
-        .header Modal4
-        // .content 
-        .ui.fluid.card.test(postID="4")
-          .content
-            .right.floated.meta= "Yesterday"
-            |
-            a(href='/user/casssssssssie')
-              img.ui.avatar.image(src='/profile_pictures/6.jpg')
-              span='Manuel De Leon'
-          .image
-            img.post(src="/post_pictures/"+"IMG_20140725_192043063_HDR.jpg")
-          .content
-            .description="when you cant decide whether to have a burger or a hotdog, put hotdog slices on ur burger"
-            //-.right.floated.meta
-              i.icon.checkmark
-              | Seen by 12
-          .three.ui.bottom.attached.icon.buttons
-            .ui.reply.button(tabindex='0')
-              i.reply.icon
-              |  Reply
-            .ui.flag.button(tabindex='0')
-              i.flag.icon
-              |  Flag
-            .ui.labeled.button(tabindex='0')
-              .ui.like.button
-                i.heart.icon
-                |  Like
-              a.ui.basic.red.left.pointing.label.count=2
-          .content
-            .ui.comments
-              .comment
-                a.avatar
-                  img(src='/profile_pictures/image-7.png')
-                .content
-                  a.author Aimee Lin
-                  .metadata
-                    span.date 1527025081548
-                    i.heart.icon
-                    |  0 Likes
-                  .text
-                    | when will you get it into your head that nobody likes your stupid ass.
-                  .actions
-                    a.reply Reply
-                    a.like Like
-                    a.flag Flag
-                .ui.bottom.attached.negative.message
-                  i.close.icon
-                  .header
-                    i.icon.red.flag
-                    | Is this Cyberbullying?
-                  br
-                  button.positive.ui.button Yes
-                  button.negative.ui.button No
+    //-     #progressing5.ui.tiny.gray.progress
+    //-       .bar
+    //-       .label ... 
+    //- // I am adding post 4 here 
+    //- .ui.container
+    //-   #modal4.ui.tiny.post.modal()
+    //-     //i.close.icon
+    //-     .header Modal4
+    //-     // .content 
+    //-     .ui.fluid.card.test(postID="4")
+    //-       .content
+    //-         .right.floated.meta= "Yesterday"
+    //-         |
+    //-         a(href='/user/casssssssssie')
+    //-           img.ui.avatar.image(src='/profile_pictures/6.jpg')
+    //-           span='Manuel De Leon'
+    //-       .image
+    //-         img.post(src="/post_pictures/"+"IMG_20140725_192043063_HDR.jpg")
+    //-       .content
+    //-         .description="when you cant decide whether to have a burger or a hotdog, put hotdog slices on ur burger"
+    //-         //-.right.floated.meta
+    //-           i.icon.checkmark
+    //-           | Seen by 12
+    //-       .three.ui.bottom.attached.icon.buttons
+    //-         .ui.reply.button(tabindex='0')
+    //-           i.reply.icon
+    //-           |  Reply
+    //-         .ui.flag.button(tabindex='0')
+    //-           i.flag.icon
+    //-           |  Flag
+    //-         .ui.labeled.button(tabindex='0')
+    //-           .ui.like.button
+    //-             i.heart.icon
+    //-             |  Like
+    //-           a.ui.basic.red.left.pointing.label.count=2
+    //-       .content
+    //-         .ui.comments
+    //-           .comment
+    //-             a.avatar
+    //-               img(src='/profile_pictures/image-7.png')
+    //-             .content
+    //-               a.author Aimee Lin
+    //-               .metadata
+    //-                 span.date 1527025081548
+    //-                 i.heart.icon
+    //-                 |  0 Likes
+    //-               .text
+    //-                 | when will you get it into your head that nobody likes your stupid ass.
+    //-               .actions
+    //-                 a.reply Reply
+    //-                 a.like Like
+    //-                 a.flag Flag
+    //-             .ui.bottom.attached.negative.message
+    //-               i.close.icon
+    //-               .header
+    //-                 i.icon.red.flag
+    //-                 | Is this Cyberbullying?
+    //-               br
+    //-               button.positive.ui.button Yes
+    //-               button.negative.ui.button No
 
 
-        .content
-          //-.description(style="text-align:center;background:#E8E8E8")="How is Cassie Feeling?"
-          .ui.fluid.left.labeled.right.icon.input
-            .ui.label            
-              img.ui.avatar.image(src='/profile_pictures/image-18.png', name="Jane Doe")
-            input.newcomment(type='text', placeholder='Write a Message')
-            i.big.send.link.icon
+    //-     .content
+    //-       //-.description(style="text-align:center;background:#E8E8E8")="How is Cassie Feeling?"
+    //-       .ui.fluid.left.labeled.right.icon.input
+    //-         .ui.label            
+    //-           img.ui.avatar.image(src='/profile_pictures/image-18.png', name="Jane Doe")
+    //-         input.newcomment(type='text', placeholder='Write a Message')
+    //-         i.big.send.link.icon
 
-        .two.fluid.ui.buttons
-          #pre4.ui.left.disabled.button Previous
-          #next4.ui.right.disabled.button  Next
+    //-     .two.fluid.ui.buttons
+    //-       #pre4.ui.left.disabled.button Previous
+    //-       #next4.ui.right.disabled.button  Next
 
-        #progressing4.ui.tiny.gray.progress
-          .bar
-          .label ... 
-    // //I am adding new post for another person
-    .ui.container
-      #modal3.ui.tiny.post.modal()
-        //i.close.icon
-        .header Modal3
-        // .content 
-        .ui.fluid.card.test(postID="3")
-          .content
-            .right.floated.meta= "Yesterday"
-            |
-            a(href='/user/casssssssssie')
-              img.ui.avatar.image(src='/profile_pictures/image-31.png')
-              span='Cassie Reed'
-          .image
-            img.post(src="/post_pictures/"+"IMG_20170129_131732.jpg")
-          .content
-            .description="taking a break from #pastaweek for some crab rangoons... made with leftover pasta dough!! :D "
-            //-.right.floated.meta
-              i.icon.checkmark
-              | Seen by 12
-          .three.ui.bottom.attached.icon.buttons
-            .ui.reply.button(tabindex='0')
-              i.reply.icon
-              |  Reply
-            .ui.flag.button(tabindex='0')
-              i.flag.icon
-              |  Flag
-            .ui.labeled.button(tabindex='0')
-              .ui.like.button
-                i.heart.icon
-                |  Like
-              a.ui.basic.red.left.pointing.label.count=2
-          .content
-            .ui.comments
-              .comment
-                a.avatar
-                  img(src='/profile_pictures/155.jpg')
-                .content
-                  a.author Emma Hanson
-                  .metadata
-                    span.date 1527025081548
-                    i.heart.icon
-                    |  0 Likes
-                  .text
-                    | when will you get it into your head that nobody likes your stupid ass.
-                  .actions
-                    a.reply Reply
-                    a.like Like
-                    a.flag Flag
-                .ui.bottom.attached.negative.message
-                  i.close.icon
-                  .header
-                    i.icon.red.flag
-                    | Is this Cyberbullying?
-                  br
-                  button.positive.ui.button Yes
-                  button.negative.ui.button No
+    //-     #progressing4.ui.tiny.gray.progress
+    //-       .bar
+    //-       .label ... 
+    //- // //I am adding new post for another person
+    //- .ui.container
+    //-   #modal3.ui.tiny.post.modal()
+    //-     //i.close.icon
+    //-     .header Modal3
+    //-     // .content 
+    //-     .ui.fluid.card.test(postID="3")
+    //-       .content
+    //-         .right.floated.meta= "Yesterday"
+    //-         |
+    //-         a(href='/user/casssssssssie')
+    //-           img.ui.avatar.image(src='/profile_pictures/image-31.png')
+    //-           span='Cassie Reed'
+    //-       .image
+    //-         img.post(src="/post_pictures/"+"IMG_20170129_131732.jpg")
+    //-       .content
+    //-         .description="taking a break from #pastaweek for some crab rangoons... made with leftover pasta dough!! :D "
+    //-         //-.right.floated.meta
+    //-           i.icon.checkmark
+    //-           | Seen by 12
+    //-       .three.ui.bottom.attached.icon.buttons
+    //-         .ui.reply.button(tabindex='0')
+    //-           i.reply.icon
+    //-           |  Reply
+    //-         .ui.flag.button(tabindex='0')
+    //-           i.flag.icon
+    //-           |  Flag
+    //-         .ui.labeled.button(tabindex='0')
+    //-           .ui.like.button
+    //-             i.heart.icon
+    //-             |  Like
+    //-           a.ui.basic.red.left.pointing.label.count=2
+    //-       .content
+    //-         .ui.comments
+    //-           .comment
+    //-             a.avatar
+    //-               img(src='/profile_pictures/155.jpg')
+    //-             .content
+    //-               a.author Emma Hanson
+    //-               .metadata
+    //-                 span.date 1527025081548
+    //-                 i.heart.icon
+    //-                 |  0 Likes
+    //-               .text
+    //-                 | when will you get it into your head that nobody likes your stupid ass.
+    //-               .actions
+    //-                 a.reply Reply
+    //-                 a.like Like
+    //-                 a.flag Flag
+    //-             .ui.bottom.attached.negative.message
+    //-               i.close.icon
+    //-               .header
+    //-                 i.icon.red.flag
+    //-                 | Is this Cyberbullying?
+    //-               br
+    //-               button.positive.ui.button Yes
+    //-               button.negative.ui.button No
 
-        .content
-          //-.description(style="text-align:center;background:#E8E8E8")="How is Cassie Feeling?"
-          .ui.fluid.left.labeled.right.icon.input
-            .ui.label            
-              img.ui.avatar.image(src='/profile_pictures/image-18.png', name="Jane Doe")
-            input.newcomment(type='text', placeholder='Write a Message')
-            i.big.send.link.icon
+    //-     .content
+    //-       //-.description(style="text-align:center;background:#E8E8E8")="How is Cassie Feeling?"
+    //-       .ui.fluid.left.labeled.right.icon.input
+    //-         .ui.label            
+    //-           img.ui.avatar.image(src='/profile_pictures/image-18.png', name="Jane Doe")
+    //-         input.newcomment(type='text', placeholder='Write a Message')
+    //-         i.big.send.link.icon
 
-        .two.fluid.ui.buttons
-          #pre3.ui.left.disabled.button Previous
-          #next3.ui.right.disabled.button  Next
+    //-     .two.fluid.ui.buttons
+    //-       #pre3.ui.left.disabled.button Previous
+    //-       #next3.ui.right.disabled.button  Next
 
-        #progressing3.ui.tiny.gray.progress
-          .bar
-          .label ... 
-
-
-        .ui.container
-          #modal2.ui.tiny.post.modal()
-            //i.close.icon
-            .header Modal22
-            // .content 
-            .ui.fluid.card.test(postID="5")
-              .content
-                .right.floated.meta= "Yesterday"
-                |
-                a(href='/user/casssssssssie')
-                  img.ui.avatar.image(src='/profile_pictures/8.jpg')
-                  span='Ananya'
-              .image
-                img.post(src="/post_pictures/"+"IMG_20170423_163934.jpg")
-              .content
-                .description="has anyone else tried this rolled ice cream? This one is matcha with berries (and a random oreo that I definitely didn’t ask for, but who can complain?). It was so fun watching them make it!"
-                //-.right.floated.meta
-                  i.icon.checkmark
-                  | Seen by 12
-              .three.ui.bottom.attached.icon.buttons
-                .ui.reply.button(tabindex='0')
-                  i.reply.icon
-                  |  Reply
-                .ui.flag.button(tabindex='0')
-                  i.flag.icon
-                  |  Flag
-                .ui.labeled.button(tabindex='0')
-                  .ui.like.button
-                    i.heart.icon
-                    |  Like
-                  a.ui.basic.red.left.pointing.label.count=2
-              .content
-                .ui.comments
-                  .comment
-                    a.avatar
-                      img(src='/profile_pictures/image-7.png')
-                    .content
-                      a.author Aimee Lin
-                      .metadata
-                        span.date 1527025081548
-                        i.heart.icon
-                        |  0 Likes
-                      .text
-                        | Sounds like these would make an awesome dessert too.
-                      .actions
-                        a.reply Reply
-                        a.like Like
-                        a.flag Flag
-                    // .ui.bottom.attached.negative.message
-                    //   i.close.icon
-                    //   .header
-                    //     i.icon.red.flag
-                    //     | Is this Cyberbullying?
-                      br
-                      button.positive.ui.button Yes
-                      button.negative.ui.button No
+    //-     #progressing3.ui.tiny.gray.progress
+    //-       .bar
+    //-       .label ... 
 
 
-            .content
-              //-.description(style="text-align:center;background:#E8E8E8")="How is Cassie Feeling?"
-              .ui.fluid.left.labeled.right.icon.input
-                .ui.label            
-                  img.ui.avatar.image(src='/profile_pictures/image-18.png', name="Jane Doe")
-                input.newcomment(type='text', placeholder='Write a Message')
-                i.big.send.link.icon
+    //-     .ui.container
+    //-       #modal2.ui.tiny.post.modal(modal_iid='5')
+    //-         //i.close.icon
+    //-         .header Modal22
+    //-         // .content 
+    //-         .ui.fluid.card.test(postID="5")
+    //-           .content
+    //-             .right.floated.meta= "Yesterday"
+    //-             |
+    //-             a(href='/user/casssssssssie')
+    //-               img.ui.avatar.image(src='/profile_pictures/8.jpg')
+    //-               span='Ananya'
+    //-           .image
+    //-             img.post(src="/post_pictures/"+"IMG_20170423_163934.jpg")
+    //-           .content
+    //-             .description="has anyone else tried this rolled ice cream? This one is matcha with berries (and a random oreo that I definitely didn’t ask for, but who can complain?). It was so fun watching them make it!"
+    //-             //-.right.floated.meta
+    //-               i.icon.checkmark
+    //-               | Seen by 12
+    //-           .three.ui.bottom.attached.icon.buttons
+    //-             .ui.reply.button(tabindex='0')
+    //-               i.reply.icon
+    //-               |  Reply
+    //-             .ui.flag.button(tabindex='0')
+    //-               i.flag.icon
+    //-               |  Flag
+    //-             .ui.labeled.button(tabindex='0')
+    //-               .ui.like.button
+    //-                 i.heart.icon
+    //-                 |  Like
+    //-               a.ui.basic.red.left.pointing.label.count=2
+    //-           .content
+    //-             .ui.comments
+    //-               .comment
+    //-                 a.avatar
+    //-                   img(src='/profile_pictures/image-7.png')
+    //-                 .content
+    //-                   a.author Aimee Lin
+    //-                   .metadata
+    //-                     span.date 1527025081548
+    //-                     i.heart.icon
+    //-                     |  0 Likes
+    //-                   .text
+    //-                     | Sounds like these would make an awesome dessert too.
+    //-                   .actions
+    //-                     a.reply Reply
+    //-                     a.like Like
+    //-                     a.flag Flag
+    //-                 // .ui.bottom.attached.negative.message
+    //-                 //   i.close.icon
+    //-                 //   .header
+    //-                 //     i.icon.red.flag
+    //-                 //     | Is this Cyberbullying?
+    //-                   br
+    //-                   button.positive.ui.button Yes
+    //-                   button.negative.ui.button No
 
-            .two.fluid.ui.buttons
-              #pre2.ui.left.disabled.button Previous
-              #next2.ui.right.disabled.button  Next
+
+    //-         .content
+    //-           //-.description(style="text-align:center;background:#E8E8E8")="How is Cassie Feeling?"
+    //-           .ui.fluid.left.labeled.right.icon.input
+    //-             .ui.label            
+    //-               img.ui.avatar.image(src='/profile_pictures/image-18.png', name="Jane Doe")
+    //-             input.newcomment(type='text', placeholder='Write a Message')
+    //-             i.big.send.link.icon
+
+    //-         .two.fluid.ui.buttons
+    //-           #pre2.ui.left.disabled.button Previous
+    //-           #next2.ui.right.disabled.button  Next
               
-            #progressing2.ui.tiny.gray.progress
-              .bar
-              .label ... 
+    //-         #progressing2.ui.tiny.gray.progress
+    //-           .bar
+    //-           .label ... 
     
-        // .ui.container 
-        //   #modal2.ui.tiny.post.modal()
-        //     //will need to change its location in the modal ... 
-        //     // i.close.icon
-        //     .header Modal2        
-        //     .ui.fluid.card(postID="2")
-        //       .content
-        //         .right.floated.meta= "Yesterday"
-        //         |
-        //         a(href='/user/NoahM1121')
-        //           img.ui.avatar.image(src='/profile_pictures/image-31.png')
-        //           span='Cassie'
-        //       .image
-        //         img.post(src="/post_pictures/"+"IMG_20170602_173837.jpg")
-        //       .content
-        //         .description="Today was a rough day, but I have food to cheer me up."
-        //         //-.right.floated.meta
-        //           i.icon.checkmark
-        //           | Seen by 12
-        //       .three.ui.bottom.attached.icon.buttons
-        //         .ui.reply.button(tabindex='0')
-        //           i.reply.icon
-        //           |  Reply
-        //         .ui.flag.button(tabindex='0')
-        //           i.flag.icon
-        //           |  Flag
-        //         .ui.labeled.button(tabindex='0')
-        //           .ui.like.button
-        //             i.heart.icon
-        //             |  Like
-        //           a.ui.basic.red.left.pointing.label.count=4
+    //-     .ui.container
+    //-       #modal1.ui.tiny.post.modal()
+    //-         //i.close.icon
+    //-         .header Modal1
+    //-         // .content 
+    //-         .ui.fluid.card.test(postID="1")
+    //-           .content
+    //-             .right.floated.meta= "Yesterday"
+    //-             |
+    //-             a(href='/user/casssssssssie')
+    //-               img.ui.avatar.image(src='/profile_pictures/image-31.png')
+    //-               span='Cassie Reed'
+    //-           .image
+    //-             img.post(src="/post_pictures/"+"vegan6.jpg", style="filter: blur(5px);")
+    //-           .content
+    //-             .description="Today was a rough day, but I have food to cheer me up. "
+    //-             //-.right.floated.meta
+    //-               i.icon.checkmark
+    //-               | Seen by 12
+    //-           .three.ui.bottom.attached.icon.buttons
+    //-             .ui.reply.button(tabindex='0')
+    //-               i.reply.icon
+    //-               |  Reply
+    //-             .ui.flag.button(tabindex='0')
+    //-               i.flag.icon
+    //-               |  Flag
+    //-             .ui.labeled.button(tabindex='0')
+    //-               .ui.like.button
+    //-                 i.heart.icon
+    //-                 |  Like
+    //-               a.ui.basic.red.left.pointing.label.count=2
+    //-           .content
+    //-             .ui.comments
+    //-               .comment
+    //-                 a.avatar
+    //-                   img(src='/profile_pictures/155.jpg')
+    //-                 .content
+    //-                   a.author Emma Hanson
+    //-                   .metadata
+    //-                     span.date 1527025081548
+    //-                     i.heart.icon
+    //-                     |  0 Likes
+    //-                   .text
+    //-                     | when will you get it into your head that nobody likes your stupid ass.
+    //-                   .actions
+    //-                     a.reply Reply
+    //-                     a.like Like
+    //-                     a.flag Flag
+    //-                 .ui.bottom.attached.negative.message
+    //-                   i.close.icon
+    //-                   .header
+    //-                     i.icon.red.flag
+    //-                     | Is this Cyberbullying?
+    //-                   br
+    //-                   button.positive.ui.button Yes
+    //-                   button.negative.ui.button No
 
-            
-        //         .content
-        //           //-.description(style="text-align:center;background:#E8E8E8")="How is Cassie Feeling?"
-        //           .ui.fluid.left.labeled.right.icon.input
-        //             .ui.label            
-        //               img.ui.avatar.image(src='/profile_pictures/image-18.png', name="Jane Doe")
-        //             input.newcomment(type='text', placeholder='Write a Message')
-        //             i.big.send.link.icon
+    //-         .content
+    //-           //-.description(style="text-align:center;background:#E8E8E8")="How is Cassie Feeling?"
+    //-           .ui.fluid.left.labeled.right.icon.input
+    //-             .ui.label            
+    //-               img.ui.avatar.image(src='/profile_pictures/image-18.png', name="Jane Doe")
+    //-             input.newcomment(type='text', placeholder='Write a Message')
+    //-             i.big.send.link.icon
 
-        //         .two.fluid.ui.buttons
-        //           #pre2.ui.left.disabled.button  Previous
-        //           #next2.ui.right.disabled.button  Next
+    //-         .two.fluid.ui.buttons
+    //-           #pre1.ui.left.disabled.button Previous
+    //-           #next1.ui.right.disabled.button  Next
 
-        //         #progressing2.ui.tiny.gray.progress
-        //           .bar
-        //           .label ... 
-
-            //-.ui.blurring.segment
-        // .ui.login.modal\
-        //@@@@@@@@@
-        // .ui.container
-        //   #modal1.ui.tiny.post.modal()
-        //     // i.close.icon
-        //     .header Modal1
-        //     .ui.fluid.card(postID="1")
-        //       .content
-        //         .right.floated.meta= "Yesterday"
-        //         |
-        //         a(href='/user/NoahM1121')
-        //           img.ui.avatar.image(src='/profile_pictures/image-31.png')
-        //           span='Cassie Taggart'
-        //       .image.blurring
-        //         .ui.inverted.active.read.dimmer
-        //               .content
-        //                 .center
-        //                   h2.ui.icon.header
-        //                     i.hide.icon
-        //                     |  This photo may have graphic or violent content
-        //                   br
-        //                   button.ui.black.button.reread Reveal? 
-        //         img.post(src="/post_pictures/"+"vegan6.jpg", style="filter: blur(5px);")
-        //       .content
-        //         .description="a little ranbow salad! soooooooooo much chopping though :P #eatclean"
-        //         //-.right.floated.meta
-        //           i.icon.checkmark
-        //           | Seen by 12
-        //       .three.ui.bottom.attached.icon.buttons
-        //         .ui.reply.button(tabindex='0')
-        //           i.reply.icon
-        //           |  Reply
-        //         .ui.flag.button(tabindex='0')
-        //           i.flag.icon
-        //           |  Flag
-        //         .ui.labeled.button(tabindex='0')
-        //           .ui.like.button
-        //             i.heart.icon
-        //             |  Like
-        //           a.ui.basic.red.left.pointing.label.count=8
-        //       // .actions
-        //       //   .ui.cancel.button Previous
-        //       //   .ui.approve.button Next
-        //       .content
-        //         .ui.comments
-        //           .ui.info.message
-        //             .comment
-        //               a.avatar
-        //                 img(src='/profile_pictures/jaket.jpeg')
-        //               .content
-        //                 a.author Jake Tyrel
-        //                 .metadata
-        //                   span.date 1518667649625
-        //                   i.heart.icon
-        //                   |  3 Likes
-        //                 .text
-        //                   | This is gross, just like you!
-        //                 .actions
-        //                   a.reply Reply
-        //                   a.like Like
-        //                   a.flag Flag
-        //             .ui.header Our automated system has flagged this comment as harassment. Do you agree? 
-        //             a.ui.button(href='#') Yes
-        //             a.ui.button(href='#') No 
-        //           //-.ui.info.message
-        //             .ui.header Our automated system has flagged this comment as harassment. Do you agree? 
-        //             a.ui.button(href='#') Yes
-        //             a.ui.button(href='#') No 
-                  
-        //           .comment
-        //             a.avatar
-        //               img(src='/profile_pictures/165.jpg')
-        //             .content
-        //               a.author Yalonda Carter
-        //               .metadata
-        //                 span.date 1518667649625
-        //                 .rating
-        //                   i.heart.icon
-        //                   |  5 Likes
-        //               .text
-        //                 p Pretty good!!!
-        //               .actions
-        //                 a.reply Reply
-        //                 a.like Like
-        //                 a.flag Flag
-        //       //-.extra.content
-        //         .ui.fluid.top.labeled.right.icon.input
-        //           .ui.top.attached.label(style="text-align:center")="How is Noah Feeling"
-        //           //-.ui.label            
-        //             img.ui.avatar.image(src='/user_post/5979434f9977054afa16f2af5r5z28mndominic_jpg')
-        //           input(type='text', placeholder='Write to Noah')
-        //           i.send.link.icon
-        //       .extra.content
-        //         //-.description(style="text-align:center;background:#E8E8E8")="How is Jamie Feeling?"
-        //         //-.ui.top.attached.label(style="text-align:center")="How is Noah Feeling"
-        //         #newcomment.ui.fluid.left.labeled.right.icon.input
-        //           .ui.label            
-        //             img.ui.avatar.image(src='/profile_pictures/image-18.png', name="Jane Doe")
-        //           input(type='text', placeholder='Write to Jamie')
-        //           i.big.send.link.icon
-        //               // .extra.content
-        //       // .two.ui.bottom.attached.icon.buttons
-        //       //     #pre1.ui.left.button(tabindex='0')
-        //       //       i.i.angle.double.left.icon.icon
-        //       //       |  Previous
-        //       //     #next1.ui.right.button(tabindex='0')
-        //       //       i.i.angle.double.right.icon.icon
-        //       //       |  Next
-        //       .two.fluid.ui.buttons
-        //         #pre1.ui.left.disabled.button Previous
-        //         #next1.ui.right.disabled.button  Next
-        //         // #pre1.ui.left.button(disabled='true') Previous
-        //         // #next1.ui.right.button(disabled='true')  Next
-
-        //       #progressing1.ui.tiny.gray.progress
-        //         .bar
-        //         .label ...
-
-        .ui.container
-          #modal1.ui.tiny.post.modal()
-            //i.close.icon
-            .header Modal1
-            // .content 
-            .ui.fluid.card.test(postID="1")
-              .content
-                .right.floated.meta= "Yesterday"
-                |
-                a(href='/user/casssssssssie')
-                  img.ui.avatar.image(src='/profile_pictures/image-31.png')
-                  span='Cassie Reed'
-              .image
-                img.post(src="/post_pictures/"+"vegan6.jpg", style="filter: blur(5px);")
-              .content
-                .description="Today was a rough day, but I have food to cheer me up. "
-                //-.right.floated.meta
-                  i.icon.checkmark
-                  | Seen by 12
-              .three.ui.bottom.attached.icon.buttons
-                .ui.reply.button(tabindex='0')
-                  i.reply.icon
-                  |  Reply
-                .ui.flag.button(tabindex='0')
-                  i.flag.icon
-                  |  Flag
-                .ui.labeled.button(tabindex='0')
-                  .ui.like.button
-                    i.heart.icon
-                    |  Like
-                  a.ui.basic.red.left.pointing.label.count=2
-              .content
-                .ui.comments
-                  .comment
-                    a.avatar
-                      img(src='/profile_pictures/155.jpg')
-                    .content
-                      a.author Emma Hanson
-                      .metadata
-                        span.date 1527025081548
-                        i.heart.icon
-                        |  0 Likes
-                      .text
-                        | when will you get it into your head that nobody likes your stupid ass.
-                      .actions
-                        a.reply Reply
-                        a.like Like
-                        a.flag Flag
-                    .ui.bottom.attached.negative.message
-                      i.close.icon
-                      .header
-                        i.icon.red.flag
-                        | Is this Cyberbullying?
-                      br
-                      button.positive.ui.button Yes
-                      button.negative.ui.button No
-
-            .content
-              //-.description(style="text-align:center;background:#E8E8E8")="How is Cassie Feeling?"
-              .ui.fluid.left.labeled.right.icon.input
-                .ui.label            
-                  img.ui.avatar.image(src='/profile_pictures/image-18.png', name="Jane Doe")
-                input.newcomment(type='text', placeholder='Write a Message')
-                i.big.send.link.icon
-
-            .two.fluid.ui.buttons
-              #pre1.ui.left.disabled.button Previous
-              #next1.ui.right.disabled.button  Next
-
-            #progressing1.ui.tiny.gray.progress
-              .bar
-              .label ... 
+    //-         #progressing1.ui.tiny.gray.progress
+    //-           .bar
+    //-           .label ... 
 
 

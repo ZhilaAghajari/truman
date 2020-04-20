@@ -273,6 +273,12 @@ app.get('/test2', function (req, res) {
     title: 'TEST2'
   });
 })
+app.get('/survey', function (req, res) {
+  res.render('survey', { //?:
+    title: 'Survey'
+  });
+})
+
 
 
 app.get('/com', function (req, res) {

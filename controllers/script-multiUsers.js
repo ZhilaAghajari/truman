@@ -3,6 +3,7 @@ const User = require('../models/User');
 const Notification = require('../models/Notification');
 const _ = require('lodash');
 
+
 function shuffle(array) {
   var currentIndex = array.length, temporaryValue, randomIndex;
 
@@ -28,7 +29,7 @@ function shuffle(array) {
  * List of Script posts for Feed
 */
 exports.getScript = (req, res, next) => {
-
+  console.log('@@@@@@@@@@@@777777')
   //req.user.createdAt
   var time_now = Date.now();
   var time_diff = time_now - req.user.createdAt;
@@ -70,8 +71,8 @@ exports.getScript = (req, res, next) => {
   
     //filter the script based on experimental group
     scriptFilter = user.group;
+    console.log('@@@@@@@@@@ User group is:@@@@@@@@@@@@@ ', scriptFilter);
       
-    
 
     //User is no longer active - study is over
     if (!user.active)
@@ -119,7 +120,8 @@ exports.getScript = (req, res, next) => {
 
   
   
-    //Get the newsfeed
+    //Get the newsfeed //ZH: here we get the actor's posts if they are in the same group (condtion). 
+    var users_posts = [];
     Script.find()
       .where("experiment_group").equals(scriptFilter)
       .where('time').lte(time_diff).gte(time_limit)
@@ -132,36 +134,82 @@ exports.getScript = (req, res, next) => {
          model: 'Actor'
        } 
     })
-      .exec(function (err, script_feed) {
+      .exec(function (err, script_feed) { //ZH: line 123 to 137 are to provide this script_feed which is ???
         if (err) { return next(err); }
         //Successful, so render
 
         //update script feed to see if reading and posts has already happened
         var finalfeed = [];
 
-        var user_posts = [];
+        user_posts = [];
 
         //Look up Notifications??? And do this as well?
 
-        user_posts = user.getPostInPeriod(time_limit, time_diff);
-
-        user_posts.sort(function (a, b) {
+        user_posts = user.getPostInPeriod(time_limit, time_diff); //ZH: this user is the user we get from DB 
+        //based on its id which is in req.user.id . So now, we need to get the users based on their groups. 
+        //And iterate over them to gather their posts in users_posts.. and do the rests for userS_posts?
+        //see what is the type of this user_posts and append them to userS_posts now
+        User.find()
+            .where("group").equals(scriptFilter)
+            .populate({ 
+             path: 'posts.reply',
+             model: 'Script',
+             populate: {
+               path: 'actor',
+               model: 'Actor'
+             } 
+          })
+        .populate({ 
+             path: 'posts.actorAuthor',
+             model: 'Actor'
+          })
+        .populate({ 
+             path: 'posts.comments.actor',
+             model: 'Actor'
+          })
+        .exec(function (err, users) {
+          //
+          var users_posts =[]
+          //iterate over all the users in 'users' to run getPostInPeriod for each and append their results...
+          console.log('############ Length of all USERs the posts is:');
+          console.log(users.length);
+          for (var i = 0; i < users.length; i++){
+            current_posts=(users[i].getPostInPeriod(time_limit, time_diff));
+            // if(!(typeof current_posts[0] === 'undefined'))
+            if(!(typeof current_posts === 'undefined'))
+            {
+              for(var j = 0; j<current_posts.length; j++)
+              {
+                //ZH: next step: now each post is shown under this active user's name! For instance if Bob is active, he sees Jean's posts as his own posts incorrectly!
+                // console.log('newUSER');
+                // console.log(users[i]);
+                var temp = new Object();
+                var temp_user = new Object();
+                temp_user.user = JSON.parse(JSON.stringify(users[i])); //check if it is not null +ONLY gather essential data from user!
+                const temp_current_post = JSON.parse(JSON.stringify(current_posts[j]))//check if it is not null
+                current_posts[j] = Object.assign(temp_current_post, temp_user);
+                users_posts.push(current_posts[j]);
+              }
+            }
+            console.log(users_posts);
+          }
+          users_posts.sort(function (a, b) {
             return b.relativeTime - a.relativeTime;
           });
-
-        while(script_feed.length || user_posts.length) {
-          //console.log(typeof user_posts[0] === 'undefined');
-          //console.log(user_posts[0].relativeTime);
-          //console.log(feed[0].time)
+        //ZH: I changed user_posts to users_posts
+        while(script_feed.length || users_posts.length) {
           if(typeof script_feed[0] === 'undefined') {
               console.log("Script_Feed is empty, push user_posts");
-              finalfeed.push(user_posts[0]);
-              user_posts.splice(0,1);
+              finalfeed.push(users_posts[0]);
+              users_posts.splice(0,1);
           }
-          else if(!(typeof user_posts[0] === 'undefined') && (script_feed[0].time < user_posts[0].relativeTime)){
-              console.log("Push user_posts");
-              finalfeed.push(user_posts[0]);
-              user_posts.splice(0,1);
+          else if(!(typeof users_posts[0] === 'undefined') && (script_feed[0].time < users_posts[0].relativeTime)){
+              console.log("Push user_postss");
+              finalfeed.push(users_posts[0]);
+              console.log(users_posts[0]);//ZH: remove it
+              console.log('final feed');
+              console.log(finalfeed);
+              users_posts.splice(0,1);
           }
           else{
             
@@ -317,7 +365,11 @@ exports.getScript = (req, res, next) => {
       //Testing stories .. !!!! Might need to remove the second argument in below ..
       //We render one of these based on the conditions ..
       //res.render('stories',{stories:finalfeed})
+      //ZH: remove this print statement 
+      console.log('FFFFFFFFFF')
+      console.log(finalfeed);
       res.render('script', { script: finalfeed});
+        });
 
       });//end of Script.find()
 
@@ -520,8 +572,16 @@ exports.newPost = (req, res) => {
  * Update user's profie feed posts Actions.
  */
 exports.postUpdateFeedAction = (req, res, next) => {
+  console.log("You are in postUpdateFeedAction");
+  //ZH:instead of posting only the posts of this specific user, post all posts from people in this group!
+  //ZH: We need to do the same for getposts
+  // User.findById(req.user.id, (err, user) => { 
+  //   //get the group of this current user ..
+  //   //update everything like before , comments, replies, everything. 
+  //   //but find other objects (users) who have the same group in the user Schema. and push the new in
 
-  User.findById(req.user.id, (err, user) => {
+  // }
+  User.findById(req.user.id, (err, user) => { 
     //somehow user does not exist here
     if (err) { return next(err); }
 
@@ -855,6 +915,7 @@ exports.postUpdateUserPostFeedAction = (req, res, next) => {
     if (err) { return next(err); }
 
     console.log("@@@@@@@@@@@ TOP USER profile is  ", req.body.postID);
+    console.log("### User group is:  ", user.group);
 
     //find the object from the right post in feed 
     var feedIndex = _.findIndex(user.posts, function(o) { return o.postID == req.body.postID; });

@@ -37,16 +37,14 @@ block content
           img.ui.avatar.image(src=user.gravatar(60))
       input(type='text', placeholder='Share your meal')
       i.big.photo.link.icon
-  
-    script.
-      var i=0;
+    
+    -console.log("SCRIPT@@@@@")
+    -console.log(script);
     each val in script
       //- create a card for each post in val (if by user make the card a little different)
       //- if val.relativeTime - then post came from user_post (so user post, user reply to actor reply to user post)
-      //- -console.log("iiiss VAL@@@");
-      script.
-        var i=0;
-      -console.log(i);
+      -console.log("VAL@@@");
+      -console.log(val);
       if val.relativeTime
         -var u_class;
         -if (val.actorAuthor) {u_class = "actorReply"}
@@ -56,15 +54,18 @@ block content
           
           //- This is a User made post
           .content
-            .right.floated.time.meta= (user.createdAt.getTime() + val.relativeTime)
+            .right.floated.time.meta= (val.user.createdAt + val.relativeTime)
             |  
             a.ui.avatar.image(href='/me')
-              if user.profile.picture
-                img(src='/user_post/'+user.profile.picture)
+            -console.log('USER TIME99..');
+            -console.log(val.user.username);
+            -console.log(val.user.id)
+              if (!(typeof val.user.profile === 'undefined'))
+                img(src='/user_post/'+val.user.profile.picture)
               else
-                img(src=user.gravatar(60))
+                img(src=val.user.gravatar)
             a(href='/me')
-              span=user.profile.name || user.username || user.id
+              span= val.user.username || val.user.id ||val.user.profile.name 
           .image
             img(src='/user_post/'+val.picture)
           .content
@@ -86,7 +87,7 @@ block content
               .ui.comments
                 each comment in val.comments
                   //-IF this comment is USER made, do this
-                  if (user.createdAt.getTime() + comment.time) < Date.now()
+                  if (user.createdAt + comment.time) < Date.now()
                     if !comment.flagged
                       if comment.new_comment
                         -console.log("New COMMENT AREA");
@@ -95,11 +96,11 @@ block content
                             if user.profile.picture
                               img(src='/user_post/'+user.profile.picture)
                             else
-                              img(src=user.gravatar(60))
+                              img(src=user.gravatar)
                           .content
                             a.author(href='/me')=user.profile.name || user.username || user.id
                             .metadata
-                              span.date=(user.createdAt.getTime() + comment.time)
+                              span.date=(user.createdAt + comment.time)
                               .rating
                                 if comment.liked
                                   i.red.heart.icon
@@ -125,7 +126,7 @@ block content
                           .content
                             a.author(href='/user/'+comment.actor.username)=comment.actor.profile.name
                             .metadata
-                              span.date=(user.createdAt.getTime() + comment.time)
+                              span.date=(user.createdAt + comment.time)
                               .rating
                                 if comment.liked
                                   i.red.heart.icon
@@ -148,7 +149,7 @@ block content
                 if user.profile.picture
                   img.ui.avatar.image(src='/user_post/'+user.profile.picture, name=user.profile.name || user.username || user.id)
                 else
-                  img.ui.avatar.image(src=user.gravatar(60), name=user.profile.name || user.username || user.id)            
+                  img.ui.avatar.image(src=user.gravatar, user.username || user.id)            
               input.newcomment(type='text', placeholder='Write a Comment')
               i.big.send.link.icon
 
@@ -166,7 +167,7 @@ block content
                         span="The admins will review this post further. We are sorry you had this experience."
           //- Normal Base Post
           .content
-            .right.floated.time.meta= (user.createdAt.getTime() + val.time)
+            .right.floated.time.meta= (val.createdAt + val.time)
             |  
             //-a(href='/user/'+val.actor.username)
               img.ui.avatar.image(src=cdn+'/profile_pictures/'+val.actor.profile.picture)
@@ -206,7 +207,7 @@ block content
             .content
               .ui.comments
                 each comment in val.comments
-                  //-IF this comment is USER made, do this
+                  //-IF this comment is USER made, do this //Zh: now it could be from any other user not the only subject user that we used to have!!!!
                   if (user.createdAt.getTime() + comment.time) < Date.now()
                     if comment.new_comment
                       -console.log("New COMMENT AREA");

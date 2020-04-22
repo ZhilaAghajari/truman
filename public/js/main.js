@@ -9,10 +9,56 @@ $('#loading').show();
 //     allowMultiple: true
 //   });
 
+// capture when the user closes the windows ..
+$(window).on('mouseover', (function () {
+    window.onbeforeunload = null;
+}));
+$(window).on('mouseout', (function () {
+    window.onbeforeunload = ConfirmLeave;
+}));
+function ConfirmLeave() {
+    alert('One question survey');
+    return "Please fill in this one question before you leave";
+}
+var prevKey="";
+$(document).keydown(function (e) {            
+    if (e.key=="F5") {
+        window.onbeforeunload = ConfirmLeave;
+    }
+    else if (e.key.toUpperCase() == "W" && prevKey == "CONTROL") {                
+        window.onbeforeunload = ConfirmLeave;   
+    }
+    else if (e.key.toUpperCase() == "R" && prevKey == "CONTROL") {
+        window.onbeforeunload = ConfirmLeave;
+    }
+    else if (e.key.toUpperCase() == "F4" && (prevKey == "ALT" || prevKey == "CONTROL")) {
+        window.onbeforeunload = ConfirmLeave;
+    }
+    prevKey = e.key.toUpperCase();
+});
+//@@@@ pop up question when closing a window ... second solution ...
+// window.addEventListener('beforeunload', (event) => {
+//   // Cancel the event as stated by the standard.
+//   event.preventDefault();
+//   // Chrome requires returnValue to be set.
+//   event.returnValue = 'Please fill in this one question before you leave';
+// });
+
+// $(window).bind("beforeunload",function(event) {
+//     return "You have some unsaved changes";
+// });
+
+
+
+// @@@@@@@@@
 $(window).on("load", function() {
   $('.modal').modal({
     // this parameter will enable/disable the closing for the previous .united modals when the next will be opened :)
     allowMultiple: false,
+  });
+
+  $('.ui.tiny.post.modal').modal({
+    closable: false,
   });
   //@@@@@@@@@@@ No time restrictions: users need to click to see the next post @@@@@@@@@@
   // // why doesn't this allow me to write or like or anything? 
@@ -118,6 +164,9 @@ $(window).on("load", function() {
   //    }, 5000) // delay : but this delay is activated without caring about whether ot not the user plans to react to a story! 
   //    //but this time should be reset if the user touch somethign, right?
   // })(3); // iterations count
+
+
+  //@@@@@@@ Gathering the survey results @@@@@@@
 
  //@@@@@@@@@@@@@@@@@@@@@
   //close loading dimmer on load

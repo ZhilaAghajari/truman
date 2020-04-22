@@ -1,75 +1,16 @@
+//Multi-Client-Distributed_project
 const Script = require('../models/Script.js');
 const User = require('../models/User');
 const Notification = require('../models/Notification');
 const Cohort = require('../models/Cohort')
 const _ = require('lodash');
 
-//initialize an object of cohort collection if not created
-// var result = ['var1', 'var2','var3', 'var4']
-// var collection = new Cohort({
-//   collection_group: '',
-//         users:[]
-// });
 var collection;
 
-// Cohort.find()
-//   .where("collection_group").equals(result[0])
-//   .exec(function(err, collection){
-//     console.log('whats the length of this collection: ', Object.entries(collection).length);
-//     console.log('whats inside this collection: ', collection);
-//     if(Object.entries(collection).length === 0)
-//     {
-//       //create one with this group --> make this one universal .... 
-//       var collection = new Cohort({
-//         collection_group: collection_group,
-//         users:[]
-//       });
-//       console.log('Initialized object of group0 ?');
-//     }
-// Cohort.find()
-//   .where("collection_group").equals(result[1])
-//   .exec(function(err, collection){
-//     console.log('whats the length of this collection: ', Object.entries(collection).length);
-//     console.log('whats inside this collection: ', collection);
-//     if(Object.entries(collection).length === 0)
-//     {
-//       //create one with this group --> make this one universal .... 
-//       var collection = new Cohort({
-//         collection_group: collection_group,
-//         users:[]
-//       });
-//       console.log('Initialized object of group1 ?');
-//     }
-// Cohort.find()
-//   .where("collection_group").equals(result[2])
-//   .exec(function(err, collection){
-//     console.log('whats the length of this collection: ', Object.entries(collection).length);
-//     console.log('whats inside this collection: ', collection);
-//     if(Object.entries(collection).length === 0)
-//     {
-//       //create one with this group --> make this one universal .... 
-//       var collection = new Cohort({
-//         collection_group: collection_group,
-//         users:[]
-//       });
-//       console.log('Initialized object of group2 ?');
-//     }
-// Cohort.find()
-//   .where("collection_group").equals(result[3])
-//   .exec(function(err, collection){
-//     console.log('whats the length of this collection: ', Object.entries(collection).length);
-//     console.log('whats inside this collection: ', collection);
-//     if(Object.entries(collection).length === 0)
-//     {
-//       //create one with this group --> make this one universal .... 
-//       var collection = new Cohort({
-//         collection_group: collection_group,
-//         users:[]
-//       });
-//       console.log('Initialized object of group3 ?');
-//     }
-
-
+//Zh: next step is to read from collection in the getScript function :)
+//Zh: next task: 1- add profile to the user of users in collection!
+// 2- collection[0].users will be used instead of users in the previous format of getScript  
+//look at the screen shots!
 
 function shuffle(array) {
   var currentIndex = array.length, temporaryValue, randomIndex;
@@ -116,6 +57,46 @@ exports.getScript = (req, res, next) => {
   console.log("$#$#$#$#$#$#$START GET SCRIPT$#$#$$#$#$#$#$#$#$#$#$#$#");
   console.log("time_diff  is now "+time_diff);
   console.log("time_limit  is now "+time_limit);
+
+  // Cohort.findById(req.user.id)
+  // .populate({ 
+  //      path: 'posts.reply',
+  //      model: 'Script',
+  //      populate: {
+  //        path: 'actor',
+  //        model: 'Actor'
+  //      } 
+  //   })
+  // .populate({ 
+  //      path: 'posts.actorAuthor',
+  //      model: 'Actor'
+  //   })
+  // .populate({ 
+  //      path: 'posts.comments.actor',
+  //      model: 'Actor'
+  //   })
+  // .exec(function (err, user) {
+  //   console.log('@@@ User from Cohort is: ', user);
+  //   // console.log('@@@ Group of user from Cohort is: ', user.group);
+  // });
+
+  //ZHILA: Big question!!! How Do I know the group of current user if I don't search for it in the data set?
+  //get the user that is equal to it  ...
+  Cohort.find()
+    // .where("collection_group").equals(collection_group)
+    .where("collection_group").equals('var2')
+          .exec(function(err, collection){
+            console.log('@@@@@ COLLECTION - Users -username-0 @@@@@ ', collection[0].users[0].username);
+            console.log('@@@@@ COLLECTION - Userss @@@@@ ', collection[0].users[0]);
+            console.log('@@@@@ FORMAT OF COLLECTION @@@@@ ', collection[0]);
+            console.log('@@@@@ FORMAT OF COLLECTION-USERS @@@@@ ', collection[0].users); //collection[0].users will sit instead of users in the previous format but before that profile of user should be added to in in newpost!!!
+            // let obj_index = collection[0].users.findIndex(obj => obj.username == user.username);
+            // console.log('User index is: ',obj_index);
+            // console.log('@@@@The current user is: ', collection[0].users[obj_index]); //later I need to put it in something and work with it and put it back to collection? or not?
+
+          });
+
+
   
   User.findById(req.user.id)
   .populate({ 
@@ -238,7 +219,7 @@ exports.getScript = (req, res, next) => {
           })
         .exec(function (err, users) {
           //
-          // console.log('current collection: ', users.group)
+          console.log('PREVIOUS Format of users: ', users);
           // console.log('users in the current collection', users)
           var users_posts =[]
           //iterate over all the users in 'users' to run getPostInPeriod for each and append their results...
@@ -269,6 +250,11 @@ exports.getScript = (req, res, next) => {
           users_posts.sort(function (a, b) {
             return b.relativeTime - a.relativeTime;
           });
+          console.log('user post in previous format are:');
+          console.log(users_posts);
+          //zh:testing
+          console.log('users posts username 0 format is like:');
+          // console.log(users_posts[0].user.username);
           // console.log('with USER collection');
           // console.log('with the NEW collection');
           // console.log(users_posts);
@@ -613,103 +599,101 @@ exports.newPost = (req, res) => {
           //console.log("numPost is now "+user.numPosts);
           user.posts.unshift(post);
           user.logPostStats(post.postID);
+          //zhila:
+          // console.log('here is the profile: ', user.profile);
           //console.log("CREATING NEW POST!!!");
 
           collection_group = user.group;
           console.log('group of the sender is ', collection_group);
 
-          // UsersCollection.find()
-          //   .where("group").equals(collection_group)
-          //   .exec(function (err, collection) {
-          //     // here we have the schema of the users in the same group and we will add 
-          //     console.log('PREVIOUS COLLECTION:');
-          //     console.log(collection)
-          //     collection.users.push(user)
-          //     console.log('Updated collection: ', collection);
-          //     //add everything related to this post to this collection .... but before that we need to create collection.js
-          //   // at the end save this collection
-          //   });
-
-          // UsersCollection.find()
-          //     .where("group").equals(collection_group)
-          //     .populate({ 
-          //      path: 'posts.reply',
-          //      model: 'Script',
-          //      populate: {
-          //        path: 'actor',
-          //        model: 'Actor'
-          //      } 
-          //   })
-          // .populate({ 
-          //      path: 'posts.actorAuthor',
-          //      model: 'Actor'
-          //   })
-          // .populate({ 
-          //      path: 'posts.comments.actor',
-          //      model: 'Actor'
-          //   })
-          // .exec(function (err, collection) {
-          //   console.log('the group is   ', collection_group)
-          //   console.log('what is inside this new one collection: ');
-          //   console.log(collection);
-          //   if(Object.entries(collection).length === 0){
-          //     console.log('594930030303');
-          //     const collection = new UsersCollection({
-          //       group: collection_group,
-          //       user: user
-          //     });
-          //     // const temp_collection = new UsersCollection;
-          //     // temp_collection.group = collection_group;
-          //     // temp_collection.user = user;
-          //   }
-            // collection.user.posts.unshift(post);
+          
+//Zh: next step is 1- to add the new user to the collection, 2- to read from collection in the getScript function :) 
 
           Cohort.find()
           .where("collection_group").equals(collection_group)
           .exec(function(err, collection){
             console.log('whats the length of this collection: ', Object.entries(collection).length);
             console.log('whats inside this collection: ', collection);
-            if(Object.entries(collection).length === 0)
+            if(Object.entries(collection).length == 0)
             {
               //create one with this group --> make this one universal .... 
               collection = new Cohort({
                 collection_group: collection_group,
                 users:[]
               });
-              console.log('First initialization?');
+              console.log('This shouldnt happen or is an error?');
             }
             // collection = new Cohort({
             //     collection_group: collection_group,
             //     users:[]
             //   });
-            console.log('now the collection is: ', collection);
-            // console.log('collection zero: ', collection[0]);
-            // console.log('give me the group please: ', collection[0].collection_group);
-            // //now we have a collection, add the new user to it!
-            // // console.log('type of collection',typeof collection);
-            // console.log('type of collection.users is with zero ', typeof collection[0].users);
-            // console.log('collection.users after fixing issue : ', collection[0].users)
-            // // console.log('print collection[0].users ', collection[0].users)
-            // console.log('type of userCollection is ', typeof collection);
-            collection.users.push(user); // later I will find this user and push to his posts..
-            console.log('the user that has been added is : ',collection.users);
-            console.log('the new collection is now equal to: ', collection)
+            console.log('Collection is:::: ', collection);
+            console.log('Size of collection is :::', Object.entries(collection).length);
+            //Only push the current post to the current user instead!//if the user is in the collection[0].user then 
+            //push the current post. Otherwise, push the user to users (post has been already added to the user object)
+            // if the user is not added to the collection add it!!!
+            console.log('the user object is', collection[0].users[0].username);
+            let obj_index = collection[0].users.findIndex(obj => obj.username == user.username);
+            if(obj_index !=-1)
+            {
+              console.log('the length of the project is: ',obj_index);
+            //if this was empthy we need to add push the current user to the collection[0].users.push(user) and then we won't have to push the post anymore in this case...
+            console.log('and this object will be: ', collection[0].users[obj_index]);
+            console.log('THE POST IS');
+            console.log(post);
+            collection[0].users[obj_index].posts.push(post);
+            // collection[0].users.push(user); // later I will find this user and push to his posts.
+            console.log('test added post: ', collection[0].users[obj_index].posts);
+            // console.log('the new collection in index 0 is now equal to: ', collection[0]);
+            console.log('the new collection is: ', collection)
             //save the new collection ...
-            collection.save((err) => {
-            if (err) {
-              console.log('Seriously why:( ', err);
-              }
+            collection[0].markModified('users');
+            collection[0].save();
+            }
             
-            });
+            else if(obj_index === -1)
+            {
+              // add the current user to the collection first
+              collection[0].users.push(user);
+              collection[0].markModified('users');
+              collection[0].save();
+              console.log('saved the user to the collection of group: ', collection_group);
+            }
+
             
           });
           
+
         Cohort.find()
-            .where("collection_group").equals(collection_group)
             .exec(function(err, collection){
-              console.log('Would you mind saving this document?');
+              console.log('All Saved???');
               console.log(collection);
+              console.log('there are these many users:'); // now get its length
+              console.log(Object.entries(collection[0].users).length);
+              console.log('print all the users:');
+              console.log(collection[0].users);
+              console.log('and user0 is:', collection[0].users[0]);
+              // let obj_index = collection[0].users.findIndex(obj => obj.username === user.username);
+              // console.log('Username of current user:', collection[0].users[obj_index].username); // now get its length
+              // console.log('the posts of current user isss: ', collection[0].users[obj_index].posts);
+              
+
+
             });
+        // Cohort.find()
+        //     .where("collection_group").equals(collection_group)
+        //     .exec(function(err, collection){
+        //       console.log('Did you save the current updates?');
+        //       console.log(collection);
+        //       console.log('there are these many users:'); // now get its length
+        //       console.log(Object.entries(collection[0].users).length);
+        //       let obj_index = collection[0].users.findIndex(obj => obj.username === user.username);
+        //       console.log('Username of current user:', collection[0].users[obj_index].username); // now get its length
+        //       console.log('the posts of current user isss: ', collection[0].users[obj_index].posts);
+              
+
+
+        //     });
           
 
           user.save((err) => {

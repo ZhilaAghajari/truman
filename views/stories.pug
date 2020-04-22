@@ -94,12 +94,8 @@ block content
         -else if (val.reply) {u_class = "userReply"}
         -else {u_class = "userPost"}
         .ui.container
-          //- #modal1.ui.tiny.post.modal()
-          //- .ui.tiny.post.modal(modal_id=val.modal_id)
           -console.log(val.modal_id)
           .ui.tiny.post.modal(modal_id=val.modal_id)
-          // .ui.tiny.post.modal(modal_id='321')
-            // .header val.modal_id
             .ui.fluid.card(u_postID=val.id, type=u_class, postID=val.postID)
               .content
                 .right.floated.time.meta= (user.createdAt.getTime() + val.relativeTime)
@@ -203,10 +199,13 @@ block content
               .two.fluid.ui.buttons
                 .ui.left.disabled.button(pre_id=val.modal_id) Previous
                 .ui.right.disabled.button(next_id=val.modal_id)  Next
-                
-              .ui.tiny.gray.progress(progressing_id='progressing{{val.modal_id}}')
+                 
+              .ui.tiny.gray.progress(progressing_id=val.modal_id)
                 .bar
                 .label ... 
+
+
+              
       //- These are posts by Actors, not the participants !!!
       else
         .ui.container

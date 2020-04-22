@@ -1,3 +1,4 @@
+//Empathy project
 const Script = require('../models/Script.js');
 const User = require('../models/User');
 const Notification = require('../models/Notification');

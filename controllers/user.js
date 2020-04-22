@@ -195,53 +195,43 @@ Place Experimental Varibles Here!
     lastNotifyVisit : (Date.now()),
     createdAt: (Date.now())
   });
-  //zhila: can I create the collection of the new user here?
+
+  Cohort.find()
+    .where("collection_group").equals(result)
+    .exec(function(err, collection){
+      console.log('whats the length of this collection: ', Object.entries(collection).length);
+      console.log('whats inside this collection: ', collection);
+      if(Object.entries(collection).length === 0)
+      {
+        //create one with this group --> make this one universal .... 
+        var collection = new Cohort({
+          collection_group: result,
+          users:[]
+        });
+        console.log('before push ',collection.users);
+        collection.users.push(user);
+        console.log('after push ', collection.users);
+        collection.save((err) => {
+            if (err) {
+              console.log('Seriously why:( ', err);
+              }
+            
+            });
+        console.log('first user has been added to the collection of group: ',result);
+        console.log(collection)
+      }
+      
+            // else the user will be added to the group..
+      //Zhila: will write this part after scrip ... or maybe in script.js ... 
+    });
+
+  Cohort.find()
+    .where("collection_group").equals(result)
+    .exec(function(err, collection){
+      console.log('the collection after first user added is: ', collection);
+    });
 
 
-  // const collection = new UsersCollection({
-  //   group:result,
-  //   user: user
-  //   // users.user.email:user.email,
-  //   // users.user.password: user.password,
-  //   // users.user.mturkID : user.mturkID,
-  //   // users.user.username: user.username,
-  //   // users.user.group : user.group,
-  //   // users.user.active: user.active,
-  //   // users.user.lastNotifyVisit: user.lastNotifyVisit,
-  //   // users.user.createdAt:user.createdAt
-
-  //   // users: user
-  // });
-
-  // console.log('@@@@ NEW COLLECTION IS :  ', collection);
-  // collection.save((err) => {
-  //    if (err) {
-  //         return next(err);
-  //       }
-  //     });
-
-  //store this collection instance to the UserCollection data base...
-
-  // UsersCollection.find()
-  //       .where("group").equals(result)
-  //       .exec(function (err, collection) {
-  //         // add this new user to the collection
-  //         if(!collection.length)
-  //         {
-  //           //create a new connection
-  //           const collection = new UsersCollection({
-
-  //           });
-  //         }
-  //         else
-  //         {
-  //           //add the new user to this collection
-  //           // add the new user to this collection? exactly like how you add it to User schema
-
-  //         }
-
-  //       }
-  
   User.findOne({ email: req.body.email }, (err, existingUser) => {
     if (err) { return next(err); }
     //ZH: MAKE SURE to uncomment this if statement after testing!!!
@@ -386,6 +376,8 @@ exports.postUpdateProfile = (req, res, next) => {
       console.log("Changeing Picture now to: "+ req.file.filename);
       user.profile.picture = req.file.filename;
     }
+
+    //update the collection maybe here?
 
     user.save((err) => {
       if (err) {

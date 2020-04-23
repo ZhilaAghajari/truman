@@ -10,6 +10,7 @@ $('#loading').show();
 //   });
 
 // capture when the user closes the windows ..
+//SOLUTION1
 $(window).on('mouseover', (function () {
     window.onbeforeunload = null;
 }));
@@ -36,17 +37,17 @@ $(document).keydown(function (e) {
     }
     prevKey = e.key.toUpperCase();
 });
-//@@@@ pop up question when closing a window ... second solution ...
-// window.addEventListener('beforeunload', (event) => {
-//   // Cancel the event as stated by the standard.
-//   event.preventDefault();
-//   // Chrome requires returnValue to be set.
-//   event.returnValue = 'Please fill in this one question before you leave';
-// });
+//@@@@ pop up question when closing a window ... SOLUTION 2  ...
+window.addEventListener('beforeunload', (event) => {
+  // Cancel the event as stated by the standard.
+  event.preventDefault();
+  // Chrome requires returnValue to be set.
+  event.returnValue = 'Please fill in this one question before you leave';
+});
 
-// $(window).bind("beforeunload",function(event) {
-//     return "You have some unsaved changes";
-// });
+$(window).bind("beforeunload",function(event) {
+    return "You have some unsaved changes";
+});
 
 
 
@@ -115,7 +116,7 @@ $(window).on("load", function() {
     var j ='321'
     var survey_modal=$(" .ui.tiny.post.modal[modal_id='"+j+"']");
     survey_modal.modal('show')
-    alert('clicked')
+    // alert('clicked')
   });
  // flag should be as large as posts numbers .. 
   flag=new Array(100).fill(0)

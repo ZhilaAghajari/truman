@@ -196,6 +196,7 @@ Place Experimental Varibles Here!
     createdAt: (Date.now())
   });
 
+  // Zhila: I need to add information of profile to it...
   Cohort.find()
     .where("collection_group").equals(result)
     .exec(function(err, collection){
@@ -213,14 +214,14 @@ Place Experimental Varibles Here!
         console.log('after push ', collection.users);
         collection.save((err) => {
             if (err) {
-              console.log('Seriously why:( ', err);
+              console.log('Seriously? :( ', err);
               }
             
             });
         console.log('first user has been added to the collection of group: ',result);
         console.log(collection)
       }
-      
+
             // else the user will be added to the group..
       //Zhila: will write this part after scrip ... or maybe in script.js ... 
     });
@@ -276,15 +277,55 @@ exports.postSignupInfo = (req, res, next) => {
       user.profile.picture = req.file.filename;
     }
 
+
+
+
+    // //new place for creating Cohort collection...
+    // Cohort.find()
+    // .where("collection_group").equals(user.group)
+    // .exec(function(err, collection){
+    //   console.log('whats the length of this collection: ', Object.entries(collection).length);
+    //   console.log('whats inside this collection: ', collection);
+    //   if(Object.entries(collection).length === 0)
+    //   {
+    //     //create one with this group --> make this one universal .... 
+    //     var collection = new Cohort({
+    //       collection_group: user.group,
+    //       users:[]
+    //     });
+    //     console.log('Empty collection ',collection.users);
+    //     collection.users.push(user);
+    //     console.log('Collection after pushing first user ', collection.users);
+    //     collection.save((err) => {
+    //         if (err) {
+    //           console.log('Seriously why:( ', err);
+    //           }
+            
+    //         });
+    //     console.log('first user has been added to the collection of group: ',result);
+    //     console.log(collection)
+    //   }
+      
+    //         // else the user will be added to the group..
+    //   //Zhila: will write this part after scrip ... or maybe in script.js ... 
+    // });
+
+    // Cohort.find()
+    //   .where("collection_group").equals(result)
+    //   .exec(function(err, collection){
+    //     console.log('The forst user has been added to collection: ', collection);
+    //   });
+
+
     user.save((err) => {
       //ZH: uncomment it after testing
-      // if (err) {
-      //   if (err.code === 11000) {
-      //     req.flash('errors', { msg: 'The email address you have entered is already associated with an account.' });
-      //     return res.redirect('/signup_info');
-      //   }
-      //   return next(err);
-      // }
+      if (err) {
+        if (err.code === 11000) {
+          req.flash('errors', { msg: 'The email address you have entered is already associated with an account.' });
+          return res.redirect('/signup_info');
+        }
+        return next(err);
+      }
       req.flash('success', { msg: 'Profile information has been updated.' });
       res.redirect('/com');
     });

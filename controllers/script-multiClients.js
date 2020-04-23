@@ -8,7 +8,7 @@ const _ = require('lodash');
 var collection;
 
 //Zh: next step is to read from collection in the getScript function :)
-//Zh: next task: 1- add profile to the user of users in collection!
+//Zh: next task: 1- add profile to the user of users in collection! Done!
 // 2- collection[0].users will be used instead of users in the previous format of getScript  
 //look at the screen shots!
 
@@ -57,46 +57,6 @@ exports.getScript = (req, res, next) => {
   console.log("$#$#$#$#$#$#$START GET SCRIPT$#$#$$#$#$#$#$#$#$#$#$#$#");
   console.log("time_diff  is now "+time_diff);
   console.log("time_limit  is now "+time_limit);
-
-  // Cohort.findById(req.user.id)
-  // .populate({ 
-  //      path: 'posts.reply',
-  //      model: 'Script',
-  //      populate: {
-  //        path: 'actor',
-  //        model: 'Actor'
-  //      } 
-  //   })
-  // .populate({ 
-  //      path: 'posts.actorAuthor',
-  //      model: 'Actor'
-  //   })
-  // .populate({ 
-  //      path: 'posts.comments.actor',
-  //      model: 'Actor'
-  //   })
-  // .exec(function (err, user) {
-  //   console.log('@@@ User from Cohort is: ', user);
-  //   // console.log('@@@ Group of user from Cohort is: ', user.group);
-  // });
-
-  //ZHILA: Big question!!! How Do I know the group of current user if I don't search for it in the data set?
-  //get the user that is equal to it  ...
-  Cohort.find()
-    // .where("collection_group").equals(collection_group)
-    .where("collection_group").equals('var2')
-          .exec(function(err, collection){
-            console.log('@@@@@ COLLECTION - Users -username-0 @@@@@ ', collection[0].users[0].username);
-            console.log('@@@@@ COLLECTION - Userss @@@@@ ', collection[0].users[0]);
-            console.log('@@@@@ FORMAT OF COLLECTION @@@@@ ', collection[0]);
-            console.log('@@@@@ FORMAT OF COLLECTION-USERS @@@@@ ', collection[0].users); //collection[0].users will sit instead of users in the previous format but before that profile of user should be added to in in newpost!!!
-            // let obj_index = collection[0].users.findIndex(obj => obj.username == user.username);
-            // console.log('User index is: ',obj_index);
-            // console.log('@@@@The current user is: ', collection[0].users[obj_index]); //later I need to put it in something and work with it and put it back to collection? or not?
-
-          });
-
-
   
   User.findById(req.user.id)
   .populate({ 
@@ -198,55 +158,124 @@ exports.getScript = (req, res, next) => {
         //And iterate over them to gather their posts in users_posts.. and do the rests for userS_posts?
         //see what is the type of this user_posts and append them to userS_posts now
 
-        // User.find()
-        User.find()
-            .where("group").equals(scriptFilter)
-            .populate({ 
-             path: 'posts.reply',
-             model: 'Script',
-             populate: {
-               path: 'actor',
-               model: 'Actor'
-             } 
-          })
-        .populate({ 
-             path: 'posts.actorAuthor',
-             model: 'Actor'
-          })
-        .populate({ 
-             path: 'posts.comments.actor',
-             model: 'Actor'
-          })
-        .exec(function (err, users) {
-          //
-          console.log('PREVIOUS Format of users: ', users);
-          // console.log('users in the current collection', users)
-          var users_posts =[]
-          //iterate over all the users in 'users' to run getPostInPeriod for each and append their results...
-          console.log('############ Length of all USERs in this collection is:');
-          console.log(users.length);
-          for (var i = 0; i < users.length; i++){
-            current_posts=(users[i].getPostInPeriod(time_limit, time_diff));
-            // if(!(typeof current_posts[0] === 'undefined'))
-            if(!(typeof current_posts === 'undefined'))
-            {
-              for(var j = 0; j<current_posts.length; j++)
-              {
-                //ZH: next step: now each post is shown under this active user's name! For instance if Bob is active, he sees Jean's posts as his own posts incorrectly!
-                // console.log('newUSER');
-                // console.log(users[i]);
-                var temp = new Object();
-                var temp_user = new Object();
-                temp_user.user = JSON.parse(JSON.stringify(users[i])); //check if it is not null +ONLY gather essential data from user!
-                const temp_current_post = JSON.parse(JSON.stringify(current_posts[j]));//check if it is not null
-                // console.log('before assign: ', current_posts[j]);
-                current_posts[j] = Object.assign(temp_current_post, temp_user);
-                // console.log('after assign: ', current_posts[j]);
-                users_posts.push(current_posts[j]);
+        //Use the collection Cohort instead of User schema ...
+          Cohort.find()
+            .where("collection_group").equals(scriptFilter)
+                  .exec(function(err, collection){
+                    console.log('@@@@@ COLLECTION - Users -username-0 @@@@@ ', collection[0].users[0].username);
+                    console.log('@@@@@ COLLECTION - Userss @@@@@ ', collection[0].users[0]);
+                    console.log('@@@@@ FORMAT OF COLLECTION @@@@@ ', collection[0]);
+                    console.log('@@@@@ FORMAT OF COLLECTION-USERS @@@@@ ', collection[0].users); //collection[0].users will sit instead of users in the previous format but before that profile of user should be added to in in newpost!!!
+                    // let obj_index = collection[0].users.findIndex(obj => obj.username == user.username);
+                    // console.log('User index is: ',obj_index);
+                    // console.log('@@@@The current user is: ', collection[0].users[obj_index]); //later I need to put it in something and work with it and put it back to collection? or not?
+
+                  }); 
+
+        Cohort.find()
+            .where("collection_group").equals(scriptFilter)
+            .exec(function(err, collection){
+              console.log(collection[0].user); // now can I populate for what is insider user array ?? or should I do something before exec to get all the users in the arguments instead of to get the collection...
+              var users_posts =[];
+              console.log('############ Length of user in this collection is:');
+              console.log(collection[0].users.length);
+              for (var i = 0; i <collection[0].users.length; i++){
+                console.log('the new format of collection.user is :');
+                console.log(collection[0].users[i]);
+
+                // put the collection[0].users[i] in a temp_user of type User schema first, then call getPostInPeriod only for that temp_user
+                const mid_user = new User({
+                  email: collection[0].users[i].email,
+                  password: collection[0].users[i].password,
+                  mturkID: collection[0].users[i].mturkID,
+                  username: collection[0].users[i].username,
+                  group: collection[0].users[i].group,
+                  active: true,
+                  lastNotifyVisit : collection[0].users[i].lastNotifyVisit,
+                  createdAt: collection[0].users[i].createdAt
+                });
+
+                // current_posts=(collection[0].users[i].getPostInPeriod(time_limit, time_diff)); // Zh: my current issues is that it doesn;t recognize this getPostInPeriod
+                current_posts=(mid_user.getPostInPeriod(time_limit, time_diff)); // Zh: my current issues is that it doesn;t recognize this getPostInPeriod
+                // if(!(typeof current_posts[0] === 'undefined'))
+                if(!(typeof current_posts === 'undefined'))
+                {
+                  for(var j = 0; j<current_posts.length; j++)
+                  {
+                    //ZH: next step: now each post is shown under this active user's name! For instance if Bob is active, he sees Jean's posts as his own posts incorrectly!
+                    // console.log('newUSER');
+                    // console.log(users[i]);
+                    var temp = new Object();
+                    var temp_user = new Object();
+                    temp_user.user = JSON.parse(JSON.stringify(collection[0].users[i])); //check if it is not null +ONLY gather essential data from user!
+                    const temp_current_post = JSON.parse(JSON.stringify(current_posts[j]));//check if it is not null
+                    // console.log('before assign: ', current_posts[j]);
+                    current_posts[j] = Object.assign(temp_current_post, temp_user);
+                    // console.log('after assign: ', current_posts[j]);
+                    users_posts.push(current_posts[j]);
+                  }
+                }
+                // console.log(users_posts);
               }
-            }
-            // console.log(users_posts);
-          }
+
+
+              // users_posts.sort(function (a, b) {
+              //   return b.relativeTime - a.relativeTime;
+              // });
+
+
+        //Zhila: uncomment from here...
+        // User.find()
+        //     .where("group").equals(scriptFilter)
+        //     .populate({ 
+        //      path: 'posts.reply',
+        //      model: 'Script',
+        //      populate: {
+        //        path: 'actor',
+        //        model: 'Actor'
+        //      } 
+        //   })
+        // .populate({ 
+        //      path: 'posts.actorAuthor',
+        //      model: 'Actor'
+        //   })
+        // .populate({ 
+        //      path: 'posts.comments.actor',
+        //      model: 'Actor'
+        //   })
+        // .exec(function (err, users) {
+        //   //
+        //   console.log('PREVIOUS Format of users: ', users);
+        //   // console.log('users in the current collection', users)
+        //   var users_posts =[]
+        //   //iterate over all the users in 'users' to run getPostInPeriod for each and append their results...
+        //   console.log('############ Length of all USERs in this collection is:');
+        //   console.log(users.length);
+        //   for (var i = 0; i < users.length; i++){
+        //     console.log('specifically the old format of user[i] is :');
+        //     console.log(users[i]);
+        //     //need to fix it...
+        //     current_posts=(users[i].getPostInPeriod(time_limit, time_diff));
+        //     // if(!(typeof current_posts[0] === 'undefined'))
+        //     if(!(typeof current_posts === 'undefined'))
+        //     {
+        //       for(var j = 0; j<current_posts.length; j++)
+        //       {
+        //         //ZH: next step: now each post is shown under this active user's name! For instance if Bob is active, he sees Jean's posts as his own posts incorrectly!
+        //         // console.log('newUSER');
+        //         // console.log(users[i]);
+        //         var temp = new Object();
+        //         var temp_user = new Object();
+        //         temp_user.user = JSON.parse(JSON.stringify(users[i])); //check if it is not null +ONLY gather essential data from user!
+        //         const temp_current_post = JSON.parse(JSON.stringify(current_posts[j]));//check if it is not null
+        //         // console.log('before assign: ', current_posts[j]);
+        //         current_posts[j] = Object.assign(temp_current_post, temp_user);
+        //         // console.log('after assign: ', current_posts[j]);
+        //         users_posts.push(current_posts[j]);
+        //       }
+        //     }
+        //     // console.log(users_posts);
+        //   }
           users_posts.sort(function (a, b) {
             return b.relativeTime - a.relativeTime;
           });
@@ -430,7 +459,7 @@ exports.getScript = (req, res, next) => {
       //ZH: remove this print statement 
       // console.log(finalfeed);
       res.render('script', { script: finalfeed});
-        });
+      });// end of User.find()
 
       });//end of Script.find()
 
@@ -441,10 +470,10 @@ exports.getScript = (req, res, next) => {
 
 exports.getScriptPost = (req, res) => {
 
-  Script.findOne({ _id: req.params.id}, (err, post) => {
-    console.log(post);
-    res.render('script_post', { post: post });
-  });
+	Script.findOne({ _id: req.params.id}, (err, post) => {
+		console.log(post);
+		res.render('script_post', { post: post });
+	});
 };
 
 /**
@@ -600,7 +629,14 @@ exports.newPost = (req, res) => {
           user.posts.unshift(post);
           user.logPostStats(post.postID);
           //zhila:
-          // console.log('here is the profile: ', user.profile);
+          console.log('here is the profile: ', user.profile);
+          console.log('some information about user');
+          console.log('name: ', user.username);
+          console.log('gender: ', user.gender);
+          console.log('location: ', user.location);
+          console.log('website: ', user.website);
+          console.log('picture: ',user.picture);
+          console.log('bio: ', user.bio);
           //console.log("CREATING NEW POST!!!");
 
           collection_group = user.group;
@@ -642,6 +678,9 @@ exports.newPost = (req, res) => {
             console.log('THE POST IS');
             console.log(post);
             collection[0].users[obj_index].posts.push(post);
+            collection[0].users[obj_index].profile = user.profile;
+            console.log('did you get the profile??');
+            console.log(collection[0].users[obj_index]);
             // collection[0].users.push(user); // later I will find this user and push to his posts.
             console.log('test added post: ', collection[0].users[obj_index].posts);
             // console.log('the new collection in index 0 is now equal to: ', collection[0]);

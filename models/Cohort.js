@@ -336,11 +336,10 @@ CohortSchema.methods.getActorReplyByID = function(actorReplyID) {
 //get user posts within the min/max time period 
 CohortSchema.methods.getPostInPeriod = function(min, max) {
     //concat posts & reply
-    return this.user.posts.filter(function(item) {
+    return this.posts.filter(function(item) {
         return item.relativeTime >= min && item.relativeTime <= max;
     });
 }
-
 /**
  * Helper method for getting user's gravatar.
  */

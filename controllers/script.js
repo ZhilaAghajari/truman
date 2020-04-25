@@ -50,7 +50,7 @@ exports.getScript = (req, res, next) => {
   var time_diff = time_now - req.user.createdAt;
   //var today = moment();
   //var tomorrow = moment(today).add(1, 'days');
-  var two_days = 86400000 * 5; //two days in milliseconds .. Zh: just changed it from 2 to 5..
+  var two_days = 86400000 * 4; //two days in milliseconds .. Zh: it was previously set to 2. Now its 4.
   var time_limit = time_diff - two_days; 
 
   var user_ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;

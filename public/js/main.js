@@ -11,43 +11,43 @@ $('#loading').show();
 
 // capture when the user closes the windows ..
 //SOLUTION1
-$(window).on('mouseover', (function () {
-    window.onbeforeunload = null;
-}));
-$(window).on('mouseout', (function () {
-    window.onbeforeunload = ConfirmLeave;
-}));
-function ConfirmLeave() {
-    alert('One question survey');
-    return "Please fill in this one question before you leave";
-}
-var prevKey="";
-$(document).keydown(function (e) {            
-    if (e.key=="F5") {
-        window.onbeforeunload = ConfirmLeave;
-    }
-    else if (e.key.toUpperCase() == "W" && prevKey == "CONTROL") {                
-        window.onbeforeunload = ConfirmLeave;   
-    }
-    else if (e.key.toUpperCase() == "R" && prevKey == "CONTROL") {
-        window.onbeforeunload = ConfirmLeave;
-    }
-    else if (e.key.toUpperCase() == "F4" && (prevKey == "ALT" || prevKey == "CONTROL")) {
-        window.onbeforeunload = ConfirmLeave;
-    }
-    prevKey = e.key.toUpperCase();
-});
-//@@@@ pop up question when closing a window ... SOLUTION 2  ...
-window.addEventListener('beforeunload', (event) => {
-  // Cancel the event as stated by the standard.
-  event.preventDefault();
-  // Chrome requires returnValue to be set.
-  event.returnValue = 'Please fill in this one question before you leave';
-});
+// $(window).on('mouseover', (function () {
+//     window.onbeforeunload = null;
+// }));
+// $(window).on('mouseout', (function () {
+//     window.onbeforeunload = ConfirmLeave;
+// }));
+// function ConfirmLeave() {
+//     alert('One question survey');
+//     return "Please fill in this one question before you leave";
+// }
+// var prevKey="";
+// $(document).keydown(function (e) {            
+//     if (e.key=="F5") {
+//         window.onbeforeunload = ConfirmLeave;
+//     }
+//     else if (e.key.toUpperCase() == "W" && prevKey == "CONTROL") {                
+//         window.onbeforeunload = ConfirmLeave;   
+//     }
+//     else if (e.key.toUpperCase() == "R" && prevKey == "CONTROL") {
+//         window.onbeforeunload = ConfirmLeave;
+//     }
+//     else if (e.key.toUpperCase() == "F4" && (prevKey == "ALT" || prevKey == "CONTROL")) {
+//         window.onbeforeunload = ConfirmLeave;
+//     }
+//     prevKey = e.key.toUpperCase();
+// });
+// //@@@@ pop up question when closing a window ... SOLUTION 2  ...
+// window.addEventListener('beforeunload', (event) => {
+//   // Cancel the event as stated by the standard.
+//   event.preventDefault();
+//   // Chrome requires returnValue to be set.
+//   event.returnValue = 'Please fill in this one question before you leave';
+// });
 
-$(window).bind("beforeunload",function(event) {
-    return "You have some unsaved changes";
-});
+// $(window).bind("beforeunload",function(event) {
+//     return "You have some unsaved changes";
+// });
 
 
 

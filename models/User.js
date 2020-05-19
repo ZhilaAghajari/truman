@@ -123,6 +123,12 @@ const userSchema = new mongoose.Schema({
     picture_clicks : [Number],
     })],
 
+  session_survey: 
+  {
+    answers: Array,
+    time: Number
+  },
+
   feedAction: [new Schema({
         post: {type: Schema.ObjectId, ref: 'Script'},
         //add in object to see which comments were linked and flagged

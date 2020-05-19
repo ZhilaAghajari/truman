@@ -50,7 +50,7 @@ exports.getScript = (req, res, next) => {
   var time_diff = time_now - req.user.createdAt;
   //var today = moment();
   //var tomorrow = moment(today).add(1, 'days');
-  var two_days = 86400000 * 4; //two days in milliseconds .. Zh: it was previously set to 2. Now its 4.
+  var two_days = 86400000 * 1; //two days in milliseconds .. Zh: it was previously set to 2. Now its 4.
   var time_limit = time_diff - two_days; 
 
   var user_ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
@@ -166,6 +166,7 @@ exports.getScript = (req, res, next) => {
         var properties = function(script_feed){
           return script_feed.actor.username;
         }
+        //ZH: we need to remove this for the feed version ! it is just for individual centric
         sort(properties,script_feed);
 
         //Look up Notifications??? And do this as well?
@@ -671,6 +672,14 @@ exports.postUpdateFeedAction = (req, res, next) => {
         user.numCommentLikes++
         
       }
+      //ZH:
+      //SESSION SURVEY 
+      else if(req.body.session_survey)
+      { 
+        console.log('@@@@@@ SESSION SURVEY @@@@@ :')
+        console.log(req.body.session_survey);
+        //Zh: now where do I store these responses. append them to a field to the user schema ? 
+      }
 
       //FLAG A COMMENT
       else if(req.body.flag)
@@ -759,12 +768,28 @@ exports.postUpdateFeedAction = (req, res, next) => {
         //console.log("%%%%%Add new REPLY Time: ", reply);
         user.feedAction[feedIndex].replyTime.push(reply);
       }
+      // Zhila
+      else if(req.body.session_survey)
+      {
+        console.log('SESSION SURVEY is 111 ',req.body.session_survey);
+        user.session_survey.answers.push(req.body.session_survey);
+        user.session_survey.time = req.body.survey_time;
+        console.log('post modal ID is ', req.body.modalID);
+        console.log('session time is', req.body.session_time)
+        // where do I add it now ??
+        // add more information about session level, things like number of likes, comments, flag, etc.
+
+      }
 
       else
       {
         console.log("Got a POST that did not fit anything. Possible Error.")
       }
     }//else ALL POST ACTIONS IF/ELSES
+    // test and remove:
+    console.log('Did the session added?');
+    console.log(user);
+    console.log('session session, ', user.session_survey.answers);
 
        //console.log("####### END OF ELSE post at index "+ feedIndex);
 
@@ -872,6 +897,12 @@ exports.postUpdateProFeedAction = (req, res, next) => {
         user.profile_feed[feedIndex].picture_clicks.push(picture);
       }
 
+      // Zhila
+      if(req.body.session_survey)
+      {
+        console.log('SESSION SURVEY is 222 ',req.body.session_survey);
+      }
+
       else
       {
         console.log("Got a POST that did not fit anything. Possible Error.")
@@ -975,20 +1006,24 @@ exports.postUpdateUserPostFeedAction = (req, res, next) => {
       console.log("##### FOUND post "+req.body.postID+" at index "+ feedIndex);
 
 
-        //array of likeTime is empty and we have a new (first) LIKE event
-        if (req.body.like)
-        { 
-          
-          console.log("!!!!!!User Post LIKE was: ", user.posts[feedIndex].liked);
-          user.posts[feedIndex].liked = user.posts[feedIndex].liked ? false : true;
-          console.log("!!!!!!User Post LIKE is now: ", user.posts[feedIndex].liked);
-        }
-
-
+      //array of likeTime is empty and we have a new (first) LIKE event
+      if (req.body.like)
+      { 
+        
+        console.log("!!!!!!User Post LIKE was: ", user.posts[feedIndex].liked);
+        user.posts[feedIndex].liked = user.posts[feedIndex].liked ? false : true;
+        console.log("!!!!!!User Post LIKE is now: ", user.posts[feedIndex].liked);
+      }
+      // Zhila
+      if(req.body.session_survey)
+      {
+        console.log('SESSION SURVEY is 333 ',req.body.session_survey);
+      }
       else
       {
         console.log("Got a POST that did not fit anything. Possible Error.")
       }
+      
 
     }//else 
 

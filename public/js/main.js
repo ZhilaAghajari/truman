@@ -3,7 +3,11 @@
 //Before Page load:
 $('#content').hide();
 $('#loading').show();
-
+var modal_id;
+var next_id;
+var check_id;
+var move_id;
+var next_post;
 
 // $('.event-modal').modal({
 //     allowMultiple: true
@@ -42,6 +46,7 @@ $('#loading').show();
 //   // Cancel the event as stated by the standard.
 //   event.preventDefault();
 //   // Chrome requires returnValue to be set.
+//   alret('ONE_QUESTION SURVEY');
 //   event.returnValue = 'Please fill in this one question before you leave';
 // });
 
@@ -58,31 +63,51 @@ $(window).on("load", function() {
     allowMultiple: false,
   });
 
+  $('.coupled.modal')
+  .modal({
+    allowMultiple: false
+  });
+
   $('.ui.tiny.post.modal').modal({
     closable: false,
   });
-  //@@@@@@@@@@@ No time restrictions: users need to click to see the next post @@@@@@@@@@
-  // // why doesn't this allow me to write or like or anything? 
-  // $('#modal1').modal('show')
-  // $('.angle.double.left.icon').on('click', function(){
-  //   $('#modal2').modal('attach events', '#modal1');
-  //   $('#modal3').modal('attach events', '#modal2');
-  //   $('#modal1').modal('attach events', '#modal3');
-  // });
-  // $('.angle.double.right.icon').on('click', function(){
-  //   $('#modal3').modal('attach events', '#modal1');
-  //   $('#modal1').modal('attach events', '#modal2');
-  //   $('#modal2').modal('attach events', '#modal3');     
-  // });
-  // time-based transitions WORKS
+
+  // var modal_id;
+  // var next_id;
+  // var check_id;
+  // var move_id;
+  //ZHILA: my next step! after they press submit, I need to put them back to where they left ! work on submit!
+  // when clicked! if there were more posts, get back where the user left off, otherwise , possibly take them to another link for now
+
+  $(document).ready(function()
+  {
+    setTimeout(function () { 
+    // alert('Show survey');
+    //  ATTACH THE SURVEY TO CURRENT MODAL ..
+    var j ='321';
+    $("#surveyModal.ui.small.post.modal").modal('attach events',".ui.right.button[next_id='"+next_id+"']");
+    // call a function to show this survey modal
+    console.log('inside the timeout?');
+    show_survey();
+  },20000); // pop up the session survey after 20 seconds, change it to 5 minutes
+  });
+  function show_survey(){
+    var j='321';
+    $(".ui.small.post.modal[modal_id='"+j+"']").modal('show');
+    console.log('inside the survey show!');
+    // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events',$(".ui.tiny.post.modal[modal_id='"+j+"']"));
+  }
+  
+
   $('.ui.tiny.gray.progress')
   .progress({
-    total: 10
+    total: 2 //Zh: change it back to 10
   });
 
   function move(j) {
+    
      progressing_id = $("[progressing_id='"+j+"']");
-     //j=i;
+          //j=i;
       (function loop(i) {
         setTimeout(function () { 
           console.log(i);  
@@ -97,45 +122,67 @@ $(window).on("load", function() {
             var element_pre = $("[pre_id='"+j+"']");
             var element_next = $("[next_id='"+j+"']");
             // var element_pre = document.getElementById(pre_id);
+            
             element_pre[0].classList.remove("disabled");
             // var element_next = document.getElementById(next_id);
-            element_next[0].classList.remove("disabled");
+            element_next[0].classList.remove("disabled");     
           }
           },1000) //
-       })(10) ;
+       })(2) ; //Zh: change it back to 10
+
   }
-  
+
   $('#stratButton.button.fluid.ui.button').on('click', function(){
-    var j=1;
-    var first_modal=$(" .ui.tiny.post.modal[modal_id='"+j+"']");
+    var j=1;  //this one should change to the modal id related to the starting modal of the day .. 
+    var first_modal=$(".ui.tiny.post.modal[modal_id='"+j+"']");
     first_modal.modal('show');
     move(1);
   });
   
-  $('#survey.button.fluid.ui.button').on('click',function(){
-    var j ='321'
-    var survey_modal=$(" .ui.tiny.post.modal[modal_id='"+j+"']");
-    survey_modal.modal('show')
-    // alert('clicked')
-  });
+
  // flag should be as large as posts numbers .. 
   flag=new Array(100).fill(0)
   //fix this 20 number.. how many posts are we going to show them? 
-  for (let i=0; i<20;i++){
+  for (let i=0; i<40;i++){
     j=i+1;
     // $(" .ui.tiny.post.modal[modal_id='"+j+"']").modal('attach events',$(this)[0]);
     $(" .ui.tiny.post.modal[modal_id='"+j+"']").modal('attach events',".ui.right.button[next_id='"+i+"']");
   } 
+  
+
   $('.ui.right.button').on('click', function(){    
     // NEXT OF LAST post should show an alert that these are the posts for today...
-    var next_id = $(this)[0].attributes[1].value;
+    next_id = $(this)[0].attributes[1].value;
+    if (next_id != "submitSession")
+       {next_post = next_id;} 
     var move_id = (parseInt(next_id)+1).toString();
-    if(flag[next_id]==0)
-    {
-      flag[next_id]=1;
-      move(move_id);
-    }
+    // can I do this?
+    //  modal_postID is equivalent to postID
+    // var modal_postID = $(this)[0].attributes[2].value;
+    // var postID = card.attr( "postID" );
 
+    modal_id = $('.ui.tiny.post.modal')[0].attributes[1].value;
+
+    check_id = (parseInt(next_post)+1).toString();
+
+    // if($(".ui.tiny.post.modal[modal_id='"+check_id+"']").length ===0)
+    // if($("[next_id='"+check_id+"']")[0].classList[2]!=="disabled")
+    if($("[next_id='"+check_id+"']").length==0)
+    {
+      console.log('next id is: ', next_id)
+      var s ='321';
+      // $(".ui.tiny.post.modal[modal_id='"+s+"']").modal('attach events',".ui.right.button[next_id='"+next_id+"']");
+      var survey_modal=$(".ui.small.post.modal[modal_id='"+s+"']");
+      survey_modal.modal('show');
+      console.log('Pop Up the survey???');
+    }
+    else if(flag[next_id]==0)
+      {
+        flag[next_id]=1;
+        console.log('NEXT id is : ', next_id);
+        move(move_id);
+      }
+    
   });
 
   $('.ui.left.button').on('click', function(){
@@ -151,23 +198,7 @@ $(window).on("load", function() {
     console.log(curr_id);
 
   }); 
-  // lierally time-based (show each post for 5 seconds and jumps to next post...
-  // (function loop(i) {
-  // console.log('itr'+i);          
-  //    setTimeout(function () {   
-  //       modal_id = '#modal'+ (i);
-  //       $(modal_id).modal({
-  //         transition:'fade right'
-  //       }).modal('show');
-  //       //alert('POST'+i); // your code
-  //       if (--i) loop(i); // iteration counter
-  //       else loop(3);
-  //    }, 5000) // delay : but this delay is activated without caring about whether ot not the user plans to react to a story! 
-  //    //but this time should be reset if the user touch somethign, right?
-  // })(3); // iterations count
-
-
-  //@@@@@@@ Gathering the survey results @@@@@@@
+  
 
  //@@@@@@@@@@@@@@@@@@@@@
   //close loading dimmer on load
@@ -546,6 +577,8 @@ $("i.big.send.link.icon").click(function() {
 
   });
 
+ 
+
    //this is the FLAG button
   $('a.flag.comment')
   .on('click', function() {
@@ -603,6 +636,41 @@ $("i.big.send.link.icon").click(function() {
      //maybe send this later, when we have a re-read event to time???
      //$.post( "/feed", { postID: postID, like: like, _csrf : $('meta[name="csrf-token"]').attr('content') } );
 
+  });
+
+//@@@@@@@ Gathering the survey results @@@@@@@
+//  to add postID to it before sending it to the server side. ...
+
+  $('#submitSession.ui.blue.right.fluid.button').on('click', function(){
+    // 0- Collect the data. append it to the user's record with the session number?
+    var post = $(this).closest( ".ui.fluid.card.dim");
+    // var postID = post.attr( "postID" );
+    var session_time = Date.now();
+    var softhearted = $('input:radio[name=Softhearted]:checked').val();
+    var touched = $('input:radio[name=Touched]:checked').val();
+    var sympathetic = $('input:radio[name=Sympathetic]:checked').val();
+    var moved = $('input:radio[name=Moved]:checked').val();
+    //Zh: send these values to the user's record .. where should I send them??
+    // $.post("/feed", {softhearted: softhearted, touched: touched, sympathetic: sympathetic, moved: moved, _csrf : $('meta[name="csrf-token"]').attr('content')});
+    // thid postID is not correct! this modal doesn't have it so I need to read it from the previous post! like defining a global postID
+    //  Zh: need to change this one to postID .. why can't it recognize post ID now? do we even need it?
+    $.post("/userPost_feed", { session_time: session_time, modalID: modal_id, session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
+    $.post("/feed", { session_time: session_time, modalID: modal_id, session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
+
+    // 1- if the user reached the end of the posts for today, direct them to a link or to the login page 
+    console.log('check is: ', check_id);
+    // window.open('https://www.w3schools.com', '_self');
+    if($("[next_id='"+check_id+"']").length==0)
+    {
+      alert('This is the last post of this session!');
+    }
+    //2- if it is activated after some amount of time !
+    else 
+    {
+      $(".ui.small.post.modal[modal_id='"+'321'+"']").modal('hide'); //or close this modal instead of hide . . . 
+      $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events',$(".ui.small.post.modal[modal_id='"+j+"']"));
+      $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
+    }
   });
 
 

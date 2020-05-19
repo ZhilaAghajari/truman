@@ -127,7 +127,8 @@ const userSchema = new mongoose.Schema({
   {
     answers: Array,
     time: [Number],
-    likes: Number
+    likes: Number,
+    posts: Number
   },
 
   feedAction: [new Schema({

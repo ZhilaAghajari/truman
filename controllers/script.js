@@ -50,7 +50,7 @@ exports.getScript = (req, res, next) => {
   var time_diff = time_now - req.user.createdAt;
   //var today = moment();
   //var tomorrow = moment(today).add(1, 'days');
-  var two_days = 86400000 * 1; //two days in milliseconds .. Zh: it was previously set to 2. Now its 4.
+  var two_days = 86400000 * 2; //two days in milliseconds .. 
   var time_limit = time_diff - two_days; 
 
   var user_ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
@@ -783,6 +783,8 @@ exports.postUpdateFeedAction = (req, res, next) => {
         // user.session_survey.time.push(req.body.survey_time);
         console.log('likes numbers in this session : ', req.body.session_likes);
         user.session_survey.likes = req.body.session_likes;
+        user.session_survey.flags = req.body.session_flags;
+        user.session_survey.posts = req.body.session_posts;
         console.log('post modal ID is ', req.body.modalID);
         console.log('session time is', req.body.session_time)
         // where do I add it now ??
@@ -799,6 +801,7 @@ exports.postUpdateFeedAction = (req, res, next) => {
     console.log('Did the session added?');
     console.log('answers, ', user.session_survey.answers);
     console.log('likes numbers in this session is : ', user.session_survey.likes);
+    console.log('number of posts seen in this session: ', user.session_survey.posts);
 
        //console.log("####### END OF ELSE post at index "+ feedIndex);
 

@@ -73,6 +73,8 @@ $(window).on("load", function() {
     closable: false,
   });
   var session_likes=0;
+  var session_flags=0
+  var session_posts=0;
 
   // var modal_id;
   // var next_id;
@@ -84,12 +86,9 @@ $(window).on("load", function() {
   $(document).ready(function()
   {
     setTimeout(function () { 
-    // alert('Show survey');
-    //  ATTACH THE SURVEY TO CURRENT MODAL ..
+    //  ATTACH THE SURVEY TO CURRENT MODAL .. what if we don't attach it? we  don't need to attach it!
     var j ='321';
-    $("#surveyModal.ui.small.post.modal").modal('attach events',".ui.right.button[next_id='"+next_id+"']");
-    // call a function to show this survey modal
-    console.log('inside the timeout?');
+    // $("#surveyModal.ui.small.post.modal").modal('attach events',".ui.right.button[next_id='"+next_id+"']");
     show_survey();
   },20000); // pop up the session survey after 20 seconds, change it to 5 minutes
   });
@@ -154,6 +153,8 @@ $(window).on("load", function() {
 
   $('.ui.right.button').on('click', function(){    
     // NEXT OF LAST post should show an alert that these are the posts for today...
+    session_posts++;
+    console.log('number of posts seen in this session : ', session_posts);
     next_id = $(this)[0].attributes[1].value;
     if (next_id != "submitSession")
        {next_post = next_id;} 
@@ -605,7 +606,8 @@ $("i.big.send.link.icon").click(function() {
   //this is the POST FLAG button
   $('.flag.button')
   .on('click', function() {
-
+    session_flags++;
+    console.log('session flag number: ', session_flags);
      var post = $(this).closest( ".ui.fluid.card.dim");
      var postID = post.attr( "postID" );
      var flag = Date.now();
@@ -658,10 +660,12 @@ $("i.big.send.link.icon").click(function() {
     // $.post("/feed", {softhearted: softhearted, touched: touched, sympathetic: sympathetic, moved: moved, _csrf : $('meta[name="csrf-token"]').attr('content')});
     // thid postID is not correct! this modal doesn't have it so I need to read it from the previous post! like defining a global postID
     //  Zh: need to change this one to postID .. why can't it recognize post ID now? do we even need it?
-    $.post("/userPost_feed", { session_time: session_time, modalID: modal_id, session_likes: session_likes, session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
-    $.post("/feed", { session_time: session_time, modalID: modal_id, session_likes: session_likes, session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
+    $.post("/userPost_feed", { session_time: session_time, modalID: modal_id, session_posts: session_posts, session_flags: session_flags, session_likes: session_likes, session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
+    $.post("/feed", { session_time: session_time, modalID: modal_id, session_posts: session_posts, session_flags: session_flags, session_likes: session_likes, session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
     // reset the session_likes
     session_likes = 0;
+    session_flags=0;
+    session_posts=0
     // 1- if the user reached the end of the posts for today, direct them to a link or to the login page 
     console.log('check is: ', check_id);
     // window.open('https://www.w3schools.com', '_self');

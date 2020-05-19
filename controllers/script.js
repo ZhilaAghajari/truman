@@ -373,6 +373,13 @@ exports.getScript = (req, res, next) => {
       console.log("Script Size is now: "+finalfeed.length);
       //Testing stories .. !!!! Might need to remove the second argument in below ..
       //We render one of these based on the conditions ..
+      // if (scriptFilter == 'var1')
+      // {
+      //   res.render('stories',{script:finalfeed})
+      // }
+      // else{
+      //   res.render('script',{script:finalfeed})
+      // }
       res.render('stories',{script:finalfeed})
       // res.render('script', { script: finalfeed});
 
@@ -773,7 +780,9 @@ exports.postUpdateFeedAction = (req, res, next) => {
       {
         console.log('SESSION SURVEY is 111 ',req.body.session_survey);
         user.session_survey.answers.push(req.body.session_survey);
-        user.session_survey.time = req.body.survey_time;
+        // user.session_survey.time.push(req.body.survey_time);
+        console.log('likes numbers in this session : ', req.body.session_likes);
+        user.session_survey.likes = req.body.session_likes;
         console.log('post modal ID is ', req.body.modalID);
         console.log('session time is', req.body.session_time)
         // where do I add it now ??
@@ -788,8 +797,8 @@ exports.postUpdateFeedAction = (req, res, next) => {
     }//else ALL POST ACTIONS IF/ELSES
     // test and remove:
     console.log('Did the session added?');
-    console.log(user);
-    console.log('session session, ', user.session_survey.answers);
+    console.log('answers, ', user.session_survey.answers);
+    console.log('likes numbers in this session is : ', user.session_survey.likes);
 
        //console.log("####### END OF ELSE post at index "+ feedIndex);
 

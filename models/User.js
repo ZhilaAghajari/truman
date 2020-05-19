@@ -126,7 +126,8 @@ const userSchema = new mongoose.Schema({
   session_survey: 
   {
     answers: Array,
-    time: Number
+    time: [Number],
+    likes: Number
   },
 
   feedAction: [new Schema({

@@ -8,6 +8,7 @@ var next_id;
 var check_id;
 var move_id;
 var next_post;
+// var session_likes;
 
 // $('.event-modal').modal({
 //     allowMultiple: true
@@ -71,6 +72,7 @@ $(window).on("load", function() {
   $('.ui.tiny.post.modal').modal({
     closable: false,
   });
+  var session_likes=0;
 
   // var modal_id;
   // var next_id;
@@ -512,6 +514,8 @@ $("i.big.send.link.icon").click(function() {
   //this is the LIKE button
   $('.like.button')
   .on('click', function() {
+    session_likes = session_likes +1;
+    console.log('session likes : ', session_likes);
 
     //if already liked, unlike if pressed
     if ( $( this ).hasClass( "red" ) ) {
@@ -654,9 +658,10 @@ $("i.big.send.link.icon").click(function() {
     // $.post("/feed", {softhearted: softhearted, touched: touched, sympathetic: sympathetic, moved: moved, _csrf : $('meta[name="csrf-token"]').attr('content')});
     // thid postID is not correct! this modal doesn't have it so I need to read it from the previous post! like defining a global postID
     //  Zh: need to change this one to postID .. why can't it recognize post ID now? do we even need it?
-    $.post("/userPost_feed", { session_time: session_time, modalID: modal_id, session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
-    $.post("/feed", { session_time: session_time, modalID: modal_id, session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
-
+    $.post("/userPost_feed", { session_time: session_time, modalID: modal_id, session_likes: session_likes, session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
+    $.post("/feed", { session_time: session_time, modalID: modal_id, session_likes: session_likes, session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
+    // reset the session_likes
+    session_likes = 0;
     // 1- if the user reached the end of the posts for today, direct them to a link or to the login page 
     console.log('check is: ', check_id);
     // window.open('https://www.w3schools.com', '_self');

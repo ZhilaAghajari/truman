@@ -87,7 +87,7 @@ $(window).on("load", function() {
     var j ='321';
     // $("#surveyModal.ui.small.post.modal").modal('attach events',".ui.right.button[next_id='"+next_id+"']");
     show_survey();
-  },25000); // pop up the session survey after 20 seconds, change it to 5 minutes
+  },60000); // pop up the session survey after 20 seconds, change it to 5 minutes
   });
   function show_survey(){
     var j='321';
@@ -133,7 +133,7 @@ $(window).on("load", function() {
             element_next[0].classList.remove("disabled");     
           }
           },1000) //
-       })(2) ; //Zh: change it back to 10
+       })(10) ; //Zh: change it back to 10
 
   }
 

@@ -83,10 +83,9 @@ block content
                 p
    
     //Read from script and put in the stories format ..
-
     each val in script
-      -console.log("Modal Values");
-      -console.log(val.modal_id);
+      -console.log('Modal ID: ', val.modal_id);
+      -console.log('the post group is: ', val.experiment_group)
       //- this is a user post ..
       if val.relativeTime 
         -var u_class;
@@ -447,7 +446,7 @@ block content
         .content
           // .ui.blue.right.floated.button(disabled='true') Submit
           // #submitSession.ui.blue.right.disabled.fluid.button(survey_id='1') Submit
-          #submitSession.ui.blue.right.fluid.button(survey_id='1') Submit
+          #submitSession.ui.blue.right.fluid.button(study_group='stories') Submit
 
 
 

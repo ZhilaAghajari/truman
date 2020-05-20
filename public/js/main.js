@@ -75,11 +75,8 @@ $(window).on("load", function() {
   var session_likes=0;
   var session_flags=0
   var session_posts=0;
+  var session_userComments=0;
 
-  // var modal_id;
-  // var next_id;
-  // var check_id;
-  // var move_id;
   //ZHILA: my next step! after they press submit, I need to put them back to where they left ! work on submit!
   // when clicked! if there were more posts, get back where the user left off, otherwise , possibly take them to another link for now
 
@@ -90,15 +87,22 @@ $(window).on("load", function() {
     var j ='321';
     // $("#surveyModal.ui.small.post.modal").modal('attach events',".ui.right.button[next_id='"+next_id+"']");
     show_survey();
-  },20000); // pop up the session survey after 20 seconds, change it to 5 minutes
+  },25000); // pop up the session survey after 20 seconds, change it to 5 minutes
   });
   function show_survey(){
     var j='321';
     $(".ui.small.post.modal[modal_id='"+j+"']").modal('show');
-    console.log('inside the survey show!');
+      // .modal({
+      //   closable: false,
+      //   onSubmit: function(){
+      //     return true;
+      //   }
+      // })
+      // .modal('show');
     // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events',$(".ui.tiny.post.modal[modal_id='"+j+"']"));
   }
   
+
 
   $('.ui.tiny.gray.progress')
   .progress({
@@ -153,38 +157,34 @@ $(window).on("load", function() {
 
   $('.ui.right.button').on('click', function(){    
     // NEXT OF LAST post should show an alert that these are the posts for today...
-    session_posts++;
-    console.log('number of posts seen in this session : ', session_posts);
-    next_id = $(this)[0].attributes[1].value;
-    if (next_id != "submitSession")
-       {next_post = next_id;} 
-    var move_id = (parseInt(next_id)+1).toString();
-    // can I do this?
-    //  modal_postID is equivalent to postID
-    // var modal_postID = $(this)[0].attributes[2].value;
-    // var postID = card.attr( "postID" );
-
-    modal_id = $('.ui.tiny.post.modal')[0].attributes[1].value;
-
-    check_id = (parseInt(next_post)+1).toString();
-
-    // if($(".ui.tiny.post.modal[modal_id='"+check_id+"']").length ===0)
-    // if($("[next_id='"+check_id+"']")[0].classList[2]!=="disabled")
-    if($("[next_id='"+check_id+"']").length==0)
+    if($('.ui.blue.right.fluid.button')[0].attributes[2].value==="stories")
     {
-      console.log('next id is: ', next_id)
-      var s ='321';
-      // $(".ui.tiny.post.modal[modal_id='"+s+"']").modal('attach events',".ui.right.button[next_id='"+next_id+"']");
-      var survey_modal=$(".ui.small.post.modal[modal_id='"+s+"']");
-      survey_modal.modal('show');
-      console.log('Pop Up the survey???');
-    }
-    else if(flag[next_id]==0)
+      session_posts++;
+      console.log('number of posts seen in this session : ', session_posts);
+      next_id = $(this)[0].attributes[1].value;
+      if (next_id != "submitSession")
+         {next_post = next_id;} 
+      var move_id = (parseInt(next_id)+1).toString();
+      modal_id = $('.ui.tiny.post.modal')[0].attributes[1].value;
+
+      check_id = (parseInt(next_post)+1).toString();
+
+      if($("[next_id='"+check_id+"']").length==0)
       {
-        flag[next_id]=1;
-        console.log('NEXT id is : ', next_id);
-        move(move_id);
+        console.log('next id is: ', next_id)
+        var s ='321';
+        // $(".ui.tiny.post.modal[modal_id='"+s+"']").modal('attach events',".ui.right.button[next_id='"+next_id+"']");
+        var survey_modal=$(".ui.small.post.modal[modal_id='"+s+"']");
+        survey_modal.modal('show');
+        console.log('Pop Up the survey???');
       }
+      else if(flag[next_id]==0)
+        {
+          flag[next_id]=1;
+          console.log('NEXT id is : ', next_id);
+          move(move_id);
+        }
+    }
     
   });
 
@@ -393,6 +393,8 @@ $("i.big.send.link.icon").click(function() {
   var comments = card.find( ".ui.comments" )
   //no comments area - add it
   console.log("Comments is now "+comments.length)
+  session_userComments ++;
+  console.log(session_userComments);
   if( !comments.length )
   {
     //.three.ui.bottom.attached.icon.buttons
@@ -403,7 +405,7 @@ $("i.big.send.link.icon").click(function() {
   }
   if (text.trim() !== '')
   {
-    console.log(text)
+    console.log(text);
     var date = Date.now();
     var ava = $(this).siblings('.ui.label').find('img.ui.avatar.image');
     var ava_img = ava.attr( "src" );
@@ -489,7 +491,7 @@ $("i.big.send.link.icon").click(function() {
     ;
 
     
-    console.log("***********Block USER "+username);
+    console.log("*********** Block USER "+username);
     $.post( "/user", { blocked: username, _csrf : $('meta[name="csrf-token"]').attr('content') } );
 
   });
@@ -515,14 +517,15 @@ $("i.big.send.link.icon").click(function() {
   //this is the LIKE button
   $('.like.button')
   .on('click', function() {
-    session_likes = session_likes +1;
-    console.log('session likes : ', session_likes);
+    
 
     //if already liked, unlike if pressed
     if ( $( this ).hasClass( "red" ) ) {
         console.log("***********UNLIKE: post");
         $( this ).removeClass("red");
         var label = $(this).next("a.ui.basic.red.left.pointing.label.count");
+        session_likes = session_likes -1;
+        console.log('session likes : ', session_likes);
         label.html(function(i, val) { return val*1-1 });
     }
     //since not red, this button press is a LIKE action
@@ -533,6 +536,8 @@ $("i.big.send.link.icon").click(function() {
       var postID = $(this).closest( ".ui.fluid.card" ).attr( "postID" );
       var like = Date.now();
       console.log("***********LIKE: post "+postID+" at time "+like);
+      session_likes = session_likes +1;
+      console.log('session likes : ', session_likes);
 
       if ($(this).closest( ".ui.fluid.card" ).attr( "type" )=='userPost')
         $.post( "/userPost_feed", { postID: postID, like: like, _csrf : $('meta[name="csrf-token"]').attr('content') } );
@@ -645,7 +650,7 @@ $("i.big.send.link.icon").click(function() {
   });
 
 //@@@@@@@ Gathering the survey results @@@@@@@
-//  to add postID to it before sending it to the server side. ...
+//  Modify it to work for both versions.
 
   $('#submitSession.ui.blue.right.fluid.button').on('click', function(){
     // 0- Collect the data. append it to the user's record with the session number?
@@ -660,26 +665,45 @@ $("i.big.send.link.icon").click(function() {
     // $.post("/feed", {softhearted: softhearted, touched: touched, sympathetic: sympathetic, moved: moved, _csrf : $('meta[name="csrf-token"]').attr('content')});
     // thid postID is not correct! this modal doesn't have it so I need to read it from the previous post! like defining a global postID
     //  Zh: need to change this one to postID .. why can't it recognize post ID now? do we even need it?
-    $.post("/userPost_feed", { session_time: session_time, modalID: modal_id, session_posts: session_posts, session_flags: session_flags, session_likes: session_likes, session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
-    $.post("/feed", { session_time: session_time, modalID: modal_id, session_posts: session_posts, session_flags: session_flags, session_likes: session_likes, session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
+    $.post("/userPost_feed", { session_time: session_time, modalID: modal_id, session_userComments: session_userComments, session_posts: session_posts, session_flags: session_flags, session_likes: session_likes, session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
+    $.post("/feed", { session_time: session_time, modalID: modal_id, session_userComments: session_userComments, session_posts: session_posts, session_flags: session_flags, session_likes: session_likes, session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
     // reset the session_likes
     session_likes = 0;
     session_flags=0;
     session_posts=0
+    session_userComments =0;
+    // if the experimental group is stories-based, do the following, otherwise, just close the modal...
+
+    if($('.ui.blue.right.fluid.button')[0].attributes[2].value==="stories")
     // 1- if the user reached the end of the posts for today, direct them to a link or to the login page 
-    console.log('check is: ', check_id);
-    // window.open('https://www.w3schools.com', '_self');
-    if($("[next_id='"+check_id+"']").length==0)
     {
-      alert('This is the last post of this session!');
+        console.log('check is: ', check_id);
+      if($("[next_id='"+check_id+"']").length==0)
+      {
+        alert('This is the last post of this session!');
+      }
+      //2- if it is activated after some amount of time !
+      else 
+      {
+        $(".ui.small.post.modal[modal_id='"+'321'+"']").modal('hide'); //or close this modal instead of hide . . . 
+        $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events',$(".ui.small.post.modal[modal_id='"+j+"']"));
+        $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
+      }
+
     }
-    //2- if it is activated after some amount of time !
-    else 
+    else //if this is the feed version.. just close the modal...
     {
-      $(".ui.small.post.modal[modal_id='"+'321'+"']").modal('hide'); //or close this modal instead of hide . . . 
-      $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events',$(".ui.small.post.modal[modal_id='"+j+"']"));
-      $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
-    }
+      console.log('not implemented yet'); // in this case we only need to close the modal after submit
+      j='321';
+      $(".ui.small.post.modal[modal_id='"+j+"']")
+      .modal({
+        selector: { 
+          close: '.ui.blue.right.fluid.button'
+        } 
+      })
+    ;
+      
+    } 
   });
 
 

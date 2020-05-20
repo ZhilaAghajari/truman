@@ -185,6 +185,7 @@ exports.getScript = (req, res, next) => {
               temp.modal_id = modal_id;
               const temp_user_posts = JSON.parse(JSON.stringify(user_posts[0]));
               user_posts[0] = Object.assign(temp_user_posts,temp);
+              
               modal_id = modal_id+1;
               console.log('Expanded2!');
               console.log(user_posts[0]);

@@ -106,7 +106,7 @@ $(window).on("load", function() {
 
   $('.ui.tiny.gray.progress')
   .progress({
-    total: 2 //Zh: change it back to 10
+    total: 10 //Zh: change it back to 10
   });
 
   function move(j) {

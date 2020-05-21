@@ -97,15 +97,6 @@ block content
           .ui.tiny.post.modal(modal_id=val.modal_id, postID=val.postID)
             .ui.fluid.card(u_postID=val.id, type=u_class, postID=val.postID)
               .content
-                #newpost.ui.fluid.left.labeled.right.icon.input
-                  .ui.label
-                    if user.profile.picture
-                      img.ui.avatar.image(src='/user_post/'+user.profile.picture)
-                    else
-                      img.ui.avatar.image(src=user.gravatar(60))
-                  input(type='text', placeholder='Share your meal')
-                  i.big.photo.link.icon
-              .content
                 .right.floated.time.meta= (user.createdAt.getTime() + val.relativeTime)
                 |
                 a.ui.avatar.image(href='/me')
@@ -230,15 +221,6 @@ block content
                           |  You&apos;ve flagged this!
                           h3.ui.inverted.header
                             span="The admins will review this post further. We are sorry you had this experience."
-              .content
-                #newpost.ui.fluid.left.labeled.right.icon.input
-                  .ui.label
-                    if user.profile.picture
-                      img.ui.avatar.image(src='/user_post/'+user.profile.picture)
-                    else
-                      img.ui.avatar.image(src=user.gravatar(60))
-                  input(type='text', placeholder='Share your meal')
-                  i.big.photo.link.icon
               .content
                 .right.floated.time.meta= (user.createdAt.getTime() + val.time)
                 |  
@@ -465,24 +447,6 @@ block content
           // .ui.blue.right.floated.button(disabled='true') Submit
           // #submitSession.ui.blue.right.disabled.fluid.button(survey_id='1') Submit
           #submitSession.ui.blue.right.fluid.button(study_group='stories') Submit
-
-    #newpost.ui.tiny.post.modal(study_group='stories')
-      i.close.icon
-      .header Add a New Post
-      .content
-        form#postform.ui.feed.form(action='/post/new', method='POST', enctype='multipart/form-data')
-          input(type='hidden', name='_csrf', value=_csrf)
-          .field
-            textarea(rows='2', placeholder='Share your meal', name='body')
-          .field.image-upload
-            label(for='picinput')
-              .image.content
-                img#imgInp.ui.fluid.image(src='/public/photo-camera.svg')
-            //-input#picinput(type='file', accept='image/*', capture='camera', name='picinput')
-            input#picinput(type='file', accept='image/*', name='picinput')
-          .ui.error.message
-      .actions
-        input.ui.blue.button(type='submit', name="foo", value='Submit', form='postform')
 
 
 

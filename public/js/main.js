@@ -8,54 +8,7 @@ var next_id;
 var check_id;
 var move_id;
 var next_post;
-// var session_likes;
-
-// $('.event-modal').modal({
-//     allowMultiple: true
-//   });
-
-// capture when the user closes the windows ..
-//SOLUTION1
-// $(window).on('mouseover', (function () {
-//     window.onbeforeunload = null;
-// }));
-// $(window).on('mouseout', (function () {
-//     window.onbeforeunload = ConfirmLeave;
-// }));
-// function ConfirmLeave() {
-//     alert('One question survey');
-//     return "Please fill in this one question before you leave";
-// }
-// var prevKey="";
-// $(document).keydown(function (e) {            
-//     if (e.key=="F5") {
-//         window.onbeforeunload = ConfirmLeave;
-//     }
-//     else if (e.key.toUpperCase() == "W" && prevKey == "CONTROL") {                
-//         window.onbeforeunload = ConfirmLeave;   
-//     }
-//     else if (e.key.toUpperCase() == "R" && prevKey == "CONTROL") {
-//         window.onbeforeunload = ConfirmLeave;
-//     }
-//     else if (e.key.toUpperCase() == "F4" && (prevKey == "ALT" || prevKey == "CONTROL")) {
-//         window.onbeforeunload = ConfirmLeave;
-//     }
-//     prevKey = e.key.toUpperCase();
-// });
-// //@@@@ pop up question when closing a window ... SOLUTION 2  ...
-// window.addEventListener('beforeunload', (event) => {
-//   // Cancel the event as stated by the standard.
-//   event.preventDefault();
-//   // Chrome requires returnValue to be set.
-//   alret('ONE_QUESTION SURVEY');
-//   event.returnValue = 'Please fill in this one question before you leave';
-// });
-
-// $(window).bind("beforeunload",function(event) {
-//     return "You have some unsaved changes";
-// });
-
-
+var $window = $(window);
 
 // @@@@@@@@@
 $(window).on("load", function() {
@@ -76,6 +29,7 @@ $(window).on("load", function() {
   var session_flags=0
   var session_posts=0;
   var session_userComments=0;
+  var check_id ='1';
 
   //ZHILA: my next step! after they press submit, I need to put them back to where they left ! work on submit!
   // when clicked! if there were more posts, get back where the user left off, otherwise , possibly take them to another link for now
@@ -87,7 +41,7 @@ $(window).on("load", function() {
     var j ='321';
     // $("#surveyModal.ui.small.post.modal").modal('attach events',".ui.right.button[next_id='"+next_id+"']");
     show_survey();
-  },60000); // pop up the session survey after 20 seconds, change it to 5 minutes
+  },20000); // pop up the session survey after 20 seconds, change it to 5 minutes
   });
   function show_survey(){
     var j='321';
@@ -145,10 +99,10 @@ $(window).on("load", function() {
   });
   
 
- // flag should be as large as posts numbers .. 
+ // the flag array should be as large as posts numbers .. for now I have it fixed and need think about it more .. 
   flag=new Array(100).fill(0)
   //fix this 20 number.. how many posts are we going to show them? 
-  for (let i=0; i<40;i++){
+  for (let i=1; i<40;i++){
     j=i+1;
     // $(" .ui.tiny.post.modal[modal_id='"+j+"']").modal('attach events',$(this)[0]);
     $(" .ui.tiny.post.modal[modal_id='"+j+"']").modal('attach events',".ui.right.button[next_id='"+i+"']");
@@ -163,11 +117,13 @@ $(window).on("load", function() {
       console.log('number of posts seen in this session : ', session_posts);
       next_id = $(this)[0].attributes[1].value;
       if (next_id != "submitSession")
-         {next_post = next_id;} 
+      {
+        check_id = (parseInt(next_id)+1).toString();
+      } 
       var move_id = (parseInt(next_id)+1).toString();
       modal_id = $('.ui.tiny.post.modal')[0].attributes[1].value;
 
-      check_id = (parseInt(next_post)+1).toString();
+      
 
       if($("[next_id='"+check_id+"']").length==0)
       {
@@ -243,7 +199,14 @@ $(window).on("load", function() {
 
   //get add new feed post modal to work
   $("#newpost, a.item.newpost").click(function () {
-    $(' .ui.tiny.post.modal').modal('show'); 
+    $(' #newpost.ui.tiny.post.modal').modal('show');
+    // attach the previously shown modal to it if it is in the stories version ..
+    if($('#newpost.ui.tiny.post')[0].attributes[2]==='stories')
+    {
+      $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','#newpost.ui.tiny.post.modal');
+      // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
+    } 
+     
 });
 
   //new post validator (picture and text can not be empty)
@@ -282,11 +245,14 @@ $(window).on("load", function() {
   });
 
   $('.ui.feed.form').submit(function(e) {
-        e.preventDefault();
-        console.log("Submit the junks!!!!")
-        //$('.ui.tiny.nudge.modal').modal('show'); 
-        //return true;
-        });
+    e.preventDefault();
+    console.log("Submit the junks!!!!")
+
+    $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
+    // return true;
+    //$('.ui.tiny.nudge.modal').modal('show'); 
+    //return true;
+    });
 
 
 //Picture Preview on Image Selection
@@ -651,6 +617,14 @@ $("i.big.send.link.icon").click(function() {
 
 //@@@@@@@ Gathering the survey results @@@@@@@
 //  Modify it to work for both versions.
+j='321';
+$(".ui.small.post.modal[modal_id='"+j+"']")
+.modal({
+  selector: { 
+    close: '.ui.blue.right.fluid.button'
+  } 
+})
+;
 
   $('#submitSession.ui.blue.right.fluid.button').on('click', function(){
     // 0- Collect the data. append it to the user's record with the session number?
@@ -678,14 +652,24 @@ $("i.big.send.link.icon").click(function() {
     // 1- if the user reached the end of the posts for today, direct them to a link or to the login page 
     {
         console.log('check is: ', check_id);
-      if($("[next_id='"+check_id+"']").length==0)
+      // no more posts to show .. 
+      if($("[next_id='"+check_id+"']").length===0)
       {
         alert('This is the last post of this session!');
+        window.open('https://www.w3schools.com', '_self'); // will change it later .. 
+
       }
       //2- if it is activated after some amount of time !
       else 
       {
-        $(".ui.small.post.modal[modal_id='"+'321'+"']").modal('hide'); //or close this modal instead of hide . . . 
+        j='321';
+        // $(".ui.small.post.modal[modal_id='"+'321'+"']").modal('hide'); //or close this modal instead of hide . . . 
+        $(".ui.small.post.modal[modal_id='"+j+"']")
+          .modal({
+            selector: { 
+              close: '.ui.blue.right.fluid.button'
+            } 
+          });
         $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events',$(".ui.small.post.modal[modal_id='"+j+"']"));
         $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
       }

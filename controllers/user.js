@@ -236,10 +236,10 @@ Place Experimental Varibles Here!
   User.findOne({ email: req.body.email }, (err, existingUser) => {
     if (err) { return next(err); }
     //ZH: MAKE SURE to uncomment this if statement after testing!!!
-    // if (existingUser) {
-    //   req.flash('errors', { msg: 'Account with that email address already exists.' });
-    //   return res.redirect('/signup');
-    // }
+    if (existingUser) {
+      req.flash('errors', { msg: 'Account with that email address already exists.' });
+      return res.redirect('/signup');
+    }
     //ZH: the new user will be added to the DB here, right? ... if there are more than one user, they all will be added. 
     //what I need to do is not about the DB, it is about the final feed. they shouldn't be per user,
     // they should be per experiment and inlclude all the users activities (posts, comments, everything).

@@ -783,9 +783,9 @@ exports.postUpdateFeedAction = (req, res, next) => {
         user.session_survey.answers.push(req.body.session_survey);
         // user.session_survey.time.push(req.body.survey_time);
         console.log('likes numbers in this session : ', req.body.session_likes);
-        user.session_survey.likes = req.body.session_likes;
-        user.session_survey.flags = req.body.session_flags;
-        user.session_survey.posts = req.body.session_posts;
+        user.session_survey.likes.push(req.body.session_likes);
+        user.session_survey.flags.push(req.body.session_flags);
+        user.session_survey.posts.push(req.body.session_posts);
         console.log('post modal ID is ', req.body.modalID);
         console.log('session time is', req.body.session_time)
         // where do I add it now ??

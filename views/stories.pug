@@ -40,7 +40,7 @@ block content
             img.ui.fluid.image(src="/post_pictures/"+'vegan6.jpg')
 
       #stratButton.button.fluid.ui.button Start
-      
+      // #survey-time-left
 
       
 
@@ -66,10 +66,10 @@ block content
             //-img(src='/picture.svg', data-src=val.picture)
           .content
             .description.mod_body="Totes my Goats"
-          .three.ui.bottom.attached.icon.buttons
-            .ui.reply.button(tabindex='0')
-              i.reply.icon
-              |  Reply
+          .two.ui.bottom.attached.icon.buttons
+            // .ui.reply.button(tabindex='0')
+            //   i.reply.icon
+            //   |  Reply
             .ui.flag.button(tabindex='0')
               i.flag.icon
               |  Flag
@@ -97,6 +97,14 @@ block content
           .ui.tiny.post.modal(modal_id=val.modal_id, postID=val.postID)
             .ui.fluid.card(u_postID=val.id, type=u_class, postID=val.postID)
               .content
+                .two.fluid.ui.buttons(postID=val.postID)
+                  .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
+                  .ui.right.disabled.button(next_id=val.modal_id, postID=val.postID, study_group ='stories')  Next
+                   
+                .ui.tiny.gray.progress(progressing_id=val.modal_id)
+                  .bar
+                  .label ... 
+              .content
                 #newpost.ui.fluid.left.labeled.right.icon.input
                   .ui.label
                     if user.profile.picture
@@ -122,10 +130,10 @@ block content
                 .description=val.body
                   i.icon.checkmark
                   | Seen by 12
-              .three.ui.bottom.attached.icon.buttons
-                .ui.reply.button(tabindex='0')
-                  i.reply.icon
-                  |  Reply
+              .two.ui.bottom.attached.icon.buttons
+                //- .ui.reply.button(tabindex='0')
+                //-   i.reply.icon
+                //-   |  Reply
                 .ui.flag.button(tabindex='0')
                   i.flag.icon
                   |  Flag
@@ -204,13 +212,13 @@ block content
                   input.newcomment(type='text', placeholder='Write a Comment')
                   i.big.send.link.icon
 
-              .two.fluid.ui.buttons(postID=val.postID)
-                .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID) Previous
-                .ui.right.disabled.button(next_id=val.modal_id, postID=val.postID)  Next
+              //- .two.fluid.ui.buttons(postID=val.postID)
+              //-   .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
+              //-   .ui.right.disabled.button(next_id=val.modal_id, postID=val.postID, study_group ='stories')  Next
                  
-              .ui.tiny.gray.progress(progressing_id=val.modal_id)
-                .bar
-                .label ... 
+              //- .ui.tiny.gray.progress(progressing_id=val.modal_id)
+              //-   .bar
+              //-   .label ... 
 
 
 
@@ -222,7 +230,15 @@ block content
             //- .header val.modal_id
             .ui.fluid.card.dim(postID=val.id, state=val.state || 'unread', type='actor', actor_un = val.actor.username, actor_name = val.actor.profile.name, actor_pic = val.actor.profile.picture)
               //- dimmer DIV for flagging
-              .ui.dimmer.flag
+              .content
+                .two.fluid.ui.buttons(postID=val.postID)
+                  .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
+                  .ui.right.disabled.button(next_id=val.modal_id , postID=val.postID, study_group ='stories')  Next
+                  
+                .ui.tiny.gray.progress(progressing_id=val.modal_id)
+                  .bar
+                  .label ... 
+                .ui.dimmer.flag
                     .content
                       .center
                         h2.ui.inverted.icon.header
@@ -260,10 +276,10 @@ block content
 
               .content
                 .description=val.body
-              .three.ui.bottom.attached.icon.buttons
-                .ui.reply.button(tabindex='0')
-                  i.reply.icon
-                  |  Reply
+              .two.ui.bottom.attached.icon.buttons
+                //- .ui.reply.button(tabindex='0')
+                //-   i.reply.icon
+                //-   |  Reply
                 .ui.flag.button(tabindex='0')
                   i.flag.icon
                   |  Flag
@@ -343,13 +359,13 @@ block content
                   i.big.send.link.icon
 
 
-              .two.fluid.ui.buttons(postID=val.postID)
-                .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID) Previous
-                .ui.right.disabled.button(next_id=val.modal_id , postID=val.postID)  Next
+              //- .two.fluid.ui.buttons(postID=val.postID)
+              //-   .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
+              //-   .ui.right.disabled.button(next_id=val.modal_id , postID=val.postID, study_group ='stories')  Next
                 
-              .ui.tiny.gray.progress(progressing_id=val.modal_id)
-                .bar
-                .label ... 
+              //- .ui.tiny.gray.progress(progressing_id=val.modal_id)
+              //-   .bar
+              //-   .label ... 
 
               //- .fluid.ui.button
               //-   #sessionSurvey.ui.left.disabled.button(survey_button='survey_button') Session Survey
@@ -464,7 +480,7 @@ block content
         .content
           // .ui.blue.right.floated.button(disabled='true') Submit
           // #submitSession.ui.blue.right.disabled.fluid.button(survey_id='1') Submit
-          #submitSession.ui.blue.right.fluid.button(study_group='stories') Submit
+          #submitSession.ui.blue.fluid.button(study_group='stories') Submit
 
     #newpost.ui.tiny.post.modal(study_group='stories')
       i.close.icon
@@ -481,6 +497,8 @@ block content
             //-input#picinput(type='file', accept='image/*', capture='camera', name='picinput')
             input#picinput(type='file', accept='image/*', name='picinput')
           .ui.error.message
+      //- change this action to a simple button and attach to it
+      //- #submitnewpost.ui.blue.fluid.button(study_group='stories') Submit
       .actions
         input.ui.blue.button(type='submit', name="foo", value='Submit', form='postform')
 

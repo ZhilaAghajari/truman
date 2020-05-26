@@ -1,15 +1,17 @@
 //$(document).ready(function() {
-
+// Next Step ! 
+// Question: Do we only care about the first attempt in this study? If the user goes over same posts for the third times in the day, I need to record it is their third attempts right?
 //Before Page load:
 $('#content').hide();
 $('#loading').show();
 var modal_id;
-var next_id;
+var next_id ='1';
 var check_id;
 var move_id;
 var next_post;
 var $window = $(window);
-
+var survey_flag = 1;
+var iteration;
 // @@@@@@@@@
 $(window).on("load", function() {
   $('.modal').modal({
@@ -30,33 +32,82 @@ $(window).on("load", function() {
   var session_posts=0;
   var session_userComments=0;
   var check_id ='1';
+  var t = 60*2;
 
-  //ZHILA: my next step! after they press submit, I need to put them back to where they left ! work on submit!
-  // when clicked! if there were more posts, get back where the user left off, otherwise , possibly take them to another link for now
+if(localStorage.getItem("total_seconds")){
+    var total_seconds = localStorage.getItem("total_seconds");
+    console.log(total_seconds);
+    if (total_seconds==0)
+    {
+      //Question : Do I need to only restart it on each login ? what if the user login and never log out? the website should kick them out to login again !
+      //if I don't reset it, will it be reseted after each login? I don't think so! So maybe I need to only reset it in my code after each login! 
+      // it should be reset after each login ... 
+      console.log('RESET TIMER'); 
+      localStorage.setItem("total_seconds", 120);
+      var total_seconds = localStorage.getItem("total_seconds");
+      console.log('After setting local time ', total_seconds);
+    }
+} else {
+  console.log('when it get here at all???');
+  window.localStorage.setItem("total_seconds", t);
+    
+}
 
-  $(document).ready(function()
-  {
-    setTimeout(function () { 
-    //  ATTACH THE SURVEY TO CURRENT MODAL .. what if we don't attach it? we  don't need to attach it!
-    var j ='321';
-    // $("#surveyModal.ui.small.post.modal").modal('attach events',".ui.right.button[next_id='"+next_id+"']");
-    show_survey();
-  },20000); // pop up the session survey after 20 seconds, change it to 5 minutes
-  });
+
+var minutes = parseInt(total_seconds/60);
+var seconds = parseInt(total_seconds%60);
+function countDownTimer(){
+    if(seconds < 10){
+        seconds= "0"+ seconds ;
+    }if(minutes < 10){
+        minutes= "0"+ minutes ;
+    }
+    
+    if(total_seconds == 0){
+        // if(survey_flag ==1 && (parseInt(next_id)+1)>=3 )
+        if(survey_flag ==1)
+        {
+          if((parseInt(next_id)+1)>=3 )
+          {
+            console.log('nextid is : ', next_id);
+            console.log('pas of next id: ', (parseInt(next_id)+1));
+            show_survey();
+          }         
+          else
+          {
+            console.log('retry:',next_id); //try every second and each time it checks if the user sees more than 3 posts, then pop up the session survey ...
+            setTimeout(countDownTimer,1000);
+          }
+        }
+    } else if(total_seconds>0) {
+        total_seconds = total_seconds -1 ;
+        minutes = parseInt(total_seconds/60);
+        seconds = parseInt(total_seconds%60);
+        localStorage.setItem("total_seconds",total_seconds)
+        setTimeout(countDownTimer,1000);
+    }
+}
+setTimeout(countDownTimer,1000);
+
   function show_survey(){
+    // create a delay if necessary ... 
+    console.log('Iteration in move is: ',iteration);
     var j='321';
     $(".ui.small.post.modal[modal_id='"+j+"']").modal('show');
-      // .modal({
-      //   closable: false,
-      //   onSubmit: function(){
-      //     return true;
-      //   }
-      // })
-      // .modal('show');
-    // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events',$(".ui.tiny.post.modal[modal_id='"+j+"']"));
+    survey_flag = 0; // the survey has been shown, don't show it again after 3 minutes
+    // NEXT STEP
+    if(iteration <5)
+    {
+      (function loop(i) {
+        setTimeout(function () { 
+          console.log('delay: ', i);
+          if (--i) loop(i); // iteration counter
+          },1000) //
+       })(5) ; //time in seconds to show each post
+    }
+
   }
   
-
 
   $('.ui.tiny.gray.progress')
   .progress({
@@ -66,33 +117,29 @@ $(window).on("load", function() {
   function move(j) {
     
      progressing_id = $("[progressing_id='"+j+"']");
-          //j=i;
-      (function loop(i) {
+      (function loop(itr) {
         setTimeout(function () { 
-          console.log(i);  
+          console.log(itr);
+          console.log(total_seconds); 
+          iteration =itr; 
           $(progressing_id)
             .progress('increment')
           ;
-          if (--i) loop(i); // iteration counter
+          if (--itr) loop(itr); // iteration counter
           else {
-            // nextt_id = 'next'+(j)
-            // prev_id = 'pre'+(j)
-            // console.log(nextt_id);
             var element_pre = $("[pre_id='"+j+"']");
             var element_next = $("[next_id='"+j+"']");
-            // var element_pre = document.getElementById(pre_id);
             
             element_pre[0].classList.remove("disabled");
-            // var element_next = document.getElementById(next_id);
             element_next[0].classList.remove("disabled");     
           }
           },1000) //
-       })(10) ; //Zh: change it back to 10
+       })(10) ; //time duration in seconds to show each post
 
   }
 
   $('#stratButton.button.fluid.ui.button').on('click', function(){
-    var j=1;  //this one should change to the modal id related to the starting modal of the day .. 
+    var j=1;  //Zh: this should change to the modal id related to the starting modal of the day .. 
     var first_modal=$(".ui.tiny.post.modal[modal_id='"+j+"']");
     first_modal.modal('show');
     move(1);
@@ -104,35 +151,27 @@ $(window).on("load", function() {
   //fix this 20 number.. how many posts are we going to show them? 
   for (let i=1; i<40;i++){
     j=i+1;
-    // $(" .ui.tiny.post.modal[modal_id='"+j+"']").modal('attach events',$(this)[0]);
     $(" .ui.tiny.post.modal[modal_id='"+j+"']").modal('attach events',".ui.right.button[next_id='"+i+"']");
   } 
-  
 
   $('.ui.right.button').on('click', function(){    
-    // NEXT OF LAST post should show an alert that these are the posts for today...
-    if($('.ui.blue.right.fluid.button')[0].attributes[2].value==="stories")
-    {
+    // if($('.ui.right.button')[0].attributes[2].value =='stories')
+    // {
       session_posts++;
-      console.log('number of posts seen in this session : ', session_posts);
+      // reset session timer ... 
+      console.log('Posts seen in this session : ', session_posts);
+      console.log('time left: ', total_seconds);
       next_id = $(this)[0].attributes[1].value;
-      if (next_id != "submitSession")
-      {
-        check_id = (parseInt(next_id)+1).toString();
-      } 
+      check_id = (parseInt(next_id)+1).toString(); //next modal to be shown .. 
       var move_id = (parseInt(next_id)+1).toString();
       modal_id = $('.ui.tiny.post.modal')[0].attributes[1].value;
-
-      
 
       if($("[next_id='"+check_id+"']").length==0)
       {
         console.log('next id is: ', next_id)
         var s ='321';
-        // $(".ui.tiny.post.modal[modal_id='"+s+"']").modal('attach events',".ui.right.button[next_id='"+next_id+"']");
-        var survey_modal=$(".ui.small.post.modal[modal_id='"+s+"']");
-        survey_modal.modal('show');
-        console.log('Pop Up the survey???');
+        show_survey();
+        console.log('The last modal of the dayq');
       }
       else if(flag[next_id]==0)
         {
@@ -140,13 +179,16 @@ $(window).on("load", function() {
           console.log('NEXT id is : ', next_id);
           move(move_id);
         }
-    }
+    // }
     
   });
+
+
 
   $('.ui.left.button').on('click', function(){
 
     var next_id = $(this)[0].attributes[1].value;
+    check_id = next_id;
     var move_id = (parseInt(next_id)-1).toString();
     if(move_id>=1)
     {
@@ -199,13 +241,20 @@ $(window).on("load", function() {
 
   //get add new feed post modal to work
   $("#newpost, a.item.newpost").click(function () {
-    $(' #newpost.ui.tiny.post.modal').modal('show');
     // attach the previously shown modal to it if it is in the stories version ..
-    if($('#newpost.ui.tiny.post')[0].attributes[2]==='stories')
-    {
-      $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','#newpost.ui.tiny.post.modal');
-      // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
-    } 
+    // if($('#newpost.ui.tiny.post')[0].attributes[2].value==='stories')
+    // {
+    //   // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','#newpost.ui.tiny.post.modal');
+    //   $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','input.ui.blue.button');
+
+    //   // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
+    // }
+    console.log('Check ID is now : ',check_id);
+    // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','#newpost.ui.tiny.post.modal');
+    // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('hide');
+    $(' #newpost.ui.tiny.post.modal').modal('show');
+
+
      
 });
 
@@ -244,16 +293,38 @@ $(window).on("load", function() {
 
   });
 
+$('#submitnewpost.ui.blue.fluid.button').click(function(){
+  $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','#submitnewpost.ui.blue.fluid.button');
+  $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
+});
+
   $('.ui.feed.form').submit(function(e) {
     e.preventDefault();
+    e.stopPropagation();
+    this.submit();
     console.log("Submit the junks!!!!")
-
-    $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
-    // return true;
-    //$('.ui.tiny.nudge.modal').modal('show'); 
-    //return true;
+    // attach the previously shown modal to this submit button...
+    console.log('Check ID: ', check_id);
+    console.log('Next ID: ', next_id);
+    $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','input.ui.blue.button');
+    $(document).ready(function () {
+        $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
     });
+    // $(window).on('load', function(){ 
+    //     $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
+    // });
+    // $(window).load(function(){
+    //         $('#thankyouModal').modal('show');
+    //         $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
 
+    //      });
+    // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
+    console.log('Check ID: ', check_id);
+
+    //$('.ui.tiny.nudge.modal').modal('show'); 
+    return false;
+    });
+  
 
 //Picture Preview on Image Selection
 function readURL(input) {
@@ -269,10 +340,10 @@ function readURL(input) {
         }
     }
     
-    $("#picinput").change(function(){
-        //console.log("@@@@@ changing a photo");
-        readURL(this);
-    });
+$("#picinput").change(function(){
+    //console.log("@@@@@ changing a photo");
+    readURL(this);
+});
 
 //Modal to show "other users" in Notifications 
 /*
@@ -365,7 +436,7 @@ $("i.big.send.link.icon").click(function() {
   {
     //.three.ui.bottom.attached.icon.buttons
     console.log("Adding new Comments sections")
-    var buttons = card.find( ".three.ui.bottom.attached.icon.buttons" )
+    var buttons = card.find( ".two.ui.bottom.attached.icon.buttons" )
     buttons.after( '<div class="content"><div class="ui comments"></div>' );
     var comments = card.find( ".ui.comments" )
   }
@@ -390,8 +461,6 @@ $("i.big.send.link.icon").click(function() {
 
   }
 });
-  ///////////////////
-
 
   //this is the REPORT User button
   $('button.ui.button.report')
@@ -604,8 +673,6 @@ $("i.big.send.link.icon").click(function() {
     //.ui.active.dimmer
     $(this).closest( ".ui.dimmer" ).removeClass( "active" );
     $(this).closest( ".ui.fluid.card.dim" ).find(".ui.inverted.read.dimmer").dimmer('hide');
-
-
      var postID = $(this).closest( ".ui.fluid.card.dim" ).attr( "postID" );
      var reread = Date.now();
      console.log("##########REREAD######SEND TO DB######: post "+postID+" at time "+reread);
@@ -621,68 +688,65 @@ j='321';
 $(".ui.small.post.modal[modal_id='"+j+"']")
 .modal({
   selector: { 
-    close: '.ui.blue.right.fluid.button'
+    close: '#submitSession.ui.blue.fluid'
   } 
 })
 ;
 
-  $('#submitSession.ui.blue.right.fluid.button').on('click', function(){
-    // 0- Collect the data. append it to the user's record with the session number?
+$("#newpost.ui.tiny.post.modal")
+.modal({
+  selector: { 
+    close: 'input.ui.blue.button'
+  } 
+})
+;
+
+  $('#submitSession.ui.blue.fluid.button').on('click', function(){
     var post = $(this).closest( ".ui.fluid.card.dim");
-    // var postID = post.attr( "postID" );
     var session_time = Date.now();
     var softhearted = $('input:radio[name=Softhearted]:checked').val();
     var touched = $('input:radio[name=Touched]:checked').val();
     var sympathetic = $('input:radio[name=Sympathetic]:checked').val();
     var moved = $('input:radio[name=Moved]:checked').val();
-    //Zh: send these values to the user's record .. where should I send them??
-    // $.post("/feed", {softhearted: softhearted, touched: touched, sympathetic: sympathetic, moved: moved, _csrf : $('meta[name="csrf-token"]').attr('content')});
-    // thid postID is not correct! this modal doesn't have it so I need to read it from the previous post! like defining a global postID
-    //  Zh: need to change this one to postID .. why can't it recognize post ID now? do we even need it?
     $.post("/userPost_feed", { session_time: session_time, modalID: modal_id, session_userComments: session_userComments, session_posts: session_posts, session_flags: session_flags, session_likes: session_likes, session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
     $.post("/feed", { session_time: session_time, modalID: modal_id, session_userComments: session_userComments, session_posts: session_posts, session_flags: session_flags, session_likes: session_likes, session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
-    // reset the session_likes
+    // reset the session variables .. 
     session_likes = 0;
     session_flags=0;
     session_posts=0
     session_userComments =0;
     // if the experimental group is stories-based, do the following, otherwise, just close the modal...
-
-    if($('.ui.blue.right.fluid.button')[0].attributes[2].value==="stories")
+    if($('.ui.blue.fluid.button')[0].attributes[2].value==="stories")
     // 1- if the user reached the end of the posts for today, direct them to a link or to the login page 
     {
-        console.log('check is: ', check_id);
+      console.log('Check_id: ', check_id);
       // no more posts to show .. 
       if($("[next_id='"+check_id+"']").length===0)
       {
         alert('This is the last post of this session!');
-        window.open('https://www.w3schools.com', '_self'); // will change it later .. 
-
+        window.location.href='/'; //maybe go to tour site???
       }
       //2- if it is activated after some amount of time !
       else 
       {
-        j='321';
-        // $(".ui.small.post.modal[modal_id='"+'321'+"']").modal('hide'); //or close this modal instead of hide . . . 
-        $(".ui.small.post.modal[modal_id='"+j+"']")
-          .modal({
-            selector: { 
-              close: '.ui.blue.right.fluid.button'
-            } 
-          });
-        $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events',$(".ui.small.post.modal[modal_id='"+j+"']"));
+        $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','#submitSession.ui.blue.fluid.button');
+        // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events',$(".ui.small.post.modal[modal_id='"+j+"']"));
         $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
+        if(check_id=='1')
+        {
+          move(1);
+        }
       }
 
     }
     else //if this is the feed version.. just close the modal...
     {
-      console.log('not implemented yet'); // in this case we only need to close the modal after submit
+      console.log('Not sure what to do here yet!'); // in this case we only need to close the modal after submit
       j='321';
       $(".ui.small.post.modal[modal_id='"+j+"']")
       .modal({
         selector: { 
-          close: '.ui.blue.right.fluid.button'
+          close: '#submitSession.ui.blue.fluid'
         } 
       })
     ;
@@ -799,3 +863,5 @@ $(".ui.small.post.modal[modal_id='"+j+"']")
 ;
 */
 });
+
+

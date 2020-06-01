@@ -1,3 +1,4 @@
+// Current issue. DOesn't hide the modal when the survey pops up!!!! + new post
 //  1- Trigger an even after login and there you can reset the timer to 120 and store it in the localstorage ...
 //  2- instead of submit form on successful new post, treat it as the way the comments are treated. they are added to the front end and then are shoot to the server as well...
 // 3- check close selector because the issue with survey modal is still not solved...
@@ -101,8 +102,7 @@ if(typeof total_seconds != 'undefined')
   function show_survey(){
     // create a delay if necessary ... 
     console.log('Iteration in move is: ',iteration);
-    var j='321';
-    $(".ui.small.post.modal[modal_id='"+j+"']").modal('show');
+    
     survey_flag =0;
     window.localStorage.setItem("survey_flag", 0);
     console.log('reset the FLAG to :', survey_flag);
@@ -115,6 +115,10 @@ if(typeof total_seconds != 'undefined')
           },1000) //
        })(5) ; //time in seconds to show each post
     }
+    // maybe fist hide the previous modal ...
+    $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('hide');
+    var j='321';
+    $(".ui.small.post.modal[modal_id='"+j+"']").modal('show');
 
   }
   
@@ -315,7 +319,7 @@ if(typeof total_seconds != 'undefined')
       console.log('SET TIMER');
       window.localStorage.setItem("total_seconds", t);
       window.localStorage.setItem("survey_flag", f);
-      console.log('the survey flag is: ',localstorage.getItem("survey_flag"));
+      console.log('the survey flag is: ',localStorage.getItem("survey_flag"));
     }
     
   });
@@ -349,9 +353,11 @@ if(typeof total_seconds != 'undefined')
       //console.log(event);
       console.log("fields is :");
       //console.log(fields);
-      // $(".form.ui.form")[0].submit();
-      // instead of submit, now set the timer ?v
-      // alert('yayyy');
+      $(".form.ui.form")[0].submit();
+      event.preventDefault();
+      // change it to be an onclick event instead of submiting the form
+      // submitnewStory();
+      alert('Submit?');
     }
 
 
@@ -364,31 +370,33 @@ $('#submitnewpost.ui.blue.fluid.button').click(function(){
   $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
 });
 
+// function submitnewStory()
   $('.ui.feed.form').submit(function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.submit();
-    console.log("Submit the junks!!!!")
-    // attach the previously shown modal to this submit button...
-    console.log('Check ID: ', check_id);
-    console.log('Next ID: ', next_id);
-    $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','input.ui.blue.button');
-    $(document).ready(function () {
-        $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
-    });
-    // $(window).on('load', function(){ 
-    //     $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
-    // });
-    // $(window).load(function(){
-    //         $('#thankyouModal').modal('show');
-    //         $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
+      alert('Submited the post?');
+      e.preventDefault();
+      e.stopPropagation();
+      this.submit();
+      console.log("Submit the junks!!!!")
+      // attach the previously shown modal to this submit button...
+      console.log('Check ID: ', check_id);
+      console.log('Next ID: ', next_id);
+      $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','input.ui.blue.button');
+      $(document).ready(function () {
+          $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
+      });
+      // $(window).on('load', function(){ 
+      //     $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
+      // });
+      // $(window).load(function(){
+      //         $('#thankyouModal').modal('show');
+      //         $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
 
-    //      });
-    // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
-    console.log('Check ID: ', check_id);
+      //      });
+      // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
+      console.log('Check ID: ', check_id);
 
-    //$('.ui.tiny.nudge.modal').modal('show'); 
-    return false;
+      //$('.ui.tiny.nudge.modal').modal('show'); 
+      return false;
     });
   
 
@@ -762,6 +770,14 @@ $(".ui.small.post.modal[modal_id='"+j+"']")
 })
 ;
 
+$(".ui.tiny.post.modal")
+.modal({
+  selector: { 
+    close: ".ui.small.post.modal[modal_id='"+j+"']"
+  } 
+})
+;
+
 $("#newpost.ui.tiny.post.modal")
 .modal({
   selector: { 
@@ -793,7 +809,7 @@ $("#newpost.ui.tiny.post.modal")
       if($("[next_id='"+check_id+"']").length===0)
       {
         alert('This is the last post of this session!');
-        window.location.href='/'; //maybe go to tour site???
+        window.location.href='/'; //maybe go to tour site??? or redirect 
       }
       //2- if it is activated after some amount of time !
       else 

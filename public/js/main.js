@@ -1,3 +1,6 @@
+//  1- Trigger an even after login and there you can reset the timer to 120 and store it in the localstorage ...
+//  2- instead of submit form on successful new post, treat it as the way the comments are treated. they are added to the front end and then are shoot to the server as well...
+// 3- check close selector because the issue with survey modal is still not solved...
 //$(document).ready(function() {
 // Next Step ! 
 // Question: Do we only care about the first attempt in this study? If the user goes over same posts for the third times in the day, I need to record it is their third attempts right?
@@ -10,7 +13,6 @@ var check_id;
 var move_id;
 var next_post;
 var $window = $(window);
-var survey_flag = 1;
 var iteration;
 // @@@@@@@@@
 $(window).on("load", function() {
@@ -32,70 +34,78 @@ $(window).on("load", function() {
   var session_posts=0;
   var session_userComments=0;
   var check_id ='1';
-  var t = 60*2;
+
 
 if(localStorage.getItem("total_seconds")){
     var total_seconds = localStorage.getItem("total_seconds");
-    console.log(total_seconds);
+    console.log('time is: ', total_seconds);
+
     if (total_seconds==0)
     {
-      //Question : Do I need to only restart it on each login ? what if the user login and never log out? the website should kick them out to login again !
-      //if I don't reset it, will it be reseted after each login? I don't think so! So maybe I need to only reset it in my code after each login! 
-      // it should be reset after each login ... 
-      console.log('RESET TIMER'); 
-      localStorage.setItem("total_seconds", 120);
-      var total_seconds = localStorage.getItem("total_seconds");
-      console.log('After setting local time ', total_seconds);
+      console.log('timer is over');
     }
-} else {
-  console.log('when it get here at all???');
-  window.localStorage.setItem("total_seconds", t);
+}
+ else {
+  console.log('Does it get here at all?');
+  // window.localStorage.setItem("total_seconds", t);
     
 }
 
+if(localStorage.getItem("survey_flag")){
+  var survey_flag = localStorage.getItem("survey_flag");
+}
+else{
+  var survey_flag =0;
+}
 
-var minutes = parseInt(total_seconds/60);
-var seconds = parseInt(total_seconds%60);
-function countDownTimer(){
-    if(seconds < 10){
-        seconds= "0"+ seconds ;
-    }if(minutes < 10){
-        minutes= "0"+ minutes ;
-    }
-    
-    if(total_seconds == 0){
-        // if(survey_flag ==1 && (parseInt(next_id)+1)>=3 )
-        if(survey_flag ==1)
-        {
-          if((parseInt(next_id)+1)>=3 )
+if(typeof total_seconds != 'undefined')
+{
+  console.log('something something');
+  var minutes = parseInt(total_seconds/60);
+  var seconds = parseInt(total_seconds%60);
+  function countDownTimer(){
+      if(seconds < 10){
+          seconds= "0"+ seconds ;
+      }if(minutes < 10){
+          minutes= "0"+ minutes ;
+      }
+      
+      if(total_seconds == 0){
+          // if(survey_flag ==1 && (parseInt(next_id)+1)>=3 )
+          // ZHILA: NEXT TASK ...survey falg should also be stored in local storage ...
+          if(localStorage.getItem("survey_flag") ==1)
           {
-            console.log('nextid is : ', next_id);
-            console.log('pas of next id: ', (parseInt(next_id)+1));
-            show_survey();
-          }         
-          else
-          {
-            console.log('retry:',next_id); //try every second and each time it checks if the user sees more than 3 posts, then pop up the session survey ...
-            setTimeout(countDownTimer,1000);
+            if((parseInt(next_id)+1)>=3 )
+            {
+              console.log('nextid is : ', next_id);
+              console.log('pas of next id: ', (parseInt(next_id)+1));
+              show_survey();
+            }         
+            else
+            {
+              console.log('retry:',next_id); //try every second and each time it checks if the user sees more than 3 posts, then pop up the session survey ...
+              setTimeout(countDownTimer,1000);
+            }
           }
-        }
-    } else if(total_seconds>0) {
-        total_seconds = total_seconds -1 ;
-        minutes = parseInt(total_seconds/60);
-        seconds = parseInt(total_seconds%60);
-        localStorage.setItem("total_seconds",total_seconds)
-        setTimeout(countDownTimer,1000);
-    }
+      } else if(total_seconds>0) {
+          total_seconds = total_seconds -1 ;
+          minutes = parseInt(total_seconds/60);
+          seconds = parseInt(total_seconds%60);
+          localStorage.setItem("total_seconds",total_seconds)
+          setTimeout(countDownTimer,1000);
+      }
+  }
+  setTimeout(countDownTimer,1000);
 }
-setTimeout(countDownTimer,1000);
 
   function show_survey(){
     // create a delay if necessary ... 
     console.log('Iteration in move is: ',iteration);
     var j='321';
     $(".ui.small.post.modal[modal_id='"+j+"']").modal('show');
-    survey_flag = 0; // the survey has been shown, don't show it again after 3 minutes
-    // NEXT STEP
+    survey_flag =0;
+    window.localStorage.setItem("survey_flag", 0);
+    console.log('reset the FLAG to :', survey_flag);
     if(iteration <5)
     {
       (function loop(i) {
@@ -120,7 +130,7 @@ setTimeout(countDownTimer,1000);
       (function loop(itr) {
         setTimeout(function () { 
           console.log(itr);
-          console.log(total_seconds); 
+          // console.log(total_seconds); 
           iteration =itr; 
           $(progressing_id)
             .progress('increment')
@@ -161,6 +171,7 @@ setTimeout(countDownTimer,1000);
       // reset session timer ... 
       console.log('Posts seen in this session : ', session_posts);
       console.log('time left: ', total_seconds);
+      console.log('falg is: ', survey_flag);
       next_id = $(this)[0].attributes[1].value;
       check_id = (parseInt(next_id)+1).toString(); //next modal to be shown .. 
       var move_id = (parseInt(next_id)+1).toString();
@@ -293,6 +304,61 @@ setTimeout(countDownTimer,1000);
 
   });
 
+  // ZH: remove these after testing...
+  $('button.ui.button').on('click', function(){
+    var t = 60*2;
+    var f =1;
+    // alert('LOGEDIN');
+    window.localStorage.setItem("total_seconds", t);
+    if($('button.ui.button').text()=="Login")
+    {
+      console.log('SET TIMER');
+      window.localStorage.setItem("total_seconds", t);
+      window.localStorage.setItem("survey_flag", f);
+      console.log('the survey flag is: ',localstorage.getItem("survey_flag"));
+    }
+    
+  });
+
+  $('.form.ui.form')
+  .form({
+    fields:{
+      name:{
+        identifier:'email',
+        rules: [
+          {
+            type:'empty',
+            prompt: 'Please enter your username'
+          }
+        ]
+      },
+      password:{
+        identifier:'password',
+        rules: [
+          {
+            type:'empty',
+            prompt: 'Please enter your username'
+          }
+        ]
+      },
+
+    },
+
+    onSuccess:function(event, fields){
+      console.log("Login Events??? :");
+      //console.log(event);
+      console.log("fields is :");
+      //console.log(fields);
+      // $(".form.ui.form")[0].submit();
+      // instead of submit, now set the timer ?v
+      // alert('yayyy');
+    }
+
+
+  });
+
+//Add a validator for login submit, and save the timer in the local storage
+
 $('#submitnewpost.ui.blue.fluid.button').click(function(){
   $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','#submitnewpost.ui.blue.fluid.button');
   $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
@@ -325,6 +391,9 @@ $('#submitnewpost.ui.blue.fluid.button').click(function(){
     return false;
     });
   
+
+// on Login button set this timer to 2:00 minutes and store in in local storage ..
+
 
 //Picture Preview on Image Selection
 function readURL(input) {

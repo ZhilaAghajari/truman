@@ -134,6 +134,8 @@ exports.postLogin = (req, res, next) => {
       //req.flash('success', { msg: 'Success! You are logged in.' });
       res.redirect(req.session.returnTo || '/');//? fields of session object???
     });
+    console.log('TRIGGER an EVENT for timer HERE');
+    
   })(req, res, next);
 };
 

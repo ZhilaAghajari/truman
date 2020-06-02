@@ -346,7 +346,7 @@ $('#submitnewpost.ui.blue.fluid.button').click(function(){
 
   // $('#submitNewPost.ui.blue.fluid.button').click(function() {
   $('.ui.feed.form').submit(function(e) {
-      alert('Submited the post?');
+      // alert('Submited the post?');
       e.preventDefault();
       e.stopPropagation();
       // this.submit(); //if I don't submit ... will it get through and do I only need to take care of fron end .. ?
@@ -369,7 +369,7 @@ $('#submitnewpost.ui.blue.fluid.button').click(function(){
 
       //      });
       // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
-      alert('submited?');
+      // alert('submited?');
       console.log('Check ID: ', check_id);
 
       //helper_function();

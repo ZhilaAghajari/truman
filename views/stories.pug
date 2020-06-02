@@ -96,14 +96,14 @@ block content
           -console.log(val.modal_id)
           .ui.tiny.post.modal(modal_id=val.modal_id, postID=val.postID)
             .ui.fluid.card(u_postID=val.id, type=u_class, postID=val.postID)
-              .content
-                .two.fluid.ui.buttons(postID=val.postID)
-                  .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
-                  .ui.right.disabled.button(next_id=val.modal_id, postID=val.postID, study_group ='stories')  Next
+              // .content
+              //   .two.fluid.ui.buttons(postID=val.postID)
+              //     .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
+              //     .ui.right.disabled.button(next_id=val.modal_id, postID=val.postID, study_group ='stories')  Next
                    
-                .ui.tiny.gray.progress(progressing_id=val.modal_id)
-                  .bar
-                  .label ... 
+              //   .ui.tiny.gray.progress(progressing_id=val.modal_id)
+              //     .bar
+              //     .label ... 
               .content
                 #newpost.ui.fluid.left.labeled.right.icon.input
                   .ui.label
@@ -212,13 +212,13 @@ block content
                   input.newcomment(type='text', placeholder='Write a Comment')
                   i.big.send.link.icon
 
-              //- .two.fluid.ui.buttons(postID=val.postID)
-              //-   .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
-              //-   .ui.right.disabled.button(next_id=val.modal_id, postID=val.postID, study_group ='stories')  Next
+              .two.fluid.ui.buttons(postID=val.postID)
+                .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
+                .ui.right.disabled.button(next_id=val.modal_id, postID=val.postID, study_group ='stories')  Next
                  
-              //- .ui.tiny.gray.progress(progressing_id=val.modal_id)
-              //-   .bar
-              //-   .label ... 
+              .ui.tiny.gray.progress(progressing_id=val.modal_id)
+                .bar
+                .label ... 
 
 
 
@@ -230,14 +230,14 @@ block content
             //- .header val.modal_id
             .ui.fluid.card.dim(postID=val.id, state=val.state || 'unread', type='actor', actor_un = val.actor.username, actor_name = val.actor.profile.name, actor_pic = val.actor.profile.picture)
               //- dimmer DIV for flagging
-              .content
-                .two.fluid.ui.buttons(postID=val.postID)
-                  .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
-                  .ui.right.disabled.button(next_id=val.modal_id , postID=val.postID, study_group ='stories')  Next
+              //- .content
+              //-   .two.fluid.ui.buttons(postID=val.postID)
+              //-     .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
+              //-     .ui.right.disabled.button(next_id=val.modal_id , postID=val.postID, study_group ='stories')  Next
                   
-                .ui.tiny.gray.progress(progressing_id=val.modal_id)
-                  .bar
-                  .label ... 
+              //-   .ui.tiny.gray.progress(progressing_id=val.modal_id)
+              //-     .bar
+              //-     .label ... 
                 .ui.dimmer.flag
                     .content
                       .center
@@ -359,13 +359,13 @@ block content
                   i.big.send.link.icon
 
 
-              //- .two.fluid.ui.buttons(postID=val.postID)
-              //-   .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
-              //-   .ui.right.disabled.button(next_id=val.modal_id , postID=val.postID, study_group ='stories')  Next
+              .two.fluid.ui.buttons(postID=val.postID)
+                .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
+                .ui.right.disabled.button(next_id=val.modal_id , postID=val.postID, study_group ='stories')  Next
                 
-              //- .ui.tiny.gray.progress(progressing_id=val.modal_id)
-              //-   .bar
-              //-   .label ... 
+              .ui.tiny.gray.progress(progressing_id=val.modal_id)
+                .bar
+                .label ... 
 
               //- .fluid.ui.button
               //-   #sessionSurvey.ui.left.disabled.button(survey_button='survey_button') Session Survey
@@ -499,6 +499,8 @@ block content
           .ui.error.message
       //- change this action to a simple button and attach to it
       //- #submitnewpost.ui.blue.fluid.button(study_group='stories') Submit
+      //- .content
+      //-   #submit.ui.blue.fluid.button(study_group='stories') Submit
       .actions
         input.ui.blue.button(type='submit', name="foo", value='Submit', form='postform')
 

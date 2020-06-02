@@ -1,11 +1,9 @@
-// Current issue. DOesn't hide the modal when the survey pops up!!!! + new post
+// Current issue. DOesn't hide the modal when the
 //  1- Trigger an even after login and there you can reset the timer to 120 and store it in the localstorage ...
 //  2- instead of submit form on successful new post, treat it as the way the comments are treated. they are added to the front end and then are shoot to the server as well...
-// 3- check close selector because the issue with survey modal is still not solved...
-//$(document).ready(function() {
-// Next Step ! 
-// Question: Do we only care about the first attempt in this study? If the user goes over same posts for the third times in the day, I need to record it is their third attempts right?
-//Before Page load:
+// 1- check close selector because the issue with survey modal is still not solved...
+// 
+
 $('#content').hide();
 $('#loading').show();
 var modal_id;
@@ -30,9 +28,7 @@ $(window).on("load", function() {
   $('.ui.tiny.post.modal').modal({
     closable: false,
   });
-  var session_likes=0;
-  var session_flags=0
-  var session_posts=0;
+  
   var session_userComments=0;
   var check_id ='1';
 
@@ -160,7 +156,7 @@ if(typeof total_seconds != 'undefined')
   });
   
 
- // the flag array should be as large as posts numbers .. for now I have it fixed and need think about it more .. 
+ // the flag array should be as large as posts numbers .. for now I have it fixed but I need to fix it ...  
   flag=new Array(100).fill(0)
   //fix this 20 number.. how many posts are we going to show them? 
   for (let i=1; i<40;i++){
@@ -171,9 +167,11 @@ if(typeof total_seconds != 'undefined')
   $('.ui.right.button').on('click', function(){    
     // if($('.ui.right.button')[0].attributes[2].value =='stories')
     // {
-      session_posts++;
+      temp = parseInt(localStorage.getItem("session_posts"))+1;
+      window.localStorage.setItem("session_posts",temp);
+
       // reset session timer ... 
-      console.log('Posts seen in this session : ', session_posts);
+      console.log('Posts seen in this session : ', localStorage.getItem("session_posts"));
       console.log('time left: ', total_seconds);
       console.log('falg is: ', survey_flag);
       next_id = $(this)[0].attributes[1].value;
@@ -194,7 +192,6 @@ if(typeof total_seconds != 'undefined')
           console.log('NEXT id is : ', next_id);
           move(move_id);
         }
-    // }
     
   });
 
@@ -242,7 +239,7 @@ if(typeof total_seconds != 'undefined')
       }
 
    });
-}
+  }
 
   //make checkbox work
   $('.ui.checkbox')
@@ -254,8 +251,34 @@ if(typeof total_seconds != 'undefined')
     })
   ;
 
+  // ZH: Set local variables after loging. ( do I need to set session id here as well?)
+  $('button.ui.button').on('click', function(){
+    var t = 60*2;
+    var f =1;
+    // alert('LOGEDIN');
+    window.localStorage.setItem("total_seconds", t);
+    if($('button.ui.button').text()=="Login")
+    {
+      console.log('SET TIMER');
+      window.localStorage.setItem("total_seconds", t);
+      window.localStorage.setItem("survey_flag", f);
+      console.log('the survey flag is: ',localStorage.getItem("survey_flag"));
+      //  set the session variables ...
+      //  set these to zeros!!!
+      var z =0;
+      window.localStorage.setItem("session_likes",z);
+      window.localStorage.setItem("session_flags",z);
+      window.localStorage.setItem("session_posts",z);
+      window.localStorage.setItem("session_userComments",z);
+    }
+    
+  });
+
   //get add new feed post modal to work
   $("#newpost, a.item.newpost").click(function () {
+    console.log('Check ID is now : ',check_id);
+    $(' #newpost.ui.tiny.post.modal').modal('show');
+
     // attach the previously shown modal to it if it is in the stories version ..
     // if($('#newpost.ui.tiny.post')[0].attributes[2].value==='stories')
     // {
@@ -264,10 +287,8 @@ if(typeof total_seconds != 'undefined')
 
     //   // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
     // }
-    console.log('Check ID is now : ',check_id);
     // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','#newpost.ui.tiny.post.modal');
     // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('hide');
-    $(' #newpost.ui.tiny.post.modal').modal('show');
 
 
      
@@ -300,68 +321,16 @@ if(typeof total_seconds != 'undefined')
 
     onSuccess:function(event, fields){
       console.log("Event is :");
+      event.preventDefault();
       //console.log(event);
       console.log("fields is :");
       //console.log(fields);
+      event.preventDefault();
       $(".ui.feed.form")[0].submit();
     }
 
   });
 
-  // ZH: remove these after testing...
-  $('button.ui.button').on('click', function(){
-    var t = 60*2;
-    var f =1;
-    // alert('LOGEDIN');
-    window.localStorage.setItem("total_seconds", t);
-    if($('button.ui.button').text()=="Login")
-    {
-      console.log('SET TIMER');
-      window.localStorage.setItem("total_seconds", t);
-      window.localStorage.setItem("survey_flag", f);
-      console.log('the survey flag is: ',localStorage.getItem("survey_flag"));
-    }
-    
-  });
-
-  $('.form.ui.form')
-  .form({
-    fields:{
-      name:{
-        identifier:'email',
-        rules: [
-          {
-            type:'empty',
-            prompt: 'Please enter your username'
-          }
-        ]
-      },
-      password:{
-        identifier:'password',
-        rules: [
-          {
-            type:'empty',
-            prompt: 'Please enter your username'
-          }
-        ]
-      },
-
-    },
-
-    onSuccess:function(event, fields){
-      console.log("Login Events??? :");
-      //console.log(event);
-      console.log("fields is :");
-      //console.log(fields);
-      $(".form.ui.form")[0].submit();
-      event.preventDefault();
-      // change it to be an onclick event instead of submiting the form
-      // submitnewStory();
-      alert('Submit?');
-    }
-
-
-  });
 
 //Add a validator for login submit, and save the timer in the local storage
 
@@ -370,20 +339,27 @@ $('#submitnewpost.ui.blue.fluid.button').click(function(){
   $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
 });
 
-// function submitnewStory()
+// $(document).ready(function(){
+//      $(document).on("keydown", disableF5);
+// });
+// function disableF5(e) { if ((e.which || e.keyCode) == 116 || (e.which || e.keyCode) == 82) e.preventDefault(); };
+
+  // $('#submitNewPost.ui.blue.fluid.button').click(function() {
   $('.ui.feed.form').submit(function(e) {
       alert('Submited the post?');
       e.preventDefault();
       e.stopPropagation();
-      this.submit();
+      // this.submit(); //if I don't submit ... will it get through and do I only need to take care of fron end .. ?
       console.log("Submit the junks!!!!")
       // attach the previously shown modal to this submit button...
       console.log('Check ID: ', check_id);
       console.log('Next ID: ', next_id);
-      $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','input.ui.blue.button');
-      $(document).ready(function () {
-          $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
-      });
+      $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','#submitNewPost.ui.blue.fluid.button');
+      $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
+
+      // $(document).ready(function () {
+      //     $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
+      // });
       // $(window).on('load', function(){ 
       //     $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
       // });
@@ -393,12 +369,27 @@ $('#submitnewpost.ui.blue.fluid.button').click(function(){
 
       //      });
       // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
+      alert('submited?');
       console.log('Check ID: ', check_id);
 
+      //helper_function();
+      window.localStorage.setItem("reload",1);
+      console.log('Reload flag: ',localStorage.getItem("reload"));
+
       //$('.ui.tiny.nudge.modal').modal('show'); 
-      return false;
+      // call a function that reload the page from check_id modal .. 
+      // return false;
     });
-  
+if(parseInt(localStorage.getItem("reload")) == 1)
+{
+  $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
+  window.localStorage.setItem("reload",0);
+  move(check_id);
+}
+// function helper_function() {
+//   // body...
+//   $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
+// }
 
 // on Login button set this timer to 2:00 minutes and store in in local storage ..
 
@@ -506,9 +497,10 @@ $("i.big.send.link.icon").click(function() {
   var card = $(this).parents( ".ui.fluid.card" );
   var comments = card.find( ".ui.comments" )
   //no comments area - add it
-  console.log("Comments is now "+comments.length)
-  session_userComments ++;
-  console.log(session_userComments);
+  console.log("Comments is now "+comments.length);
+  temp = parseInt(localStorage.getItem("session_userComments"))+1;
+  window.localStorage.setItem("session_userComments",temp);
+  console.log('user comments number in this session: ',localStorage.getItem("session_userComments"));
   if( !comments.length )
   {
     //.three.ui.bottom.attached.icon.buttons
@@ -636,8 +628,9 @@ $("i.big.send.link.icon").click(function() {
         console.log("***********UNLIKE: post");
         $( this ).removeClass("red");
         var label = $(this).next("a.ui.basic.red.left.pointing.label.count");
-        session_likes = session_likes -1;
-        console.log('session likes : ', session_likes);
+        temp = parseInt(localStorage.getItem("session_likes"))-1;
+        window.localStorage.setItem("session_likes",temp);
+        console.log('session likes : ', localStorage.getItem("session_likes"));
         label.html(function(i, val) { return val*1-1 });
     }
     //since not red, this button press is a LIKE action
@@ -648,8 +641,9 @@ $("i.big.send.link.icon").click(function() {
       var postID = $(this).closest( ".ui.fluid.card" ).attr( "postID" );
       var like = Date.now();
       console.log("***********LIKE: post "+postID+" at time "+like);
-      session_likes = session_likes +1;
-      console.log('session likes : ', session_likes);
+      temp = parseInt(localStorage.getItem("session_likes"))+1;
+      window.localStorage.setItem("session_likes",temp);
+      console.log('session likes : ', localStorage.getItem("session_likes"));
 
       if ($(this).closest( ".ui.fluid.card" ).attr( "type" )=='userPost')
         $.post( "/userPost_feed", { postID: postID, like: like, _csrf : $('meta[name="csrf-token"]').attr('content') } );
@@ -723,8 +717,9 @@ $("i.big.send.link.icon").click(function() {
   //this is the POST FLAG button
   $('.flag.button')
   .on('click', function() {
-    session_flags++;
-    console.log('session flag number: ', session_flags);
+    temp = parseInt(localStorage.getItem("session_flags"))+1;
+    window.localStorage.setItem("session_flags",temp);
+    console.log('session flag number: ', localStorage.getItem("session_flags"));
      var post = $(this).closest( ".ui.fluid.card.dim");
      var postID = post.attr( "postID" );
      var flag = Date.now();
@@ -793,13 +788,16 @@ $("#newpost.ui.tiny.post.modal")
     var touched = $('input:radio[name=Touched]:checked').val();
     var sympathetic = $('input:radio[name=Sympathetic]:checked').val();
     var moved = $('input:radio[name=Moved]:checked').val();
-    $.post("/userPost_feed", { session_time: session_time, modalID: modal_id, session_userComments: session_userComments, session_posts: session_posts, session_flags: session_flags, session_likes: session_likes, session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
-    $.post("/feed", { session_time: session_time, modalID: modal_id, session_userComments: session_userComments, session_posts: session_posts, session_flags: session_flags, session_likes: session_likes, session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
+    $.post("/userPost_feed", { session_time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: session_posts, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
+    $.post("/feed", { session_time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: session_posts, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
     // reset the session variables .. 
-    session_likes = 0;
-    session_flags=0;
-    session_posts=0
-    session_userComments =0;
+    console.log('session likes stored : ', localStorage.getItem("session_likes"));
+    window.localStorage.setItem("session_likes",0);
+    window.localStorage.setItem("session_flags",0);
+    window.localStorage.setItem("session_posts",0);
+    window.localStorage.setItem("session_userComments",0);
+    console.log('reset likes of this session: ', localStorage.getItem("session_likes"));
+
     // if the experimental group is stories-based, do the following, otherwise, just close the modal...
     if($('.ui.blue.fluid.button')[0].attributes[2].value==="stories")
     // 1- if the user reached the end of the posts for today, direct them to a link or to the login page 
@@ -839,114 +837,6 @@ $("#newpost.ui.tiny.post.modal")
     } 
   });
 
-
-//////TESTING
-/*setTimeout(function() {
-  //.ui.fluid.card.test
-    $('.ui.fluid.card.test .content.read')
-      .transition({
-        animation: 'fade down',
-        duration   : '1.5s',
-      });
-      }.bind(this), 1500);
-
-  //Dimm cards as user scrolls - send Post to update DB on timing of events .image
-  //$('.ui.fluid.card.dim') img.post $('.ui.fluid.card.dim .image'
-  /*
-  $('img.post.s3, .content.pro.s3')
-  .visibility({
-    once       : false,
-    continuous : false,
-    observeChanges: true,
-    //throttle:100,
-    offset: 250,
-    
-    //USER HAS NOW READ THE POST (READ EVENT) 
-    //onBottomVisibleReverse:function(calculations) { onBottomPassed
-      onBottomPassed:function(calculations) {
-        console.log(":::::Now passing onBottomPassed:::::");
-        var parent = $(this).parents(".ui.fluid.card.dim, .profile_card");
-
-        //As Post is not READ and We have a transparency condistion - Show Read Conent and send Post READ event
-        if ((!(parent.attr( "state" )=='read')) && (parent.attr( "transparency" )=='yes'))
-        {
-          console.log("::::UI passing::::Adding Seen Box Now::::::::");
-
-          var postID = parent.attr( "postID" );
-          var read = Date.now();
-
-          //actual show the element
-          
-           parent.find('.read')
-            .transition({
-              animation: 'fade',
-              duration   : '1.5s',
-            });
-          //$('img.post').visibility('refresh')  $('img.post, .content.pro').visibility('refresh')
-          //<div style="text-align:center;background:#b5bfce" class="content read"> <p>You've read this!</p><a href="/user/"><img src="/profile_pictures/" class="ui avatar image"><span>cat</span></a> has been notified.</div>
-          //parent.append( '<div style="text-align:center;background:#b5bfce" class="content read"> <p>You have read this!</p><a href="/user/'+parent.attr( "actor_un" )+'"><img src="/profile_pictures/'+parent.attr( "actor_pic" )+'" class="ui avatar image"><span>'+parent.attr( "actor_name" )+'</span></a> has been notified.</div>' );
-          parent.attr( "state", "read" );
-          console.log("::::UI passing::::SENDING POST TO DB::::::::");
-          $.post( "/feed", { postID: postID, read: read, _csrf : $('meta[name="csrf-token"]').attr('content') } );
-
-        }
-
-        //if we are not in UI condistion, and we are reading, then send off Post to DB for new Read Time
-        //Maybe kill this so we don't fill the DB with all this stuff. Seems kind of silly (or only do like 10, etc)
-        //else if ((parent.attr( "ui" )=='no') && (parent.attr( "state" )=='unread'))
-
-        //Need to get all "read" and "start" times in non-UI case (as all other times rests on it)
-        else if ((parent.attr( "transparency" )=='no'))
-        {
-          console.log("::::NO UI passing:::");
-          //console.log("::::first time reading -> UNREAD:::");
-          var postID = parent.attr( "postID" );
-          var read = Date.now();
-          //set to read now
-          //parent.attr( "state" , "read");
-
-          //send post to server to update DB that we have now read this
-          console.log("::::NO UI :::::READ::::SENDING POST TO DB:::::::POST:"+postID+" at time "+read);
-          if (parent.attr( "profile" )=="yes")
-            $.post( "/pro_feed", { postID: postID, read: read, _csrf : $('meta[name="csrf-token"]').attr('content') } );
-          else
-            $.post( "/feed", { postID: postID, read: read, _csrf : $('meta[name="csrf-token"]').attr('content') } );
-        }
-
-        //UI and DIMMED READ, which does not count as a READ
-        else
-          {console.log("::::passing::::Already dimmed - do nothing - transparency is now "+parent.attr( "transparency" ));}
-
-      },
-
-    ////POST IS NOW Visiable - START EVENT
-    onBottomVisible:function(calculations) {
-        console.log("@@@@@@@ Now Seen @@@@@@@@@");
-        var parent = $(this).parents(".ui.fluid.card.dim, .profile_card");
-        
-        var postID = parent.attr( "postID" );
-        var start = Date.now();
-        console.log("@@@@@@@ UI!!!! @@@@@@SENDING TO DB@@@@@@START POST UI has seen post "+postID+" at time "+start);
-        if (parent.attr( "profile" )=="yes")
-          $.post( "/pro_feed", { postID: postID, start: start, _csrf : $('meta[name="csrf-token"]').attr('content') } );
-        else
-          $.post( "/feed", { postID: postID, start: start, _csrf : $('meta[name="csrf-token"]').attr('content') } );
-
-        }
-  })
-;//WTF!!!
-//lazy loading of images
-  $('.img.post img')
-  .visibility({
-    type       : 'image'
-    //offset: 450,
-    //transition : 'fade in',
-    //duration   : 1000,
-
-    
-  })
-;
-*/
 });
 
 

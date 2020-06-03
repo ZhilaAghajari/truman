@@ -1,8 +1,9 @@
-// Current issue. DOesn't hide the modal when the
+// Issues to be fixed: 
+//  DOesn't hide the modal when the ... 
 //  1- Trigger an even after login and there you can reset the timer to 120 and store it in the localstorage ...
 //  2- instead of submit form on successful new post, treat it as the way the comments are treated. they are added to the front end and then are shoot to the server as well...
 // 1- check close selector because the issue with survey modal is still not solved...
-// 
+// Number of post seen in the session is not accurate because if a post is seen and the user get back and forth to see the posts I count them each time. Need to be fixed... 
 
 $('#content').hide();
 $('#loading').show();
@@ -788,8 +789,8 @@ $("#newpost.ui.tiny.post.modal")
     var touched = $('input:radio[name=Touched]:checked').val();
     var sympathetic = $('input:radio[name=Sympathetic]:checked').val();
     var moved = $('input:radio[name=Moved]:checked').val();
-    $.post("/userPost_feed", { session_time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: session_posts, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
-    $.post("/feed", { session_time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: session_posts, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
+    $.post("/userPost_feed", { session_time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
+    $.post("/feed", { session_time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
     // reset the session variables .. 
     console.log('session likes stored : ', localStorage.getItem("session_likes"));
     window.localStorage.setItem("session_likes",0);

@@ -94,9 +94,7 @@ if(typeof total_seconds != 'undefined')
           }
       } else if(total_seconds>0) {
           total_seconds = total_seconds -1 ;
-          // minutes = parseInt(total_seconds/60);
-          // seconds = parseInt(total_seconds%60);
-          localStorage.setItem("total_seconds",total_seconds)
+          localStorage.setItem("total_seconds",total_seconds);
           setTimeout(countDownTimer,1000);
       }
 
@@ -112,7 +110,7 @@ if(typeof total_logedin_time != 'undefined')
   total_logedin_time = parseInt(localStorage.getItem("total_logedin_time"));
   function countDownTimerTotal(){
     if(total_logedin_time == 0){
-      // kick the user out of the site because 10 minutes has passed and she/he should have seen all the posts by now!
+      // kick the user out of the site because 10 minutes has passed from the user's last activitiy ... 
       console.log('Did it get here after 4 minutes???');
       // window.location.href='/info'; //How to log the user out here? 
       alert('I need to kick you out of the app here!!!');    
@@ -127,7 +125,7 @@ if(typeof total_logedin_time != 'undefined')
 
       }
       else{
-        // reset the timer and make active flag 0 again ... 
+        // reset the timer and active flag ... 
         var z = 5*60;
         window.localStorage.setItem("total_logedin_time",z);
         total_logedin_time = window.localStorage.getItem("total_logedin_time");
@@ -747,7 +745,7 @@ $("i.big.send.link.icon").click(function() {
     temp = parseInt(localStorage.getItem("session_flags"))+1;
     window.localStorage.setItem("session_flags",temp);
     console.log('session flag number: ', localStorage.getItem("session_flags"));
-     var post = $(this).closest( ".ui.fluid.card.dim");
+     var post = $(this).closest( ".ui.fluid.card.dim"); // ok I guess instead of doing on the whole card, do it on
      var postID = post.attr( "postID" );
      var flag = Date.now();
      console.log("***********FLAG: post "+postID+" at time "+flag);
@@ -762,6 +760,17 @@ $("i.big.send.link.icon").click(function() {
                    closable: false
                   })
                   .dimmer('show');
+
+    var img_flagged = $(this).closest( ".imgage.dim");
+    img_flagged.find(".ui.dimmer.flag").dimmer({
+                   closable: false
+                  })
+                  .dimmer('show');
+    //repeat to ensure its closable             
+    img_flagged.find(".ui.dimmer.flag").dimmer({
+                 closable: false
+                })
+                .dimmer('show');
     
 
   });

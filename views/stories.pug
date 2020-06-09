@@ -228,24 +228,15 @@ block content
           //- .ui.tiny.post.modal(modal_id=val.modal_id)
           .ui.tiny.post.modal(modal_id=val.modal_id)
             //- .header val.modal_id
-            .ui.fluid.card.dim(postID=val.id, state=val.state || 'unread', type='actor', actor_un = val.actor.username, actor_name = val.actor.profile.name, actor_pic = val.actor.profile.picture)
-              //- dimmer DIV for flagging
-              //- .content
-              //-   .two.fluid.ui.buttons(postID=val.postID)
-              //-     .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
-              //-     .ui.right.disabled.button(next_id=val.modal_id , postID=val.postID, study_group ='stories')  Next
-                  
-              //-   .ui.tiny.gray.progress(progressing_id=val.modal_id)
-              //-     .bar
-              //-     .label ... 
-              .ui.dimmer.flag
-                  .content
-                    .center
-                      h2.ui.inverted.icon.header
-                        i.red.flag.icon
-                        |  You&apos;ve flagged this!
-                        h3.ui.inverted.header
-                          span="The admins will review this post further. We are sorry you had this experience."
+            .ui.fluid.card.dim(postID=val.id, state=val.state || 'unread', type='actor', actor_un = val.actor.username, actor_name = val.actor.profile.name, actor_pic = val.actor.profile.picture) 
+              //- .ui.dimmer.flag
+              //-     .content
+              //-       .center
+              //-         h2.ui.inverted.icon.header
+              //-           i.red.flag.icon
+              //-           |  You&apos;ve flagged this!
+              //-           h3.ui.inverted.header
+              //-             span="The admins will review this post further. We are sorry you had this experience."
               .content
                 #newpost.ui.fluid.left.labeled.right.icon.input
                   .ui.label
@@ -268,11 +259,19 @@ block content
                 img(src="image.png" style="position: absolute; z-index: 2;")
                 span#overlay_text(style="position: relative; top: -10px; z-index: 3;") OVERLAY
               //- .img.post
-              .imgage
+              .imgage.dim
                 //-img.post(src="/"+val.picture)
                 //img(src='/public/picture.svg', data-src="/post_pictures/"+val.picture, style="max-width:100%;width:100%;")
                 img(src="/post_pictures/"+val.picture, style="max-width:100%;width:100%;")
                 //- img(src="/post_pictures/"+val.picture)
+                .ui.dimmer.flag
+                    .content
+                      .center
+                        h2.ui.inverted.icon.header
+                          i.red.flag.icon
+                          |  You&apos;ve flagged this!
+                          h3.ui.inverted.header
+                            span="The admins will review this post further. We are sorry you had this experience."
 
               .content
                 .description=val.body
@@ -282,7 +281,7 @@ block content
                 //-   |  Reply
                 .ui.flag.button(tabindex='0')
                   i.flag.icon
-                  //- |  Flag
+                  |  Flag
                 if val.like
                   .ui.labeled.button(tabindex='0')
                     .ui.red.like.button

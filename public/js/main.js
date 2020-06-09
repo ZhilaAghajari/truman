@@ -1,4 +1,4 @@
-// Issues to be fixed: 
+// Issues to be fixed:  Do I consider a like to reset the timer of inactivity ?
 //  DOesn't hide the modal when the ... 
 //  1- Trigger an even after login and there you can reset the timer to 120 and store it in the localstorage ...
 //  2- instead of submit form on successful new post, treat it as the way the comments are treated. they are added to the front end and then are shoot to the server as well...
@@ -14,6 +14,7 @@ var move_id;
 var next_post;
 var $window = $(window);
 var iteration;
+var active_flag;
 // @@@@@@@@@
 $(window).on("load", function() {
   $('.modal').modal({
@@ -49,6 +50,12 @@ if(localStorage.getItem("total_seconds")){
     
 }
 
+
+if(localStorage.getItem("total_logedin_time")){
+  var total_logedin_time = localStorage.getItem("total_logedin_time");
+}
+
+
 if(localStorage.getItem("survey_flag")){
   var survey_flag = localStorage.getItem("survey_flag");
 }
@@ -59,21 +66,21 @@ else{
 if(typeof total_seconds != 'undefined')
 {
   console.log('something something');
-  var minutes = parseInt(total_seconds/60);
-  var seconds = parseInt(total_seconds%60);
+  // var minutes = parseInt(total_seconds/60);
+  // var seconds = parseInt(total_seconds%60);
   function countDownTimer(){
-      if(seconds < 10){
-          seconds= "0"+ seconds ;
-      }if(minutes < 10){
-          minutes= "0"+ minutes ;
-      }
-      
+      // if(seconds < 10){
+      //     seconds= "0"+ seconds ;
+      // }if(minutes < 10){
+      //     minutes= "0"+ minutes ;
+      // }
       if(total_seconds == 0){
           // if(survey_flag ==1 && (parseInt(next_id)+1)>=3 )
           // ZHILA: NEXT TASK ...survey falg should also be stored in local storage ...
           if(localStorage.getItem("survey_flag") ==1)
           {
-            if((parseInt(next_id)+1)>=3 )
+            // if((parseInt(next_id)+1)>=3 )
+            if(localStorage.getItem("session_posts")>=3) //in this case if they refresh it won't reset the counter. which one is a better desig?
             {
               console.log('nextid is : ', next_id);
               console.log('pas of next id: ', (parseInt(next_id)+1));
@@ -87,36 +94,74 @@ if(typeof total_seconds != 'undefined')
           }
       } else if(total_seconds>0) {
           total_seconds = total_seconds -1 ;
-          minutes = parseInt(total_seconds/60);
-          seconds = parseInt(total_seconds%60);
+          // minutes = parseInt(total_seconds/60);
+          // seconds = parseInt(total_seconds%60);
           localStorage.setItem("total_seconds",total_seconds)
           setTimeout(countDownTimer,1000);
       }
+
   }
   setTimeout(countDownTimer,1000);
 }
 
+
+// Here, we check whether user has been idle for more than 5 minutes 
+if(typeof total_logedin_time != 'undefined')
+{
+  console.log('Total time counter');
+  total_logedin_time = parseInt(localStorage.getItem("total_logedin_time"));
+  function countDownTimerTotal(){
+    if(total_logedin_time == 0){
+      // kick the user out of the site because 10 minutes has passed and she/he should have seen all the posts by now!
+      console.log('Did it get here after 4 minutes???');
+      // window.location.href='/info'; //How to log the user out here? 
+      alert('I need to kick you out of the app here!!!');    
+    }
+    else if(total_logedin_time>0) {
+      console.log('Total time: !!!', total_logedin_time);
+      console.log('flag value: ',  active_flag);
+      if(active_flag ==0)
+      {
+        total_logedin_time = total_logedin_time -1;
+        window.localStorage.setItem("total_logedin_time",total_logedin_time);
+
+      }
+      else{
+        // reset the timer and make active flag 0 again ... 
+        var z = 5*60;
+        window.localStorage.setItem("total_logedin_time",z);
+        total_logedin_time = window.localStorage.getItem("total_logedin_time");
+        active_flag = 0;
+      }
+      
+      setTimeout(countDownTimerTotal,1000);
+    }
+  }
+  setTimeout(countDownTimerTotal,1000);
+}
+
+
+
+
   function show_survey(){
     // create a delay if necessary ... 
     console.log('Iteration in move is: ',iteration);
-    
-    survey_flag =0;
-    window.localStorage.setItem("survey_flag", 0);
-    console.log('reset the FLAG to :', survey_flag);
-    if(iteration <5)
-    {
-      (function loop(i) {
-        setTimeout(function () { 
-          console.log('delay: ', i);
-          if (--i) loop(i); // iteration counter
-          },1000) //
-       })(5) ; //time in seconds to show each post
-    }
+    // if(iteration <5)
+    // {
+    //   (function loop(i) {
+    //     setTimeout(function () { 
+    //       console.log('delay: ', i);
+    //       if (--i) loop(i); // iteration counter
+    //       },1000) //
+    //    })(5) ; //time in seconds to show each post
+    // }
     // maybe fist hide the previous modal ...
     $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('hide');
     var j='321';
     $(".ui.small.post.modal[modal_id='"+j+"']").modal('show');
-
+    survey_flag =0;
+    window.localStorage.setItem("survey_flag", 0);
+    console.log('reset the FLAG to :', survey_flag);
   }
   
 
@@ -168,6 +213,7 @@ if(typeof total_seconds != 'undefined')
   $('.ui.right.button').on('click', function(){    
     // if($('.ui.right.button')[0].attributes[2].value =='stories')
     // {
+      active_flag = 1;
       temp = parseInt(localStorage.getItem("session_posts"))+1;
       window.localStorage.setItem("session_posts",temp);
 
@@ -200,6 +246,7 @@ if(typeof total_seconds != 'undefined')
 
   $('.ui.left.button').on('click', function(){
 
+     active_flag = 1;
     var next_id = $(this)[0].attributes[1].value;
     check_id = next_id;
     var move_id = (parseInt(next_id)-1).toString();
@@ -254,10 +301,12 @@ if(typeof total_seconds != 'undefined')
 
   // ZH: Set local variables after loging. ( do I need to set session id here as well?)
   $('button.ui.button').on('click', function(){
-    var t = 60*2;
+     active_flag = 1;
+    var t = 2*60; //ZHILA: change it back to 120
     var f =1;
-    // alert('LOGEDIN');
+    var logged_time = 5*60;
     window.localStorage.setItem("total_seconds", t);
+    window.localStorage.setItem("total_logedin_time",logged_time);
     if($('button.ui.button').text()=="Login")
     {
       console.log('SET TIMER');
@@ -265,7 +314,6 @@ if(typeof total_seconds != 'undefined')
       window.localStorage.setItem("survey_flag", f);
       console.log('the survey flag is: ',localStorage.getItem("survey_flag"));
       //  set the session variables ...
-      //  set these to zeros!!!
       var z =0;
       window.localStorage.setItem("session_likes",z);
       window.localStorage.setItem("session_flags",z);
@@ -279,19 +327,7 @@ if(typeof total_seconds != 'undefined')
   $("#newpost, a.item.newpost").click(function () {
     console.log('Check ID is now : ',check_id);
     $(' #newpost.ui.tiny.post.modal').modal('show');
-
-    // attach the previously shown modal to it if it is in the stories version ..
-    // if($('#newpost.ui.tiny.post')[0].attributes[2].value==='stories')
-    // {
-    //   // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','#newpost.ui.tiny.post.modal');
-    //   $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','input.ui.blue.button');
-
-    //   // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
-    // }
-    // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','#newpost.ui.tiny.post.modal');
-    // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('hide');
-
-
+     active_flag = 1;
      
 });
 
@@ -322,11 +358,11 @@ if(typeof total_seconds != 'undefined')
 
     onSuccess:function(event, fields){
       console.log("Event is :");
-      event.preventDefault();
+      // event.preventDefault();
       //console.log(event);
       console.log("fields is :");
       //console.log(fields);
-      event.preventDefault();
+      $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','#submitNewPost.ui.blue.fluid.button');
       $(".ui.feed.form")[0].submit();
     }
 
@@ -335,66 +371,54 @@ if(typeof total_seconds != 'undefined')
 
 //Add a validator for login submit, and save the timer in the local storage
 
-$('#submitnewpost.ui.blue.fluid.button').click(function(){
-  $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','#submitnewpost.ui.blue.fluid.button');
-  $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
-});
-
-// $(document).ready(function(){
-//      $(document).on("keydown", disableF5);
+// $('#submitnewpost.ui.blue.fluid.button').click(function(){
+//   $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','#submitnewpost.ui.blue.fluid.button');
+//   $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
 // });
-// function disableF5(e) { if ((e.which || e.keyCode) == 116 || (e.which || e.keyCode) == 82) e.preventDefault(); };
 
   // $('#submitNewPost.ui.blue.fluid.button').click(function() {
   $('.ui.feed.form').submit(function(e) {
+     active_flag = 1;
       // alert('Submited the post?');
       e.preventDefault();
-      e.stopPropagation();
-      // this.submit(); //if I don't submit ... will it get through and do I only need to take care of fron end .. ?
+      // e.stopPropagation();
+      this.submit(); //if I don't submit ... will it get through and do I only need to take care of fron end .. ?
       console.log("Submit the junks!!!!")
       // attach the previously shown modal to this submit button...
       console.log('Check ID: ', check_id);
       console.log('Next ID: ', next_id);
-      $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','#submitNewPost.ui.blue.fluid.button');
-      $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
 
-      // $(document).ready(function () {
-      //     $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
-      // });
-      // $(window).on('load', function(){ 
-      //     $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
-      // });
-      // $(window).load(function(){
-      //         $('#thankyouModal').modal('show');
-      //         $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
+      // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','#submitNewPost.ui.blue.fluid.button');
 
-      //      });
-      // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
-      // alert('submited?');
+
+      //Zhila: This idea works on Safar but not on Firefox and Chrome! it is weird but I'll try it after other issues are solved .. 
+      // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']")
+      //     .modal({
+      //       onApprove : function(){
+      //         return false;
+      //       },
+      //       onDeny : function(){
+      //         return false
+      //       }
+      //     })
+      //     .modal('show');
+   
       console.log('Check ID: ', check_id);
-
-      //helper_function();
+      //  We don't need as as we write onApprove return false but in firefox and chrome it doesn't work it only work for Safari
       window.localStorage.setItem("reload",1);
       console.log('Reload flag: ',localStorage.getItem("reload"));
-
-      //$('.ui.tiny.nudge.modal').modal('show'); 
-      // call a function that reload the page from check_id modal .. 
-      // return false;
+      return false
     });
+
+
 if(parseInt(localStorage.getItem("reload")) == 1)
 {
   $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
   window.localStorage.setItem("reload",0);
   move(check_id);
 }
-// function helper_function() {
-//   // body...
-//   $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
-// }
 
 // on Login button set this timer to 2:00 minutes and store in in local storage ..
-
-
 //Picture Preview on Image Selection
 function readURL(input) {
         if (input.files && input.files[0]) {
@@ -494,6 +518,7 @@ $("input.newcomment").keyup(function(event) {
 
 //create a new Comment
 $("i.big.send.link.icon").click(function() {
+   active_flag = 1;
   var text = $(this).siblings( "input.newcomment").val();
   var card = $(this).parents( ".ui.fluid.card" );
   var comments = card.find( ".ui.comments" )
@@ -622,7 +647,7 @@ $("i.big.send.link.icon").click(function() {
   //this is the LIKE button
   $('.like.button')
   .on('click', function() {
-    
+     active_flag = 1;
 
     //if already liked, unlike if pressed
     if ( $( this ).hasClass( "red" ) ) {
@@ -658,7 +683,7 @@ $("i.big.send.link.icon").click(function() {
   //a.like.comment
   $('a.like.comment')
   .on('click', function() {
-
+    active_flag = 1;
     //if already liked, unlike if pressed
     if ( $( this ).hasClass( "red" ) ) {
         console.log("***********UNLIKE: post");
@@ -699,7 +724,7 @@ $("i.big.send.link.icon").click(function() {
    //this is the FLAG button
   $('a.flag.comment')
   .on('click', function() {
-
+    active_flag = 1;
     var comment = $(this).parents( ".comment" );
     var postID = $(this).closest( ".ui.fluid.card" ).attr( "postID" );
     var typeID = $(this).closest( ".ui.fluid.card" ).attr( "type" );
@@ -718,6 +743,7 @@ $("i.big.send.link.icon").click(function() {
   //this is the POST FLAG button
   $('.flag.button')
   .on('click', function() {
+     active_flag = 1;
     temp = parseInt(localStorage.getItem("session_flags"))+1;
     window.localStorage.setItem("session_flags",temp);
     console.log('session flag number: ', localStorage.getItem("session_flags"));
@@ -766,7 +792,7 @@ $(".ui.small.post.modal[modal_id='"+j+"']")
 })
 ;
 
-$(".ui.tiny.post.modal")
+$(".ui.tiny.post.modal[modal_id='"+check_id+"']")
 .modal({
   selector: { 
     close: ".ui.small.post.modal[modal_id='"+j+"']"
@@ -789,8 +815,8 @@ $("#newpost.ui.tiny.post.modal")
     var touched = $('input:radio[name=Touched]:checked').val();
     var sympathetic = $('input:radio[name=Sympathetic]:checked').val();
     var moved = $('input:radio[name=Moved]:checked').val();
-    $.post("/userPost_feed", { session_time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
-    $.post("/feed", { session_time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
+    $.post("/userPost_feed", { session_time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_unique_posts: check_id, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
+    $.post("/feed", { session_time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_unique_posts: check_id, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
     // reset the session variables .. 
     console.log('session likes stored : ', localStorage.getItem("session_likes"));
     window.localStorage.setItem("session_likes",0);

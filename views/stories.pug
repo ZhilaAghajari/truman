@@ -238,14 +238,14 @@ block content
               //-   .ui.tiny.gray.progress(progressing_id=val.modal_id)
               //-     .bar
               //-     .label ... 
-                .ui.dimmer.flag
-                    .content
-                      .center
-                        h2.ui.inverted.icon.header
-                          i.red.flag.icon
-                          |  You&apos;ve flagged this!
-                          h3.ui.inverted.header
-                            span="The admins will review this post further. We are sorry you had this experience."
+              .ui.dimmer.flag
+                  .content
+                    .center
+                      h2.ui.inverted.icon.header
+                        i.red.flag.icon
+                        |  You&apos;ve flagged this!
+                        h3.ui.inverted.header
+                          span="The admins will review this post further. We are sorry you had this experience."
               .content
                 #newpost.ui.fluid.left.labeled.right.icon.input
                   .ui.label
@@ -282,7 +282,7 @@ block content
                 //-   |  Reply
                 .ui.flag.button(tabindex='0')
                   i.flag.icon
-                  |  Flag
+                  //- |  Flag
                 if val.like
                   .ui.labeled.button(tabindex='0')
                     .ui.red.like.button

@@ -15,6 +15,7 @@ var next_post;
 var $window = $(window);
 var iteration;
 var active_flag;
+var logged = 0;
 // @@@@@@@@@
 $(window).on("load", function() {
   $('.modal').modal({
@@ -109,7 +110,7 @@ if(typeof total_logedin_time != 'undefined')
   console.log('Total time counter');
   total_logedin_time = parseInt(localStorage.getItem("total_logedin_time"));
   function countDownTimerTotal(){
-    if(total_logedin_time == 0){
+    if(total_logedin_time == 0 && logged == 1){
       // kick the user out of the site because 10 minutes has passed from the user's last activitiy ... 
       console.log('Did it get here after 4 minutes???');
       // window.location.href='/info'; //How to log the user out here? 
@@ -303,6 +304,7 @@ if(typeof total_logedin_time != 'undefined')
     var t = 2*60; //ZHILA: change it back to 120
     var f =1;
     var logged_time = 5*60;
+    logged = 1;
     window.localStorage.setItem("total_seconds", t);
     window.localStorage.setItem("total_logedin_time",logged_time);
     if($('button.ui.button').text()=="Login")

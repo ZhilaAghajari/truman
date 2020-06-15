@@ -57,12 +57,12 @@ if(localStorage.getItem("total_logedin_time")){
 }
 
 
-if(localStorage.getItem("survey_flag")){
-  var survey_flag = localStorage.getItem("survey_flag");
-}
-else{
-  var survey_flag =0;
-}
+// if(localStorage.getItem("survey_flag")){
+//   var survey_flag = localStorage.getItem("survey_flag");
+// }
+// else{
+//   var survey_flag =0;
+// }
 
 if(typeof total_seconds != 'undefined')
 {
@@ -107,18 +107,17 @@ if(typeof total_seconds != 'undefined')
 // Here, we check whether user has been idle for more than 5 minutes 
 if(typeof total_logedin_time != 'undefined')
 {
-  console.log('Total time counter');
+  // console.log('Total time counter');
   total_logedin_time = parseInt(localStorage.getItem("total_logedin_time"));
   function countDownTimerTotal(){
     if(total_logedin_time == 0 && logged == 1){
       // kick the user out of the site because 10 minutes has passed from the user's last activitiy ... 
       console.log('Did it get here after 4 minutes???');
-      // window.location.href='/info'; //How to log the user out here? 
+      window.location.href='/info'; //How to log the user out here? 
       alert('I need to kick you out of the app here!!!');    
     }
     else if(total_logedin_time>0) {
-      console.log('Total time: !!!', total_logedin_time);
-      console.log('flag value: ',  active_flag);
+      // console.log('Total time: !!!', total_logedin_time);
       if(active_flag ==0)
       {
         total_logedin_time = total_logedin_time -1;
@@ -219,7 +218,7 @@ if(typeof total_logedin_time != 'undefined')
       // reset session timer ... 
       console.log('Posts seen in this session : ', localStorage.getItem("session_posts"));
       console.log('time left: ', total_seconds);
-      console.log('falg is: ', survey_flag);
+      // console.log('falg is: ', survey_flag);
       next_id = $(this)[0].attributes[1].value;
       check_id = (parseInt(next_id)+1).toString(); //next modal to be shown .. 
       var move_id = (parseInt(next_id)+1).toString();
@@ -300,7 +299,7 @@ if(typeof total_logedin_time != 'undefined')
 
   // ZH: Set local variables after loging. ( do I need to set session id here as well?)
   $('button.ui.button').on('click', function(){
-     active_flag = 1;
+    active_flag = 1;
     var t = 2*60; //ZHILA: change it back to 120
     var f =1;
     var logged_time = 5*60;
@@ -312,7 +311,7 @@ if(typeof total_logedin_time != 'undefined')
       console.log('SET TIMER');
       window.localStorage.setItem("total_seconds", t);
       window.localStorage.setItem("survey_flag", f);
-      console.log('the survey flag is: ',localStorage.getItem("survey_flag"));
+      console.log('the survey flag is: ',window.localStorage.getItem("survey_flag"));
       //  set the session variables ...
       var z =0;
       window.localStorage.setItem("session_likes",z);

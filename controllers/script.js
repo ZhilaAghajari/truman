@@ -137,7 +137,7 @@ exports.getScript = (req, res, next) => {
   
     //Get the newsfeed
     Script.find()
-      .where("experiment_group").equals(scriptFilter)
+      // .where("experiment_group").equals(scriptFilter)
       .where('time').lte(time_diff).gte(time_limit)
       // .sort('-time')
       .populate('actor')

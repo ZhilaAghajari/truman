@@ -66,6 +66,7 @@ block content
             //-img(src='/picture.svg', data-src=val.picture)
           .content
             .description.mod_body="Totes my Goats"
+
           .two.ui.bottom.attached.icon.buttons
             // .ui.reply.button(tabindex='0')
             //   i.reply.icon
@@ -130,6 +131,13 @@ block content
                 .description=val.body
                   i.icon.checkmark
                   | Seen by 12
+              //- I added this part only..
+              .content
+                span.right.floated
+                  i.heart.outline.like.icon
+                  | Like
+                  i.flag.icon
+                    | Flag
               .two.ui.bottom.attached.icon.buttons
                 //- .ui.reply.button(tabindex='0')
                 //-   i.reply.icon
@@ -275,6 +283,15 @@ block content
 
               .content
                 .description=val.body
+                i.icon.checkmark
+
+              //- I added this part only..
+              .content
+                span.right.floated
+                  i.heart.outline.like.icon
+                  | Like
+                i.flag.icon
+                | Flag
               .two.ui.bottom.attached.icon.buttons
                 //- .ui.reply.button(tabindex='0')
                 //-   i.reply.icon

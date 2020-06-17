@@ -738,9 +738,10 @@ $("i.big.send.link.icon").click(function() {
       $.post( "/feed", { postID: postID, commentID: commentID, flag: flag, _csrf : $('meta[name="csrf-token"]').attr('content') } );
 
   });
-
+  //ZH:current//
   //this is the POST FLAG button
   $('.flag.button')
+  // $('.i.flag.icon')
   .on('click', function() {
      active_flag = 1;
     temp = parseInt(localStorage.getItem("session_flags"))+1;

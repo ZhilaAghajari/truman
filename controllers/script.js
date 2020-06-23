@@ -381,6 +381,8 @@ exports.getScript = (req, res, next) => {
       // else{
       //   res.render('script',{script:finalfeed})
       // }
+      // ZHila:
+      finalfeed = shuffle(finalfeed);
       res.render('stories',{script:finalfeed})
       // res.render('script', { script: finalfeed});
 

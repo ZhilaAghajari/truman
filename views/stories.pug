@@ -130,33 +130,57 @@ block content
               .content
                 .description=val.body
                   i.icon.checkmark
-                  | Seen by 12
-              //- I added this part only..
+                    | Seen by 12
+
+
+              //- FLAG and like options...
               .content
                 span.right.floated
-                  i.heart.outline.like.icon
-                  | Like
-                  i.flag.icon
-                    | Flag
-              .two.ui.bottom.attached.icon.buttons
-                //- .ui.reply.button(tabindex='0')
-                //-   i.reply.icon
-                //-   |  Reply
-                .ui.flag.button(tabindex='0')
-                  i.flag.icon
-                  |  Flag
-                if val.like
-                  .ui.labeled.button(tabindex='0')
-                    .ui.red.like.button
-                      i.heart.icon
-                      |  Like
+                  if val.like
+                    #likeButton.ui.basic.button
+                      //- i.big.red.heart.outline.like.icon
+                      i.red.large.heart.icon
+                      | Like
                     a.ui.basic.red.left.pointing.label=val.likes
-                else
-                  .ui.labeled.button(tabindex='0')
-                    .ui.like.button
-                      i.heart.icon
-                      |  Like
+                  else
+                    #likeButton.ui.basic.button
+                      //- i.big.heart.outline.like.icon
+                      i.heart.large.icon
+                      | Like
                     a.ui.basic.red.left.pointing.label.count=val.likes
+                //- i.flag.icon
+                span.right.floated
+                  #falgebutton.ui.basic.button
+                   i.large.flag.icon
+
+
+
+              //- I added this part only..
+              //- .content
+              //-   span.right.floated
+              //-     i.heart.outline.like.icon
+              //-     | Like
+              //-     i.flag.icon
+              //-       | Flag
+              //- .two.ui.bottom.attached.icon.buttons
+              //-   //- .ui.reply.button(tabindex='0')
+              //-   //-   i.reply.icon
+              //-   //-   |  Reply
+              //-   .ui.flag.button(tabindex='0')
+              //-     i.flag.icon
+              //-     |  Flag
+              //-   if val.like
+              //-     .ui.labeled.button(tabindex='0')
+              //-       .ui.red.like.button
+              //-         i.heart.icon
+              //-         |  Like
+              //-       a.ui.basic.red.left.pointing.label=val.likes
+              //-   else
+              //-     .ui.labeled.button(tabindex='0')
+              //-       .ui.like.button
+              //-         i.heart.icon
+              //-         |  Like
+              //-       a.ui.basic.red.left.pointing.label.count=val.likes
 
               if val.comments.length > 0
                 .content
@@ -285,34 +309,47 @@ block content
                 .description=val.body
                 i.icon.checkmark
 
-              //- I added this part only..
+              //- FLAG and like options...
               .content
                 span.right.floated
-                  i.heart.outline.like.icon
-                  | Like
-                i.flag.icon
-                | Flag
-              .two.ui.bottom.attached.icon.buttons
-                //- .ui.reply.button(tabindex='0')
-                //-   i.reply.icon
-                //-   |  Reply
-                .ui.flag.button(tabindex='0')
-                  i.flag.icon
-                  |  Flag
-                if val.like
-                  .ui.labeled.button(tabindex='0')
-                    .ui.red.like.button
-                      i.heart.icon
-                      |  Like
+                  if val.like
+                    #likeButton.ui.basic.button
+                      //- i.big.red.heart.outline.like.icon
+                      i.red.large.heart.icon
+                      | Like
                     a.ui.basic.red.left.pointing.label=val.likes
-                else
-                  .ui.labeled.button(tabindex='0')
-                    .ui.like.button
-                      i.heart.icon
-                      |  Like
+                  else
+                    #likeButton.ui.basic.button
+                      //- i.big.heart.outline.like.icon
+                      i.heart.large.icon
+                      | Like
                     a.ui.basic.red.left.pointing.label.count=val.likes
-
+                //- i.flag.icon
+                span.right.floated
+                  #falgebutton.ui.basic.button
+                   i.large.flag.icon
+                //- | Flag
+             
+              //OLD version, to be removed!! 
+              //- .two.ui.bottom.attached.icon.buttons
+              //-   .ui.flag.button(tabindex='0')
+              //-     i.flag.icon
+              //-     |  Flag
+              //-   if val.like
+              //-     .ui.labeled.button(tabindex='0')
+              //-       .ui.red.like.button
+              //-         i.heart.icon
+              //-         |  Like
+              //-       a.ui.basic.red.left.pointing.label=val.likes
+              //-   else
+              //-     .ui.labeled.button(tabindex='0')
+              //-       .ui.like.button
+              //-         i.heart.icon
+              //-         |  Like
+              //-       a.ui.basic.red.left.pointing.label.count=val.likes
+              //- .content
               if val.comments.length > 0
+                //- -console.log("New COMMENT HAS BEEN POSTED");
                 .content
                   .ui.comments
                     each comment in val.comments
@@ -364,8 +401,10 @@ block content
                                 else
                                   a.like.comment Like
                                 a.flag.comment Flag
+
               .extra.content
-                .ui.fluid.left.labeled.right.icon.input
+                //- .ui.fluid.left.labeled.right.icon.input
+                #comment.ui.fluid.left.labeled.right.icon.input
                   .ui.label
                     if user.profile.picture
                       img.ui.avatar.image(src='/user_post/'+user.profile.picture, name=user.profile.name || user.username || user.id)

@@ -114,7 +114,7 @@ if(typeof total_logedin_time != 'undefined')
       // kick the user out of the site because 10 minutes has passed from the user's last activitiy ... 
       console.log('Did it get here after 4 minutes???');
       window.location.href='/info'; //How to log the user out here? 
-      alert('I need to kick you out of the app here!!!');    
+      alert('I need to kick you out of the app, you were inactive for 4 minutes now!!');    
     }
     else if(total_logedin_time>0) {
       // console.log('Total time: !!!', total_logedin_time);
@@ -122,6 +122,7 @@ if(typeof total_logedin_time != 'undefined')
       {
         total_logedin_time = total_logedin_time -1;
         window.localStorage.setItem("total_logedin_time",total_logedin_time);
+        // console.log('Time left to be INACTIVE: ', total_logedin_time);
 
       }
       else{
@@ -159,13 +160,13 @@ if(typeof total_logedin_time != 'undefined')
     $(".ui.small.post.modal[modal_id='"+j+"']").modal('show');
     survey_flag =0;
     window.localStorage.setItem("survey_flag", 0);
-    console.log('reset the FLAG to :', survey_flag);
+    console.log('RESET the flag (Session survey has been collected) :', survey_flag);
   }
   
 
   $('.ui.tiny.gray.progress')
   .progress({
-    total: 10 //Zh: change it back to 10
+    total: 10 //Zh: change it back to 10 after testing is done ..
   });
 
   function move(j) {
@@ -173,8 +174,7 @@ if(typeof total_logedin_time != 'undefined')
      progressing_id = $("[progressing_id='"+j+"']");
       (function loop(itr) {
         setTimeout(function () { 
-          console.log(itr);
-          // console.log(total_seconds); 
+          // console.log(itr);
           iteration =itr; 
           $(progressing_id)
             .progress('increment')
@@ -202,8 +202,8 @@ if(typeof total_logedin_time != 'undefined')
 
  // the flag array should be as large as posts numbers .. for now I have it fixed but I need to fix it ...  
   flag=new Array(100).fill(0)
-  //fix this 20 number.. how many posts are we going to show them? 
-  for (let i=1; i<40;i++){
+  //I assume there are at most 100 posts a day.. how many posts are we going to show them? 
+  for (let i=1; i<100;i++){
     j=i+1;
     $(" .ui.tiny.post.modal[modal_id='"+j+"']").modal('attach events',".ui.right.button[next_id='"+i+"']");
   } 
@@ -234,7 +234,7 @@ if(typeof total_logedin_time != 'undefined')
       else if(flag[next_id]==0)
         {
           flag[next_id]=1;
-          console.log('NEXT id is : ', next_id);
+          // console.log('NEXT id is : ', next_id);
           move(move_id);
         }
     
@@ -530,7 +530,11 @@ $("i.big.send.link.icon").click(function() {
   {
     //.three.ui.bottom.attached.icon.buttons
     console.log("Adding new Comments sections")
-    var buttons = card.find( ".two.ui.bottom.attached.icon.buttons" )
+    // var buttons = card.find( ".two.ui.bottom.attached.icon.buttons" )
+    // buttons.after( '<div class="content"><div class="ui comments"></div>' );
+    // var buttons = card.find( "#likeButton.ui.basic.button" )
+    
+    var buttons = card.find("#comment.ui.fluid.left.labeled.right.icon.input")
     buttons.after( '<div class="content"><div class="ui comments"></div>' );
     var comments = card.find( ".ui.comments" )
   }
@@ -644,7 +648,8 @@ $("i.big.send.link.icon").click(function() {
 ;
 
   //this is the LIKE button
-  $('.like.button')
+  // $('.like.button')
+  $('#likeButton.ui.basic.button')
   .on('click', function() {
      active_flag = 1;
 
@@ -740,8 +745,8 @@ $("i.big.send.link.icon").click(function() {
   });
   //ZH:current//
   //this is the POST FLAG button
-  $('.flag.button')
-  // $('.i.flag.icon')
+  // $('.flag.button')
+  $('#falgebutton.ui.basic.button')
   .on('click', function() {
      active_flag = 1;
     temp = parseInt(localStorage.getItem("session_flags"))+1;

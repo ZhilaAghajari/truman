@@ -95,6 +95,8 @@ block content
         -else {u_class = "userPost"}
         .ui.container
           -console.log(val.modal_id)
+          // -console.log('@@USERs POST ID:@@', val.id)
+          -console.log('@@USERs POST ID:@@', val.postID)
           .ui.tiny.post.modal(modal_id=val.modal_id, postID=val.postID)
             .ui.fluid.card(u_postID=val.id, type=u_class, postID=val.postID)
               // .content
@@ -135,7 +137,7 @@ block content
 
               //- FLAG and like options...
               .content
-                span.right.floated
+                #flgComment.span.right.floated
                   if val.like
                     #likeButton.ui.basic.button
                       //- i.big.red.heart.outline.like.icon
@@ -260,7 +262,10 @@ block content
           //- .ui.tiny.post.modal(modal_id=val.modal_id)
           .ui.tiny.post.modal(modal_id=val.modal_id)
             //- .header val.modal_id
-            .ui.fluid.card.dim(postID=val.id, state=val.state || 'unread', type='actor', actor_un = val.actor.username, actor_name = val.actor.profile.name, actor_pic = val.actor.profile.picture) 
+            -console.log('@@ACTOR VAL.ID :@@', val.id)
+            -console.log('@@ACTOR POST ID:@@', val.postID)
+              //- need to change modal_id to postID
+            .ui.fluid.card.dim( postID=val.id, state=val.state || 'unread', type='actor', actor_un = val.actor.username, actor_name = val.actor.profile.name, actor_pic = val.actor.profile.picture) 
               //- .ui.dimmer.flag
               //-     .content
               //-       .center
@@ -311,7 +316,7 @@ block content
 
               //- FLAG and like options...
               .content
-                span.right.floated
+                #flgComment.span.right.floated
                   if val.like
                     #likeButton.ui.basic.button
                       //- i.big.red.heart.outline.like.icon

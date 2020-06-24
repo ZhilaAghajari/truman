@@ -1,8 +1,5 @@
-// Issues to be fixed:  Do I consider a like to reset the timer of inactivity ?
-//  DOesn't hide the modal when the ... 
-//  1- Trigger an even after login and there you can reset the timer to 120 and store it in the localstorage ...
-//  2- instead of submit form on successful new post, treat it as the way the comments are treated. they are added to the front end and then are shoot to the server as well...
-// 1- check close selector because the issue with survey modal is still not solved...
+// Issues to be fixed: 
+// User's comments and likes are not shown on page reload... and after the user log in for next time ... 
 // Number of post seen in the session is not accurate because if a post is seen and the user get back and forth to see the posts I count them each time. Need to be fixed... 
 
 $('#content').hide();
@@ -533,9 +530,14 @@ $("i.big.send.link.icon").click(function() {
     // var buttons = card.find( ".two.ui.bottom.attached.icon.buttons" )
     // buttons.after( '<div class="content"><div class="ui comments"></div>' );
     // var buttons = card.find( "#likeButton.ui.basic.button" )
-    
-    var buttons = card.find("#comment.ui.fluid.left.labeled.right.icon.input")
-    buttons.after( '<div class="content"><div class="ui comments"></div>' );
+   
+    // var buttons = card.find("#flgComment.span.right.floated");
+    // // var buttons = card.find("#comment.ui.fluid.left.labeled.right.icon.input")
+    // buttons.after( '<div class="content"><div class="ui comments"></div>' );
+
+
+    var buttons = card.find(".two.fluid.ui.buttons");
+    buttons.before('<div class="content"><div class="ui comments"></div>');
     var comments = card.find( ".ui.comments" )
   }
   if (text.trim() !== '')

@@ -23,7 +23,6 @@ function shuffle(array) {
   return array;
 }
 
-//I don't like this sorting method. Will change it.
 var sort = function (propertyRetriever, arr) {
     arr.sort(function (a, b) {
         var valueA = propertyRetriever(a);
@@ -162,11 +161,12 @@ exports.getScript = (req, res, next) => {
         var user_posts = [];
         //Zh: test sorting by username ...
         console.log(script_feed);
+
         // console.log('script after sort: ', script_feed);
         var properties = function(script_feed){
           return script_feed.actor.username;
         }
-        //ZH: we need to remove this for the feed version ! it is just for individual centric
+        //ZH: we need to remove this for the feed version ! it is just for individual centric 
         sort(properties,script_feed);
 
         //Look up Notifications??? And do this as well?
@@ -180,7 +180,7 @@ exports.getScript = (req, res, next) => {
         while(script_feed.length || user_posts.length) {
           console.log(user_posts[0]);
           if(typeof script_feed[0] === 'undefined') {
-              console.log("Script_Feed is empty, push user_posts");
+              console.log("Script_Feed is empty, only push user_posts");
               var temp = new Object();
               temp.modal_id = modal_id;
               const temp_user_posts = JSON.parse(JSON.stringify(user_posts[0]));
@@ -206,7 +206,7 @@ exports.getScript = (req, res, next) => {
           }
           else{
             
-            //console.log("ELSE PUSH FEED");
+            console.log("ELSE PUSH FEED", script_feed[0].id);
             var feedIndex = _.findIndex(user.feedAction, function(o) { return o.post == script_feed[0].id; });
 
              
@@ -293,7 +293,7 @@ exports.getScript = (req, res, next) => {
               { 
                 script_feed[0].like = true;
                 script_feed[0].likes++;
-                //console.log("Post %o has been LIKED", script_feed[0].id);
+                console.log("Post %o has been LIKED", script_feed[0].id);
               }
 
               if (user.feedAction[feedIndex].replyTime[0])
@@ -327,6 +327,7 @@ exports.getScript = (req, res, next) => {
                 console.log(script_feed[0]);
                 modal_id = modal_id+1;
                 console.log('New SCRIPT FEED');
+                console.log('Script feed added to final feed');
                 finalfeed.push(script_feed[0]);
                 script_feed.splice(0,1);
               }
@@ -346,11 +347,15 @@ exports.getScript = (req, res, next) => {
                 //add modal number to it
                 var temp = new Object();
                 temp.modal_id = modal_id;
+                console.log('Did I destroy the id just here: ', script_feed[0].id);
+                tmp = script_feed[0].id;
                 const temp_script_feed = JSON.parse(JSON.stringify(script_feed[0]));
                 script_feed[0] = Object.assign(temp_script_feed,temp);
-                console.log('modal added!');
+                script_feed[0].id = tmp;
+                console.log('modal added ADEDEDEDE now?!', script_feed[0].id);
                 console.log(script_feed[0]);
                 modal_id = modal_id+1;
+                console.log('Script feed added to final feeddd', script_feed[0].id);
                 finalfeed.push(script_feed[0]);
                 script_feed.splice(0,1);
               }

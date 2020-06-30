@@ -54,24 +54,10 @@ if(localStorage.getItem("total_logedin_time")){
 }
 
 
-// if(localStorage.getItem("survey_flag")){
-//   var survey_flag = localStorage.getItem("survey_flag");
-// }
-// else{
-//   var survey_flag =0;
-// }
-
 if(typeof total_seconds != 'undefined')
 {
   console.log('something something');
-  // var minutes = parseInt(total_seconds/60);
-  // var seconds = parseInt(total_seconds%60);
   function countDownTimer(){
-      // if(seconds < 10){
-      //     seconds= "0"+ seconds ;
-      // }if(minutes < 10){
-      //     minutes= "0"+ minutes ;
-      // }
       if(total_seconds == 0){
           // if(survey_flag ==1 && (parseInt(next_id)+1)>=3 )
           // ZHILA: NEXT TASK ...survey falg should also be stored in local storage ...
@@ -86,8 +72,14 @@ if(typeof total_seconds != 'undefined')
             }         
             else
             {
-              console.log('retry:',next_id); //try every second and each time it checks if the user sees more than 3 posts, then pop up the session survey ...
-              setTimeout(countDownTimer,1000);
+              if($('.ui.blue.fluid.button')[0].attributes[2].value==="stories"){
+                console.log('retry:',next_id); //try every second and each time it checks if the user sees more than 3 posts, then pop up the session survey ...
+                setTimeout(countDownTimer,1000);
+              }
+              else{
+                show_survey();
+              }
+              
             }
           }
       } else if(total_seconds>0) {
@@ -101,7 +93,7 @@ if(typeof total_seconds != 'undefined')
 }
 
 
-// Here, we check whether user has been idle for more than 5 minutes 
+// Check whether user has been idle for more than 5 minutes 
 if(typeof total_logedin_time != 'undefined')
 {
   // console.log('Total time counter');
@@ -111,19 +103,16 @@ if(typeof total_logedin_time != 'undefined')
       // kick the user out of the site because 10 minutes has passed from the user's last activitiy ... 
       console.log('Did it get here after 4 minutes???');
       window.location.href='/info'; //How to log the user out here? 
-      alert('I need to kick you out of the app, you were inactive for 4 minutes now!!');    
+      alert('You have been inactive for 4 minutes now!!');    
     }
     else if(total_logedin_time>0) {
-      // console.log('Total time: !!!', total_logedin_time);
       if(active_flag ==0)
       {
         total_logedin_time = total_logedin_time -1;
         window.localStorage.setItem("total_logedin_time",total_logedin_time);
-        // console.log('Time left to be INACTIVE: ', total_logedin_time);
-
       }
       else{
-        // reset the timer and active flag ... 
+        // reset the timer on active flag, each time the user does something ... 
         var z = 5*60;
         window.localStorage.setItem("total_logedin_time",z);
         total_logedin_time = window.localStorage.getItem("total_logedin_time");
@@ -137,27 +126,21 @@ if(typeof total_logedin_time != 'undefined')
 }
 
 
-
+  $('#sessionSurvey.ui.blue.right.fluid.button').on('click', function(){
+    show_survey();
+  });
 
   function show_survey(){
     // create a delay if necessary ... 
     console.log('Iteration in move is: ',iteration);
-    // if(iteration <5)
-    // {
-    //   (function loop(i) {
-    //     setTimeout(function () { 
-    //       console.log('delay: ', i);
-    //       if (--i) loop(i); // iteration counter
-    //       },1000) //
-    //    })(5) ; //time in seconds to show each post
-    // }
-    // maybe fist hide the previous modal ...
+
+    // maybe fist hide the previous modal?
     $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('hide');
     var j='321';
     $(".ui.small.post.modal[modal_id='"+j+"']").modal('show');
     survey_flag =0;
     window.localStorage.setItem("survey_flag", 0);
-    console.log('RESET the flag (Session survey has been collected) :', survey_flag);
+    console.log('RESET the session survey flag :', survey_flag);
   }
   
 
@@ -206,16 +189,13 @@ if(typeof total_logedin_time != 'undefined')
   } 
 
   $('.ui.right.button').on('click', function(){    
-    // if($('.ui.right.button')[0].attributes[2].value =='stories')
-    // {
       active_flag = 1;
       temp = parseInt(localStorage.getItem("session_posts"))+1;
       window.localStorage.setItem("session_posts",temp);
 
       // reset session timer ... 
       console.log('Posts seen in this session : ', localStorage.getItem("session_posts"));
-      console.log('time left: ', total_seconds);
-      // console.log('falg is: ', survey_flag);
+      console.log('Time Left: ', total_seconds);
       next_id = $(this)[0].attributes[1].value;
       check_id = (parseInt(next_id)+1).toString(); //next modal to be shown .. 
       var move_id = (parseInt(next_id)+1).toString();
@@ -226,12 +206,11 @@ if(typeof total_logedin_time != 'undefined')
         console.log('next id is: ', next_id)
         var s ='321';
         show_survey();
-        console.log('The last modal of the dayq');
+        console.log('LAST POST of today');
       }
       else if(flag[next_id]==0)
         {
           flag[next_id]=1;
-          // console.log('NEXT id is : ', next_id);
           move(move_id);
         }
     
@@ -250,7 +229,7 @@ if(typeof total_logedin_time != 'undefined')
       $(" .ui.tiny.post.modal[modal_id='"+move_id+"']").modal('attach events',$(this)[0]);
     }
     var curr_id= $(this)[0].id;
-    console.log('current next id is');
+    console.log('Next ID');
     console.log(curr_id);
 
   }); 
@@ -833,8 +812,8 @@ $("#newpost.ui.tiny.post.modal")
     var touched = $('input:radio[name=Touched]:checked').val();
     var sympathetic = $('input:radio[name=Sympathetic]:checked').val();
     var moved = $('input:radio[name=Moved]:checked').val();
-    $.post("/userPost_feed", { session_time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_unique_posts: check_id, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
-    $.post("/feed", { session_time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_unique_posts: check_id, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
+    $.post("/userPost_feed", { time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_unique_posts: check_id, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
+    $.post("/feed", { time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_unique_posts: check_id, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
     // reset the session variables .. 
     console.log('session likes stored : ', localStorage.getItem("session_likes"));
     window.localStorage.setItem("session_likes",0);

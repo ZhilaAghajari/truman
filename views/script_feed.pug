@@ -1,5 +1,4 @@
-extends ui_layout_no
-//- extends ui_layout_feed
+extends ui_layout_feed
   
 block content
 
@@ -73,39 +72,18 @@ block content
             img(src='/user_post/'+val.picture)
           .content
             .description=val.body
-
-          //- FLAG and like options...
-          .content
-            #flgComment.span.right.floated
-              if val.like
-                #likeButton.ui.basic.button
-                  //- i.big.red.heart.outline.like.icon
-                  i.red.large.heart.icon
-                  | Like
-                a.ui.basic.red.left.pointing.label=val.likes
-              else
-                #likeButton.ui.basic.button
-                  //- i.big.heart.outline.like.icon
-                  i.heart.large.icon
-                  | Like
-                a.ui.basic.red.left.pointing.label.count=val.likes
-            //- i.flag.icon
-            span.right.floated
-              #falgebutton.ui.basic.button
-               i.large.flag.icon
-            //- | Flag
-          // .two.ui.bottom.attached.icon.buttons
-          //   .ui.reply.button(tabindex='0')
-          //     i.reply.icon
-          //     |  Reply
-          //   if val.liked
-          //     .ui.red.like.button
-          //       i.heart.icon
-          //       |  Like
-          //   else
-          //     .ui.like.button
-          //       i.heart.icon
-          //       |  Like
+          .two.ui.bottom.attached.icon.buttons
+            .ui.reply.button(tabindex='0')
+              i.reply.icon
+              |  Reply
+            if val.liked
+              .ui.red.like.button
+                i.heart.icon
+                |  Like
+            else
+              .ui.like.button
+                i.heart.icon
+                |  Like
           if val.comments.length > 0
             .content
               .ui.comments
@@ -171,7 +149,7 @@ block content
                                 a.like.comment Like
                               a.flag.comment Flag
           .extra.content
-            #comment.ui.fluid.left.labeled.right.icon.input
+            .ui.fluid.left.labeled.right.icon.input
               .ui.label
                 if user.profile.picture
                   img.ui.avatar.image(src='/user_post/'+user.profile.picture, name=user.profile.name || user.username || user.id)
@@ -211,45 +189,25 @@ block content
             img.lazyload(data-src=cdn+"/post_pictures/"+val.picture, style="max-width:100%;width:100%;")
           .content
             .description=val.body
-          //- FLAG and like options...
-          .content
-            #flgComment.span.right.floated
-              if val.like
-                #likeButton.ui.basic.button
-                  //- i.big.red.heart.outline.like.icon
-                  i.red.large.heart.icon
-                  | Like
+          .three.ui.bottom.attached.icon.buttons
+            .ui.reply.button(tabindex='0')
+              i.reply.icon
+              |  Reply
+            .ui.flag.button(tabindex='0')
+              i.flag.icon
+              |  Flag
+            if val.like
+              .ui.labeled.button(tabindex='0')
+                .ui.red.like.button
+                  i.heart.icon
+                  |  Like
                 a.ui.basic.red.left.pointing.label=val.likes
-              else
-                #likeButton.ui.basic.button
-                  //- i.big.heart.outline.like.icon
-                  i.heart.large.icon
-                  | Like
+            else
+              .ui.labeled.button(tabindex='0')
+                .ui.like.button
+                  i.heart.icon
+                  |  Like
                 a.ui.basic.red.left.pointing.label.count=val.likes
-            //- i.flag.icon
-            span.right.floated
-              #falgebutton.ui.basic.button
-               i.large.flag.icon
-            //- | Flag
-          //- .three.ui.bottom.attached.icon.buttons
-          //-   .ui.reply.button(tabindex='0')
-          //-     i.reply.icon
-          //-     |  Reply
-          //-   .ui.flag.button(tabindex='0')
-          //-     i.flag.icon
-          //-     |  Flag
-          //-   if val.like
-          //-     .ui.labeled.button(tabindex='0')
-          //-       .ui.red.like.button
-          //-         i.heart.icon
-          //-         |  Like
-          //-       a.ui.basic.red.left.pointing.label=val.likes
-          //-   else
-          //-     .ui.labeled.button(tabindex='0')
-          //-       .ui.like.button
-          //-         i.heart.icon
-          //-         |  Like
-          //-       a.ui.basic.red.left.pointing.label.count=val.likes
           if val.comments.length > 0
             .content
               .ui.comments
@@ -303,7 +261,7 @@ block content
                               a.like.comment Like
                             a.flag.comment Flag
           .extra.content
-            #comment.ui.fluid.left.labeled.right.icon.input
+            .ui.fluid.left.labeled.right.icon.input
               .ui.label
                 if user.profile.picture
                   img.ui.avatar.image(src='/user_post/'+user.profile.picture, name=user.profile.name || user.username || user.id)
@@ -316,9 +274,6 @@ block content
       .content
         .description
         |  End of Posts for the last 48 hours.
-        //- Here I need to activate the session survey for Feed version
-    .ui.fluid.card
-      #sessionSurvey.ui.blue.right.fluid.button(survey_id='feed') Session Survey
         //- Here I need to activate the session survey for Feed version
 
     br

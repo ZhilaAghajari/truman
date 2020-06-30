@@ -388,7 +388,18 @@ exports.getScript = (req, res, next) => {
       // }
       // ZHila:
       finalfeed = shuffle(finalfeed);
+      console.log('Final feed:');
+      console.log(finalfeed);
+      for (var i=0; i < finalfeed.length; i++){
+        finalfeed[i].modal_id = i+1;
+      }
+      console.log('Final feed with updated modal IDs:');
+      console.log(finalfeed);
+      // update the modal feeds ... 
+
+      // Zhila: here add new modal id to the posts and use the new one!!! 
       res.render('stories',{script:finalfeed})
+
       // res.render('script', { script: finalfeed});
 
       });//end of Script.find()
@@ -793,10 +804,16 @@ exports.postUpdateFeedAction = (req, res, next) => {
         user.session_survey.likes.push(req.body.session_likes);
         user.session_survey.flags.push(req.body.session_flags);
         user.session_survey.posts.push(req.body.session_posts);
+        user.session_survey.time.push(req.body.time);
         console.log('post modal ID is ', req.body.modalID);
         console.log('session time is', req.body.session_time)
         // where do I add it now ??
         // add more information about session level, things like number of likes, comments, flag, etc.
+        console.log('@@@ Session Record added: @@@');
+        console.log('Answers: ', user.session_survey.answers);
+        console.log('Session Likes : ', user.session_survey.likes);
+        console.log('Session Posts: ', user.session_survey.posts);
+        console.log('Session Flags: ', user.session_survey.flags);
 
       }
 
@@ -806,11 +823,7 @@ exports.postUpdateFeedAction = (req, res, next) => {
       }
     }//else ALL POST ACTIONS IF/ELSES
     // test and remove:
-    console.log('Did the session added?');
-    console.log('answers, ', user.session_survey.answers);
-    console.log('likes numbers in this session is : ', user.session_survey.likes);
-    console.log('number of posts seen in this session: ', user.session_survey.posts);
-
+    
        //console.log("####### END OF ELSE post at index "+ feedIndex);
 
     //}//end of else

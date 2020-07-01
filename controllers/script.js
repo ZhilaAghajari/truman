@@ -85,6 +85,7 @@ exports.getScript = (req, res, next) => {
   
     //filter the script based on experimental group
     scriptFilter = user.group;
+
       
     
 
@@ -157,8 +158,10 @@ exports.getScript = (req, res, next) => {
         var modal_id = 1;
         //update script feed to see if reading and posts has already happened
         var finalfeed = [];
-
+        var unique_actors=[];
+        var final_user_posts =[];
         var user_posts = [];
+        var final_actors_feed = [];
         //Zh: test sorting by username ...
         console.log(script_feed);
 
@@ -168,6 +171,7 @@ exports.getScript = (req, res, next) => {
         }
         //ZH: we need to remove this for the feed version ! it is just for individual centric 
         sort(properties,script_feed);
+        //  now add group id to script_feed and give same id to posts by one user!!!
 
         //Look up Notifications??? And do this as well?
 
@@ -176,7 +180,7 @@ exports.getScript = (req, res, next) => {
         user_posts.sort(function (a, b) {
             return b.relativeTime - a.relativeTime;
           });
-
+        
         while(script_feed.length || user_posts.length) {
           console.log(user_posts[0]);
           if(typeof script_feed[0] === 'undefined') {
@@ -190,6 +194,7 @@ exports.getScript = (req, res, next) => {
               console.log('Expanded2!');
               console.log(user_posts[0]);
               finalfeed.push(user_posts[0]);
+              final_user_posts.push(user_posts[0]);
               user_posts.splice(0,1);
           }
           else if(!(typeof user_posts[0] === 'undefined') && (script_feed[0].time < user_posts[0].relativeTime)){
@@ -202,6 +207,7 @@ exports.getScript = (req, res, next) => {
               console.log('Expanded2!');
               console.log(user_posts[0]);
               finalfeed.push(user_posts[0]);
+              final_user_posts.push(user_posts[0]);
               user_posts.splice(0,1);
           }
           else{
@@ -329,6 +335,7 @@ exports.getScript = (req, res, next) => {
                 console.log('New SCRIPT FEED');
                 console.log('Script feed added to final feed');
                 finalfeed.push(script_feed[0]);
+                final_actors_feed.push(script_feed[0]);
                 script_feed.splice(0,1);
               }
 
@@ -357,16 +364,23 @@ exports.getScript = (req, res, next) => {
                 modal_id = modal_id+1;
                 console.log('Script feed added to final feeddd', script_feed[0].id);
                 finalfeed.push(script_feed[0]);
+                final_actors_feed.push(script_feed[0]);
                 script_feed.splice(0,1);
               }
             }
+            
+
+            
             }//else in while loop
       }//while loop
 
       
       //shuffle up the list
       //finalfeed = shuffle(finalfeed);
-
+      unique_authors = [...new Set(final_actors_feed.map(item => item.actor.username))];
+      console.log('Unique actprs who posted: ', unique_authors);
+      unique_authors.push(user.username); 
+      unique_authors = shuffle(unique_authors);
 
       user.save((err) => {
         if (err) {
@@ -376,7 +390,6 @@ exports.getScript = (req, res, next) => {
         //req.flash('success', { msg: 'Profile information has been updated.' });
       });
 
-      console.log("Script Size is now: "+finalfeed.length);
       //Testing stories .. !!!! Might need to remove the second argument in below ..
       //We render one of these based on the conditions ..
       // if (scriptFilter == 'var1')
@@ -386,19 +399,68 @@ exports.getScript = (req, res, next) => {
       // else{
       //   res.render('script',{script:finalfeed})
       // }
-      // ZHila:
-      finalfeed = shuffle(finalfeed);
-      console.log('Final feed:');
-      console.log(finalfeed);
-      for (var i=0; i < finalfeed.length; i++){
-        finalfeed[i].modal_id = i+1;
+      // ZHila: now that we shuffled user names, only sort them based on the post created by unqiue username ...
+      // finalfeed = shuffle(finalfeed);
+      // var new_final_feeds = []
+      //   //ZH: Need to sort before sending them to front end. .. 
+
+      console.log('Len of all the authors list: ', unique_authors.length);
+      var new_final_feeds = []
+      for( var i=0; i<unique_authors.length; i++)
+      {
+        // find posts that are created by this authors ..
+        if(unique_authors[i] == user.username)
+        {
+          let temp = user_posts;
+          for (var j = 0; j<user_posts.length; j++)
+          {
+            new_final_feeds.push(temp[i]);
+          }
+        }
+        else
+        {
+          let temp = final_actors_feed.find(item => item.actor.username == unique_authors[i])
+          for( var a=0; a<final_actors_feed.length; a++)
+          {
+            if(final_actors_feed[a].actor.username == unique_authors[i])
+            {
+              new_final_feeds.push(final_actors_feed[a]);
+            }
+          }
+          // for (var j = 0; j<temp.length; j++)
+          // {
+          //   new_final_feeds.push(temp[i]);
+          // }
+
+        }
       }
-      console.log('Final feed with updated modal IDs:');
+      console.log('HOPE IT WORKS after allaaa: ', new_final_feeds);
+        
+      //   // console.log(' Updated final after changing user posts!!', new_final_feeds);
+      //   // new_final_feeds.push(temp);
+      //   // add them to a new collection instead of final
+      // }
+      // console.log('new FINAL FEDD AFTER Zhila ALGORTITMs', new_final_feeds);
+
+
+
+      for(var i=0; i<finalfeed.length; i++){
+        var temp = new Object();
+        temp.new_modal_id = i+1
+        const temp_final_feed = JSON.parse(JSON.stringify(finalfeed[i]));
+        finalfeed[i] = Object.assign(temp_final_feed,temp);
+      }
+
+      // console.log('Final feed after adding new modal id: no shuffling');
+      // console.log(finalfeed);
+      for (var i=0; i < new_final_feeds.length; i++){
+        new_final_feeds[i].modal_id = i+1;
+      }
       console.log(finalfeed);
       // update the modal feeds ... 
 
       // Zhila: here add new modal id to the posts and use the new one!!! 
-      res.render('stories',{script:finalfeed})
+      res.render('stories',{script:new_final_feeds})
 
       // res.render('script', { script: finalfeed});
 

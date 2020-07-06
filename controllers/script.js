@@ -390,20 +390,8 @@ exports.getScript = (req, res, next) => {
         //req.flash('success', { msg: 'Profile information has been updated.' });
       });
 
-      //Testing stories .. !!!! Might need to remove the second argument in below ..
-      //We render one of these based on the conditions ..
-      // if (scriptFilter == 'var1')
-      // {
-      //   res.render('stories',{script:finalfeed})
-      // }
-      // else{
-      //   res.render('script',{script:finalfeed})
-      // }
-      // ZHila: now that we shuffled user names, only sort them based on the post created by unqiue username ...
-      // finalfeed = shuffle(finalfeed);
-      // var new_final_feeds = []
-      //   //ZH: Need to sort before sending them to front end. .. 
 
+      // Later, we might need to first show the users posts first and then show the actors' posts ... 
       console.log('Len of all the authors list: ', unique_authors.length);
       var new_final_feeds = []
       for( var i=0; i<unique_authors.length; i++)
@@ -411,10 +399,11 @@ exports.getScript = (req, res, next) => {
         // find posts that are created by this authors ..
         if(unique_authors[i] == user.username)
         {
-          let temp = user_posts;
-          for (var j = 0; j<user_posts.length; j++)
+          let temp = final_user_posts;
+          console.log('users posts from final_user_posts are about to be addded: ', temp);
+          for (var j = 0; j<final_user_posts.length; j++)
           {
-            new_final_feeds.push(temp[i]);
+            new_final_feeds.push(temp[j]);
           }
         }
         else
@@ -427,36 +416,25 @@ exports.getScript = (req, res, next) => {
               new_final_feeds.push(final_actors_feed[a]);
             }
           }
-          // for (var j = 0; j<temp.length; j++)
-          // {
-          //   new_final_feeds.push(temp[i]);
-          // }
 
         }
       }
-      console.log('HOPE IT WORKS after allaaa: ', new_final_feeds);
         
-      //   // console.log(' Updated final after changing user posts!!', new_final_feeds);
-      //   // new_final_feeds.push(temp);
-      //   // add them to a new collection instead of final
-      // }
-      // console.log('new FINAL FEDD AFTER Zhila ALGORTITMs', new_final_feeds);
 
 
-
-      for(var i=0; i<finalfeed.length; i++){
+      for(var i=0; i<new_final_feeds.length; i++){
         var temp = new Object();
-        temp.new_modal_id = i+1
-        const temp_final_feed = JSON.parse(JSON.stringify(finalfeed[i]));
-        finalfeed[i] = Object.assign(temp_final_feed,temp);
+        temp.modal_id = i+1
+        const temp_final_feed = JSON.parse(JSON.stringify(new_final_feeds[i]));
+        new_final_feeds[i] = Object.assign(temp_final_feed,temp);
       }
 
-      // console.log('Final feed after adding new modal id: no shuffling');
-      // console.log(finalfeed);
-      for (var i=0; i < new_final_feeds.length; i++){
-        new_final_feeds[i].modal_id = i+1;
-      }
-      console.log(finalfeed);
+      // console.log('before updatign modal ids : ', new_final_feeds);
+      // for (var i=0; i < new_final_feeds.length; i++){
+      //   new_final_feeds[i].modal_id = i+1;
+      // }
+      console.log('Finally, we have a correct final feed, right? :');
+      console.log(new_final_feeds);
       // update the modal feeds ... 
 
       // Zhila: here add new modal id to the posts and use the new one!!! 

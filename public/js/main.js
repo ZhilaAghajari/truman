@@ -57,6 +57,7 @@ if(localStorage.getItem("total_logedin_time")){
 if(typeof total_seconds != 'undefined')
 {
   console.log('something something');
+  // if there were new posts, first show
   function countDownTimer(){
       if(total_seconds == 0){
           // if(survey_flag ==1 && (parseInt(next_id)+1)>=3 )
@@ -146,7 +147,7 @@ if(typeof total_logedin_time != 'undefined')
 
   $('.ui.tiny.gray.progress')
   .progress({
-    total: 3 //Zh: change it back to 10 after testing is done ..
+    total: 10 //Zh: change it back to 10 after testing is done ..
   });
 
   function move(j) {
@@ -168,7 +169,7 @@ if(typeof total_logedin_time != 'undefined')
             element_next[0].classList.remove("disabled");     
           }
           },1000) //
-       })(3) ; //time duration in seconds to show each post
+       })(10) ; //time duration in seconds to show each post
 
   }
 
@@ -366,7 +367,7 @@ if(typeof total_logedin_time != 'undefined')
       // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','#submitNewPost.ui.blue.fluid.button');
 
 
-      //Zhila: This idea works on Safar but not on Firefox and Chrome! it is weird but I'll try it after other issues are solved .. 
+      //Zhila: This idea works on Safari but not on Firefox and Chrome! it is weird but I'll try it after other issues are solved .. 
       // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']")
       //     .modal({
       //       onApprove : function(){
@@ -384,11 +385,13 @@ if(typeof total_logedin_time != 'undefined')
       console.log('Reload flag: ',localStorage.getItem("reload"));
       return false
     });
-
+// zhila:uncomment this one ..
 
 if(parseInt(localStorage.getItem("reload")) == 1)
 {
-  $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
+  var j=1;
+  $(" .ui.tiny.post.modal[modal_id='"+j+"']").modal('show');
+  // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
   window.localStorage.setItem("reload",0);
   move(check_id);
 }

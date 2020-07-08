@@ -42,8 +42,8 @@ block content
     script.
       var i=0;
     each val in script
-      -console.log('Modal ID: ', val.modal_id);
-      -console.log('the post group is: ', val.experiment_group)
+      //- -console.log('Modal ID: ', val.modal_id);
+      //- -console.log('the post group is: ', val.experiment_group)
       -console.log('postID: ', val.postID)
       //- create a card for each post in val (if by user make the card a little different)
       //- if val.relativeTime - then post came from user_post (so user post, user reply to actor reply to user post)
@@ -361,7 +361,7 @@ block content
       i.close.icon
       .header Add a New Post
       .content
-        form#postform.ui.feed.form(action='/post/new', method='POST', enctype='multipart/form-data')
+        form#postform.ui.feed.form(action='/post/new', method='POST', enctype='multipart/form-data', study_group = 'feed')
           input(type='hidden', name='_csrf', value=_csrf)
           .field
             textarea(rows='2', placeholder='Share your meal', name='body')
@@ -373,7 +373,7 @@ block content
             input#picinput(type='file', accept='image/*', name='picinput')
           .ui.error.message
       .actions
-        input.ui.green.button(type='submit', name="foo", value='Submit', form='postform')
+        input.ui.green.button(type='submit', name="foo", value='Submit', form='postform', study_group = 'feed')
 
     .ui.container
       #surveyModal.ui.small.post.modal(modal_id='321')

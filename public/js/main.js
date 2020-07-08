@@ -338,7 +338,10 @@ if(typeof total_logedin_time != 'undefined')
       //console.log(event);
       console.log("fields is :");
       //console.log(fields);
-      $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','#submitNewPost.ui.blue.fluid.button');
+      if($('.ui.feed.form')[0].attributes[5].value != 'feed')
+      {
+        $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','#submitNewPost.ui.blue.fluid.button');
+      }      
       $(".ui.feed.form")[0].submit();
     }
 
@@ -361,28 +364,32 @@ if(typeof total_logedin_time != 'undefined')
       this.submit(); //if I don't submit ... will it get through and do I only need to take care of fron end .. ?
       console.log("Submit the junks!!!!")
       // attach the previously shown modal to this submit button...
-      console.log('Check ID: ', check_id);
-      console.log('Next ID: ', next_id);
+      if($('.ui.feed.form')[0].attributes[5].value != 'feed')
+      {
+        console.log('Check ID: ', check_id);
+        console.log('Next ID: ', next_id);
 
-      // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','#submitNewPost.ui.blue.fluid.button');
+        // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','#submitNewPost.ui.blue.fluid.button');
 
 
-      //Zhila: This idea works on Safari but not on Firefox and Chrome! it is weird but I'll try it after other issues are solved .. 
-      // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']")
-      //     .modal({
-      //       onApprove : function(){
-      //         return false;
-      //       },
-      //       onDeny : function(){
-      //         return false
-      //       }
-      //     })
-      //     .modal('show');
-   
-      console.log('Check ID: ', check_id);
-      //  We don't need as as we write onApprove return false but in firefox and chrome it doesn't work it only work for Safari
-      window.localStorage.setItem("reload",1);
-      console.log('Reload flag: ',localStorage.getItem("reload"));
+        //Zhila: This idea works on Safari but not on Firefox and Chrome! it is weird but I'll try it after other issues are solved .. 
+        // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']")
+        //     .modal({
+        //       onApprove : function(){
+        //         return false;
+        //       },
+        //       onDeny : function(){
+        //         return false
+        //       }
+        //     })
+        //     .modal('show');
+     
+        console.log('Check ID: ', check_id);
+        //  We don't need as as we write onApprove return false but in firefox and chrome it doesn't work it only work for Safari
+        window.localStorage.setItem("reload",1);
+        console.log('Reload flag: ',localStorage.getItem("reload"));
+      }
+      
       return false
     });
 // zhila:uncomment this one ..

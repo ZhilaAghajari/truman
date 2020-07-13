@@ -1,7 +1,6 @@
-// Issues to be fixed: 
-// User's comments and likes are not shown on page reload... and after the user log in for next time ... 
-// Number of post seen in the session is not accurate because if a post is seen and the user get back and forth to see the posts I count them each time. Need to be fixed... 
-
+// Issues to be fixed: Survey pops up below the previous posts
+//2- welcome message ..
+//3- person centric design
 $('#content').hide();
 $('#loading').show();
 var modal_id;
@@ -136,7 +135,11 @@ if(typeof total_logedin_time != 'undefined')
     console.log('Iteration in move is: ',iteration);
 
     // maybe fist hide the previous modal?
+    // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('hide');
     $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('hide');
+    $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal({
+      closable: true
+    });
     var j='321';
     $(".ui.small.post.modal[modal_id='"+j+"']").modal('show');
     survey_flag =0;
@@ -277,7 +280,7 @@ if(typeof total_logedin_time != 'undefined')
   // ZH: Set local variables after loging. ( do I need to set session id here as well?)
   $('button.ui.button').on('click', function(){
     active_flag = 1;
-    var t = 2*60; //ZHILA: change it back to 120
+    var t = 60; //ZHILA: change it back to 120
     var f =1;
     var logged_time = 5*60;
     logged = 1;

@@ -154,12 +154,22 @@ if(typeof total_logedin_time != 'undefined')
 
   $('.ui.tiny.gray.progress')
   .progress({
-    total: 10 //Zh: change it back to 10 after testing is done ..
+    total: 8 //Zh: change it back to 10 after testing is done ..
   });
+
+
+  $('.ui.tiny.red.progress')
+  .progress({
+    total: 3 //Zh: change it back to 10 after testing is done ..
+  });
+
 
   function move(j) {
     console.log('modal id is: ', j);
-     progressing_id = $("[progressing_id='"+j+"']");
+    mdltype = $("[progressing_id='"+j+"']")[0].attributes[2].value;
+    if(mdltype =='post')
+    {
+      progressing_id = $("[progressing_id='"+j+"']");
       (function loop(itr) {
         setTimeout(function () { 
           // console.log(itr);
@@ -176,7 +186,31 @@ if(typeof total_logedin_time != 'undefined')
             element_next[0].classList.remove("disabled");     
           }
           },1000) //
-       })(10) ; //time duration in seconds to show each post
+       })(8) ; //time duration in seconds to show each post
+    }
+     
+    else{//if it is a actors photo modal
+      progressing_id = $("[progressing_id='"+j+"']");
+       (function loop(itr) {
+        setTimeout(function () { 
+          // console.log(itr);
+          iteration =itr; 
+          $(progressing_id)
+            .progress('increment')
+          ;
+          if (--itr) loop(itr); // iteration counter
+          else {
+            var element_pre = $("[pre_id='"+j+"']");
+            var element_next = $("[next_id='"+j+"']");
+            
+            element_pre[0].classList.remove("disabled");
+            element_next[0].classList.remove("disabled");     
+          }
+          },1000) //
+       })(3) ; //time duration in seconds to show each post
+    }
+       
+       
 
   }
 

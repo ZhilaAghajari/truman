@@ -164,7 +164,7 @@ block content
               .content
                 // var nm = user.profile.name
                 .description
-                h3(style=" color: #000000") These are all the posts by you :) 
+                h3(style=" color: #000000") These are all the posts by you 
 
                 .extra.content
                 // .ui.fluid.left.labeled.right.icon.input
@@ -182,7 +182,7 @@ block content
                   .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
                   .ui.right.disabled.button(next_id=val.modal_id, postID=val.postID, study_group ='stories')  Next
                    
-                .ui.tiny.gray.progress(progressing_id=val.modal_id)
+                .ui.tiny.red.progress(progressing_id=val.modal_id, progressing_type = 'profile')
                   .bar
                   .label ... 
 
@@ -223,7 +223,7 @@ block content
                   - var nm = val.name
                   // h3(style=" color: #016936") You have looked at all the stories by  #{nm}
                   // h3(style=" color: #0E6EB8") You have looked at all the stories by  #{nm}
-                  h3(style=" color: #000000") You have looked at all the stories by  #{nm}
+                  h2(style=" color: #000000") You have looked at all the stories by  #{nm}
                   
 
               .extra.content
@@ -231,7 +231,7 @@ block content
                   .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
                   .ui.right.disabled.button(next_id=val.modal_id, postID=val.postID, study_group ='stories')  Next
                    
-                .ui.tiny.gray.progress(progressing_id=val.modal_id)
+                .ui.tiny.red.progress(progressing_id=val.modal_id, progressing_type = 'profile')
                   .bar
                   .label ... 
 
@@ -245,7 +245,7 @@ block content
           -console.log(val.modal_id)
           // -console.log('@@USERs POST ID:@@', val.id)
           -console.log('@@USERs POST ID:@@', val.postID)
-          .ui.tiny.post.modal(modal_id=val.modal_id, postID=val.postID)
+          .ui.tiny.post.modal(modal_id=val.modal_id, postID=val.postID, modal_type = 'post')
             .ui.fluid.card(u_postID=val.id, type=u_class, postID=val.postID)
               // .content
               //   .two.fluid.ui.buttons(postID=val.postID)
@@ -398,7 +398,7 @@ block content
                 .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
                 .ui.right.disabled.button(next_id=val.modal_id, postID=val.postID, study_group ='stories')  Next
                  
-              .ui.tiny.gray.progress(progressing_id=val.modal_id)
+              .ui.tiny.gray.progress(progressing_id=val.modal_id, progressing_type = 'post')
                 .bar
                 .label ... 
 
@@ -571,7 +571,7 @@ block content
                 .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
                 .ui.right.disabled.button(next_id=val.modal_id , postID=val.postID, study_group ='stories')  Next
                 
-              .ui.tiny.gray.progress(progressing_id=val.modal_id)
+              .ui.tiny.gray.progress(progressing_id=val.modal_id, progressing_type = 'post')
                 .bar
                 .label ... 
 

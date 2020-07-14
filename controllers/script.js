@@ -405,24 +405,43 @@ exports.getScript = (req, res, next) => {
         if(unique_authors[i] == user.username)
         {
           let temp = final_user_posts;
-          console.log('users posts from final_user_posts are about to be addded: ', temp);
+          // console.log('users posts from final_user_posts are about to be addded: ', temp);
           for (var j = 0; j<final_user_posts.length; j++)
           {
             new_final_feeds.push(temp[j]);
           }
+          // //  what can I add to the feed here as a seperation between users' posts ...
+          var middle_post = {
+            type:'user',
+            picture : user.profile.picture
+          }
+          new_final_feeds.push(middle_post);
+          console.log('added user middle');
+          console.log(middle_post);
         }
+        
         else
         {
           let temp = final_actors_feed.find(item => item.actor.username == unique_authors[i])
+          var temp_record;
           for( var a=0; a<final_actors_feed.length; a++)
           {
             if(final_actors_feed[a].actor.username == unique_authors[i])
             {
               new_final_feeds.push(final_actors_feed[a]);
+              temp_record = final_actors_feed[a];
             }
           }
-
+          //  need to add something to the final feed here to show these were the posts by this specific user
+          var middle_post = {
+            type:'actor',
+            picture : temp_record.actor.profile.picture,
+            name: temp_record.actor.profile.name,
+            username: temp_record.actor.username
+          }
+          new_final_feeds.push(middle_post);
         }
+        
       }
         
 
@@ -442,7 +461,7 @@ exports.getScript = (req, res, next) => {
       // for (var i=0; i < new_final_feeds.length; i++){
       //   new_final_feeds[i].modal_id = i+1;
       // }
-      console.log('Finally, we have a correct final feed, right? :');
+      console.log('after now After adding the middle posts ... ');
       console.log(new_final_feeds);
       // update the modal feeds ... 
 

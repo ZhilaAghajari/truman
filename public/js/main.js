@@ -11,7 +11,6 @@ var next_post;
 var $window = $(window);
 var iteration;
 var active_flag;
-var logged = 0;
 // @@@@@@@@@
 $(window).on("load", function() {
   $('.modal').modal({
@@ -98,12 +97,17 @@ if(typeof total_logedin_time != 'undefined')
 {
   // console.log('Total time counter');
   total_logedin_time = parseInt(localStorage.getItem("total_logedin_time"));
+  logged = parseInt(localStorage.getItem("logged"));
   function countDownTimerTotal(){
     if(total_logedin_time == 0 && logged == 1){
       // kick the user out of the site because 10 minutes has passed from the user's last activitiy ... 
       console.log('Did it get here after 4 minutes???');
       window.location.href='/info'; //How to log the user out here? 
-      alert('You have been inactive for 4 minutes now!!');    
+      // alert('You have been inactive for 5 minutes now!!');
+      // window.localStorage.setItem("logged", 0);
+      window.localStorage.setItem("logged",0);
+      window.localStorage.setItem("total_logedin_time",300);
+      logged =0;    
     }
     else if(total_logedin_time>0) {
       if(active_flag ==0)
@@ -280,10 +284,10 @@ if(typeof total_logedin_time != 'undefined')
   // ZH: Set local variables after loging. ( do I need to set session id here as well?)
   $('button.ui.button').on('click', function(){
     active_flag = 1;
-    var t = 60; //ZHILA: change it back to 120
+    var t = 2*60; //ZHILA: change it back to 120
     var f =1;
     var logged_time = 5*60;
-    logged = 1;
+    window.localStorage.setItem("logged",f);
     window.localStorage.setItem("total_seconds", t);
     window.localStorage.setItem("total_logedin_time",logged_time);
     if($('button.ui.button').text()=="Login")

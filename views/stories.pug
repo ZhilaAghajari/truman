@@ -87,6 +87,154 @@ block content
     each val in script
       -console.log('Modal ID: ', val.modal_id);
       -console.log('the post group is: ', val.experiment_group)
+      //  this is a modal to seperate the post by the author ...
+      if val.type
+        if val.type == 'user'
+
+          .ui.container
+            .ui.tiny.post.modal(modal_id=val.modal_id)
+              .ui.fluid.card.dim(modal_id = val.modal_id)
+              .content
+                // .right.floated.time.meta= (user.createdAt.getTime() + val.time)
+                // |  
+                //-a(href='/user/'+val.actor.username)
+                  img.ui.avatar.image(src='/user_post/'+user.profile.picture)
+                  span=val.name
+                a(href='/me')     
+                  img.ui.avatar.image.lazyload(src='/user_post/'+user.profile.picture)
+                  span=user.username || user.id ||user.profile.name
+              //-div(style="position: relative; z-index: 1;")
+                
+                // img(src="image.png" style="position: absolute; z-index: 3;")
+                // span#overlay_text(style="position: relative; top: -10px; z-index: 3;") OVERLAY
+
+              .content
+                .image
+                  img(src='/user_post/'+user.profile.picture, style="max-width:100%;width:100%;")
+                // span=val.name
+                  // a(href='/user/'+val.username) 
+                // .content 
+                //   a.header " "+val.name
+                //   .meta
+                  // .description
+                  //   | You have looked at the posts by THIC ACTOR
+              
+          // .ui.container
+          //   .ui.tiny.post.modal(modal_id=val.modal_id)
+          //     .ui.fluid.card(modal_id = val.modal_id)
+          //       .content
+          //         // .right.floated.time.meta= (user.createdAt.getTime() + val.relativeTime)
+          //         // |
+          //         // a.ui.avatar.image(href='/me')
+          //         //   if user.profile.picture
+          //         //     img.ui.avatar.image(src='/user_post/'+user.profile.picture)
+          //         //   else
+          //         //     img.ui.avatar.image(src=user.gravatar(60))
+          //         // a(href='/me')
+          //           // span= user.username || user.id ||user.profile.name
+          //       .content
+          //         .right.floated.time.meta= (user.createdAt.getTime() + val.relativeTime)
+          //         |
+          //         a.ui.avatar.image(href='/me')
+          //           if user.profile.picture
+          //             .image
+          //               img(src='/user_post/'+user.profile.picture)
+          //             // img.ui.avatar.image(src='/user_post/'+user.profile.picture)
+          //           else
+          //             img.ui.avatar.image(src=user.gravatar(60))
+          //       .content
+          //         .description='you have looked at posts created by  TO BE FILLED'
+
+
+          // .ui.container
+          //   .ui.tiny.post.modal(modal_id=val.modal_id)
+          //     .ui.fluid.card.dim(modal_id = val.modal_id)
+          //       if user.profile.picture
+          //         .image
+          //           img(src='/user_post/'+user.profile.picture)
+          //       else
+          //         img.ui.avatar.image(src=user.gravatar(60))
+
+          //       .content 
+          //         a.header " "+val.name
+          //         .meta
+          //         // .description
+          //         //   | You have looked at the posts by THIC ACTOR
+              
+              .content
+                // var nm = user.profile.name
+                .description
+                h3(style=" color: #000000") These are all the posts by you :) 
+
+                .extra.content
+                // .ui.fluid.left.labeled.right.icon.input
+                //   // .ui.label
+                //     if user.profile.picture
+                //       img.ui.avatar.image(src='/user_post/'+user.profile.picture, name=user.profile.name || user.username || user.id)
+                //     else
+                //       img.ui.avatar.image(src=user.gravatar(60), name=user.profile.name || user.username || user.id)            
+                //   // input.newcomment(type='text', placeholder='Write a Comment')
+                //   // i.big.send.link.icon
+                //   .image
+                //     img(src='/user_post/'+user.profile.picture)
+
+                .two.fluid.ui.buttons(postID=val.postID)
+                  .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
+                  .ui.right.disabled.button(next_id=val.modal_id, postID=val.postID, study_group ='stories')  Next
+                   
+                .ui.tiny.gray.progress(progressing_id=val.modal_id)
+                  .bar
+                  .label ... 
+
+
+        else if val.type =='actor'
+          .ui.container
+            .ui.tiny.post.modal(modal_id=val.modal_id)
+              .ui.fluid.card.dim(modal_id = val.modal_id)
+              .content
+                // .right.floated.time.meta= (user.createdAt.getTime() + val.time)
+                // |  
+                //-a(href='/user/'+val.actor.username)
+                  img.ui.avatar.image(src='/profile_pictures/'+val.picture)
+                  span=val.name
+                a(href='/user/'+val.username)     
+                  img.ui.avatar.image.lazyload(src="/profile_pictures/"+val.picture)
+                  span=val.name
+              //-div(style="position: relative; z-index: 1;")
+                
+                // img(src="image.png" style="position: absolute; z-index: 3;")
+                // span#overlay_text(style="position: relative; top: -10px; z-index: 3;") OVERLAY
+
+              .content
+                .image
+                  img(src='/profile_pictures/'+val.picture, style="max-width:100%;width:100%;")
+                // span=val.name
+                  // a(href='/user/'+val.username) 
+                // .content 
+                //   a.header " "+val.name
+                //   .meta
+                  // .description
+                  //   | You have looked at the posts by THIC ACTOR
+              
+              .content
+                // h2(style='color:red;font-size:40px;')
+                // .description='You have looked at all the stories by ' +val.name
+                .description
+                  - var nm = val.name
+                  // h3(style=" color: #016936") You have looked at all the stories by  #{nm}
+                  // h3(style=" color: #0E6EB8") You have looked at all the stories by  #{nm}
+                  h3(style=" color: #000000") You have looked at all the stories by  #{nm}
+                  
+
+              .extra.content
+                .two.fluid.ui.buttons(postID=val.postID)
+                  .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
+                  .ui.right.disabled.button(next_id=val.modal_id, postID=val.postID, study_group ='stories')  Next
+                   
+                .ui.tiny.gray.progress(progressing_id=val.modal_id)
+                  .bar
+                  .label ... 
+
       //- this is a user post ..
       if val.relativeTime 
         -var u_class;
@@ -257,7 +405,7 @@ block content
 
 
       //- These are posts by Actors, not the participants !!!
-      else
+      else if !val.relativeTime  && !val.type
         .ui.container
           //- .ui.tiny.post.modal(modal_id=val.modal_id)
           .ui.tiny.post.modal(modal_id=val.modal_id)

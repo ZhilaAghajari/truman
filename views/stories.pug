@@ -98,86 +98,28 @@ block content
                 // .right.floated.time.meta= (user.createdAt.getTime() + val.time)
                 // |  
                 //-a(href='/user/'+val.actor.username)
+                if user.profile.picture
                   img.ui.avatar.image(src='/user_post/'+user.profile.picture)
-                  span=val.name
-                a(href='/me')     
-                  img.ui.avatar.image.lazyload(src='/user_post/'+user.profile.picture)
-                  span=user.username || user.id ||user.profile.name
-              //-div(style="position: relative; z-index: 1;")
-                
-                // img(src="image.png" style="position: absolute; z-index: 3;")
-                // span#overlay_text(style="position: relative; top: -10px; z-index: 3;") OVERLAY
-
+                else
+                    img.ui.avatar.image(src=user.gravatar(60))
+                a(href='/me')
+                  span=user.username || user.id ||user.profile.name     
+                  // img.ui.avatar.image.lazyload(src='/user_post/'+user.profile.picture)
+                  
+ 
               .content
                 .image
-                  img(src='/user_post/'+user.profile.picture, style="max-width:100%;width:100%;")
-                // span=val.name
-                  // a(href='/user/'+val.username) 
-                // .content 
-                //   a.header " "+val.name
-                //   .meta
-                  // .description
-                  //   | You have looked at the posts by THIC ACTOR
-              
-          // .ui.container
-          //   .ui.tiny.post.modal(modal_id=val.modal_id)
-          //     .ui.fluid.card(modal_id = val.modal_id)
-          //       .content
-          //         // .right.floated.time.meta= (user.createdAt.getTime() + val.relativeTime)
-          //         // |
-          //         // a.ui.avatar.image(href='/me')
-          //         //   if user.profile.picture
-          //         //     img.ui.avatar.image(src='/user_post/'+user.profile.picture)
-          //         //   else
-          //         //     img.ui.avatar.image(src=user.gravatar(60))
-          //         // a(href='/me')
-          //           // span= user.username || user.id ||user.profile.name
-          //       .content
-          //         .right.floated.time.meta= (user.createdAt.getTime() + val.relativeTime)
-          //         |
-          //         a.ui.avatar.image(href='/me')
-          //           if user.profile.picture
-          //             .image
-          //               img(src='/user_post/'+user.profile.picture)
-          //             // img.ui.avatar.image(src='/user_post/'+user.profile.picture)
-          //           else
-          //             img.ui.avatar.image(src=user.gravatar(60))
-          //       .content
-          //         .description='you have looked at posts created by  TO BE FILLED'
-
-
-          // .ui.container
-          //   .ui.tiny.post.modal(modal_id=val.modal_id)
-          //     .ui.fluid.card.dim(modal_id = val.modal_id)
-          //       if user.profile.picture
-          //         .image
-          //           img(src='/user_post/'+user.profile.picture)
-          //       else
-          //         img.ui.avatar.image(src=user.gravatar(60))
-
-          //       .content 
-          //         a.header " "+val.name
-          //         .meta
-          //         // .description
-          //         //   | You have looked at the posts by THIC ACTOR
-              
+                  if user.profile.picture
+                    img(src='/user_post/'+user.profile.picture, style="max-width:100%;width:100%;")
+                  else
+                    img.ui.avatar.image(src=user.gravatar(60))
+            
               .content
-                // var nm = user.profile.name
                 .description
-                h3(style=" color: #000000") These are all the posts by you 
+                  h3(style=" color: #000000") These are all the posts by you 
 
-                .extra.content
-                // .ui.fluid.left.labeled.right.icon.input
-                //   // .ui.label
-                //     if user.profile.picture
-                //       img.ui.avatar.image(src='/user_post/'+user.profile.picture, name=user.profile.name || user.username || user.id)
-                //     else
-                //       img.ui.avatar.image(src=user.gravatar(60), name=user.profile.name || user.username || user.id)            
-                //   // input.newcomment(type='text', placeholder='Write a Comment')
-                //   // i.big.send.link.icon
-                //   .image
-                //     img(src='/user_post/'+user.profile.picture)
 
+              .extra.content
                 .two.fluid.ui.buttons(postID=val.postID)
                   .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
                   .ui.right.disabled.button(next_id=val.modal_id, postID=val.postID, study_group ='stories')  Next

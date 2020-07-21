@@ -13,8 +13,16 @@ var iteration;
 var active_flag;
 // @@@@@@@@@
 $(window).on("load", function() {
+
+//   $('.slider').glide({
+//   autoplay: false,
+//   arrowsWrapperClass: 'slider-arrows',
+//   arrowRightText: '',
+//   arrowLeftText: ''
+// });
+  // $('.slider').glide();
   $('.modal').modal({
-    // this parameter will enable/disable the closing for the previous .united modals when the next will be opened :)
+    // this parameter will enable/disable the closing for the previous .united modals when the next modal is opened :)
     allowMultiple: false,
   });
 
@@ -33,11 +41,11 @@ $(window).on("load", function() {
 
 if(localStorage.getItem("total_seconds")){
     var total_seconds = localStorage.getItem("total_seconds");
-    console.log('time is: ', total_seconds);
+    console.log('Timer shows : ', total_seconds);
 
     if (total_seconds==0)
     {
-      console.log('timer is over');
+      console.log('Time count down is now over (2 minutes)');
     }
 }
  else {
@@ -65,8 +73,7 @@ if(typeof total_seconds != 'undefined')
             // if((parseInt(next_id)+1)>=3 )
             if(localStorage.getItem("session_posts")>=3) //in this case if they refresh it won't reset the counter. which one is a better desig?
             {
-              console.log('nextid is : ', next_id);
-              console.log('pas of next id: ', (parseInt(next_id)+1));
+              console.log('Next modal id: ', (parseInt(next_id)+1));
               show_survey();
             }         
             else
@@ -101,13 +108,12 @@ if(typeof total_logedin_time != 'undefined')
   function countDownTimerTotal(){
     if(total_logedin_time == 0 && logged == 1){
       // kick the user out of the site because 10 minutes has passed from the user's last activitiy ... 
-      console.log('Did it get here after 4 minutes???');
+      console.log('User has been idel for 5 minutes, logging the user out!');
       window.location.href='/info'; //How to log the user out here? 
-      // alert('You have been inactive for 5 minutes now!!');
-      // window.localStorage.setItem("logged", 0);
-      window.localStorage.setItem("logged",0);
-      window.localStorage.setItem("total_logedin_time",300);
-      logged =0;    
+      var z = 0;
+      window.localStorage.setItem("logged",z);
+      //window.localStorage.setItem("total_logedin_time",300);
+      logged =0;  
     }
     else if(total_logedin_time>0) {
       if(active_flag ==0)
@@ -138,11 +144,12 @@ if(typeof total_logedin_time != 'undefined')
     // create a delay if necessary ... 
     console.log('Iteration in move is: ',iteration);
 
-    // maybe fist hide the previous modal?
+    // maybe frist hide the previous modal?
     // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('hide');
     $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('hide');
     $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal({
       closable: true
+      // allowMultiple: false
     });
     var j='321';
     $(".ui.small.post.modal[modal_id='"+j+"']").modal('show');
@@ -339,6 +346,11 @@ if(typeof total_logedin_time != 'undefined')
     }
     
   });
+
+  // initialize the timer after sign up !
+  // $().on('click', function(){
+
+  // });
 
   //get add new feed post modal to work
   $("#newpost, a.item.newpost").click(function () {

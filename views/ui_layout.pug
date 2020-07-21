@@ -14,10 +14,12 @@ html
     title #{title} - eatsnap.love
     link(rel='shortcut icon', href='/public/favicon.ico')
     link(rel='manifest', href='/public/manifest.json')
+    link(rel='stylesheet', href='/public/heart.css')
     link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css')
     style(type='text/css').
       body {
       background-color: #F5F8FA;
+      //- background-color: #C6E5F2;
       padding: 0em;
       
       }
@@ -96,6 +98,7 @@ html
       include partials/ui_header
       include partials/ui_flash
       block content
+
 
     //include partials/ui_footer
     //- New Post Modal

@@ -154,7 +154,7 @@ if(typeof total_logedin_time != 'undefined')
     var j='321';
     $(".ui.small.post.modal[modal_id='"+j+"']").modal('show');
     survey_flag =0;
-    window.localStorage.setItem("survey_flag", 0);
+    window.localStorage.setItem("survey_flag", survey_flag);
     console.log('RESET the session survey flag :', survey_flag);
   }
   
@@ -336,7 +336,7 @@ if(typeof total_logedin_time != 'undefined')
       console.log('SET TIMER');
       window.localStorage.setItem("total_seconds", t);
       window.localStorage.setItem("survey_flag", f);
-      console.log('the survey flag is: ',window.localStorage.getItem("survey_flag"));
+      console.log('At first, the survey flag is: ',window.localStorage.getItem("survey_flag"));
       //  set the session variables ...
       var z =0;
       window.localStorage.setItem("session_likes",z);

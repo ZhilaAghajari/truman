@@ -158,6 +158,7 @@ exports.getScript = (req, res, next) => {
         var modal_id = 1;
         //update script feed to see if reading and posts has already happened
         var finalfeed = [];
+        var feed_version = [];
         var unique_actors=[];
         var final_user_posts =[];
         var user_posts = [];
@@ -182,7 +183,7 @@ exports.getScript = (req, res, next) => {
           });
         
         last_user_post = user_posts[0];
-        finalfeed.push(last_user_post);
+        //finalfeed.push(last_user_post);
         console.log('ANDD the last post is : : ',last_user_post);
         while(script_feed.length || user_posts.length) {
           console.log(user_posts[0]);
@@ -377,10 +378,11 @@ exports.getScript = (req, res, next) => {
       
       //shuffle up the list
       finalfeed = shuffle(finalfeed);
+    
+      feed_version = JSON.parse(JSON.stringify(finalfeed));
       console.log('final e 0: ', finalfeed[0]);
       // finalfeed.push(last_user_post);
       finalfeed[0] = last_user_post;
-      console.log('AND now final e 0 after: ', finalfeed[0]);
       // finalfeed.push(last_user_post);
       unique_authors = [...new Set(final_actors_feed.map(item => item.actor.username))];
       console.log('Unique actprs who posted: ', unique_authors);
@@ -397,12 +399,9 @@ exports.getScript = (req, res, next) => {
 
 
       // Later, we might need to first show the users posts first and then show the actors' posts ... 
-      console.log('Len of all the authors list: ', unique_authors.length);
       var new_final_feeds = []
       for( var i=0; i<unique_authors.length; i++)
       {
-        
-
         // find posts that are created by this authors ..
         if(unique_authors[i] == user.username)
         {
@@ -503,7 +502,7 @@ exports.getScript = (req, res, next) => {
       //   res.render('script', { script: finalfeed});
       // }
       res.render('stories',{script:new_final_feeds})
-      // res.render('script', { script: finalfeed});
+      // res.render('script', { script: feed_version});
 
       });//end of Script.find()
 

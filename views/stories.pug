@@ -18,8 +18,8 @@ block content
       //-       .heart()
             //- img.ui.centered.small.circular.image.pro_name_image(src="/post_pictures/"+'IMG_20170415_095155.jpg')
       .content(style="white-space:nowrap;")
-        span(style="font-size:150%;font-weight: bold;")="Welcome to EatSnap.Love stories"
-
+        span(style="font-size:150%;font-weight: bold;")="Welcome to EatSnap.Love"
+        // span(style="font-size:150%;font-weight: bold;")=""
         
       //   a.pro_name_link(href='/user/NoahM1121')
       //     span(style="font-size:150%;font-weight: bold;").pro_name="Mary's"
@@ -49,9 +49,13 @@ block content
 
 
       .content(style="white-space:nowrap;")
-        .heartb()
-          .center.aligned
-      #stratButton.large.button.fluid.ui.button Stories or whatever?
+      .content(style="white-space:nowrap;")
+        .center.aligned
+          .heartb()
+          // .center.aligned
+      .content(style="white-space:nowrap;")
+      .content(style="white-space:nowrap;")
+      #stratButton.large.button.fluid.ui.button(style="font-size:200%;font-weight: bold;") Click here to see todays stories
 
       // #survey-time-left
 
@@ -123,11 +127,11 @@ block content
                   
  
               .content
-                .image
-                  if user.profile.picture
-                    img(src='/user_post/'+user.profile.picture, style="max-width:100%;width:100%;")
-                  else
-                    img.ui.avatar.image(src=user.gravatar(60))
+                  .image
+                    if user.profile.picture
+                      img(src='/user_post/'+user.profile.picture, style="max-width:60%;width:60%;",  alt="centered image")
+                    else
+                      img.ui.avatar.image(src=user.gravatar(60))
             
               .content
                 .description
@@ -145,9 +149,9 @@ block content
 
 
         else if val.type =='actor'
-          .ui.container
+          .ui.container.center.aligned
             .ui.tiny.post.modal(modal_id=val.modal_id)
-              .ui.fluid.card.dim(modal_id = val.modal_id)
+              .ui.fluid.centered.card.dim(modal_id = val.modal_id)
               .content
                 // .right.floated.time.meta= (user.createdAt.getTime() + val.time)
                 // |  
@@ -162,18 +166,18 @@ block content
                 // img(src="image.png" style="position: absolute; z-index: 3;")
                 // span#overlay_text(style="position: relative; top: -10px; z-index: 3;") OVERLAY
 
-              .content
-                .image
-                  img(src='/profile_pictures/'+val.picture, style="max-width:100%;width:100%;")
+              .content(alt="centered image")
+                .image(alt="centered image")
+                  img(src='/profile_pictures/'+val.picture, alt="centered image", style="max-width:60%;width:60%;" )
                 // span=val.name
                   // a(href='/user/'+val.username) 
                 // .content 
                 //   a.header " "+val.name
                 //   .meta
                   // .description
-                  //   | You have looked at the posts by THIC ACTOR
+
               
-              .content
+              .content(text-align='center')
                 // h2(style='color:red;font-size:40px;')
                 // .description='You have looked at all the stories by ' +val.name
                 .description

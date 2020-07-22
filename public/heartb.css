@@ -59,3 +59,7 @@ body{
     transform:rotate(45deg) scale(1);
   }
 }
+
+@-ms-viewport{
+  width: device-width;
+}

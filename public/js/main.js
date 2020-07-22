@@ -71,7 +71,8 @@ if(typeof total_seconds != 'undefined')
           if(localStorage.getItem("survey_flag") ==1)
           {
             // if((parseInt(next_id)+1)>=3 )
-            if(localStorage.getItem("session_posts")>=3) //in this case if they refresh it won't reset the counter. which one is a better desig?
+            // if(localStorage.getItem("session_posts")>=3) //in this case if they refresh it won't reset the counter. which one is a better desig?
+            if(next_id>=3)
             {
               console.log('Next modal id: ', (parseInt(next_id)+1));
               show_survey();
@@ -146,12 +147,14 @@ if(typeof total_logedin_time != 'undefined')
 
     // maybe frist hide the previous modal?
     // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('hide');
+    // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('hide');
+    check_id = (parseInt(next_id)+1).toString();
     $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('hide');
     $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal({
       closable: true
       // allowMultiple: false
     });
-    var j='321';
+    j='321';
     $(".ui.small.post.modal[modal_id='"+j+"']").modal('show');
     survey_flag =0;
     window.localStorage.setItem("survey_flag", survey_flag);

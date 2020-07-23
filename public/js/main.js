@@ -14,13 +14,6 @@ var active_flag;
 // @@@@@@@@@
 $(window).on("load", function() {
 
-//   $('.slider').glide({
-//   autoplay: false,
-//   arrowsWrapperClass: 'slider-arrows',
-//   arrowRightText: '',
-//   arrowLeftText: ''
-// });
-  // $('.slider').glide();
   $('.modal').modal({
     // this parameter will enable/disable the closing for the previous .united modals when the next modal is opened :)
     allowMultiple: false,
@@ -36,7 +29,7 @@ $(window).on("load", function() {
   });
   
   var session_userComments=0;
-  var check_id ='1';
+  // var check_id ='1';
 
 
 if(localStorage.getItem("total_seconds")){
@@ -66,12 +59,8 @@ if(typeof total_seconds != 'undefined')
   // if there were new posts, first show
   function countDownTimer(){
       if(total_seconds == 0){
-          // if(survey_flag ==1 && (parseInt(next_id)+1)>=3 )
-          // ZHILA: NEXT TASK ...survey falg should also be stored in local storage ...
           if(localStorage.getItem("survey_flag") ==1)
           {
-            // if((parseInt(next_id)+1)>=3 )
-            // if(localStorage.getItem("session_posts")>=3) //in this case if they refresh it won't reset the counter. which one is a better desig?
             if(next_id>=3)
             {
               console.log('Next modal id: ', (parseInt(next_id)+1));
@@ -142,23 +131,19 @@ if(typeof total_logedin_time != 'undefined')
   });
 
   function show_survey(){
-    // create a delay if necessary ... 
-    console.log('Iteration in move is: ',iteration);
-
-    // maybe frist hide the previous modal?
+    // check_id = (parseInt(next_id)+1).toString();
     // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('hide');
-    // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('hide');
-    check_id = (parseInt(next_id)+1).toString();
-    $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('hide');
-    $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal({
-      closable: true
-      // allowMultiple: false
-    });
-    j='321';
-    $(".ui.small.post.modal[modal_id='"+j+"']").modal('show');
+    $(" .ui.tiny.post.modal[modal_id='"+(parseInt(next_id)+1).toString()+"']").modal('hide');
+    // $(" .ui.tiny.post.modal[modal_id='"+(parseInt(next_id)+1).toString()+"']").modal({
+    //   closable: true
+    //   // allowMultiple: false
+    // });
+    // j='321';
+    $(".ui.small.post.modal[modal_id='"+'321'+"']").modal('show');
     survey_flag =0;
     window.localStorage.setItem("survey_flag", survey_flag);
     console.log('RESET the session survey flag :', survey_flag);
+    $(" .ui.tiny.post.modal[modal_id='"+(parseInt(next_id)+1).toString()+"']").modal('hide');
   }
   
 
@@ -246,7 +231,7 @@ if(typeof total_logedin_time != 'undefined')
       // window.localStorage.setItem("session_posts",temp);
 
       // reset session timer ... 
-      console.log('Posts seen in this session : ', localStorage.getItem("session_posts"));
+      // console.log('Posts seen in this session : ', localStorage.getItem("session_posts"));
       console.log('Time Left: ', total_seconds);
       next_id = $(this)[0].attributes[1].value;
       check_id = (parseInt(next_id)+1).toString(); //next modal to be shown .. 
@@ -257,8 +242,15 @@ if(typeof total_logedin_time != 'undefined')
       {
         console.log('next id is: ', next_id)
         var s ='321';
-        show_survey();
-        console.log('LAST POST of today');
+        if(localStorage.getItem("survey_flag") ==1)
+        {
+          show_survey();
+          console.log('Last story of the day!');
+        }
+        else{
+          console.log('last story -- the session survey has already been filled');
+        }
+        
       }
       else if(flag[next_id]==0)
         {
@@ -273,7 +265,7 @@ if(typeof total_logedin_time != 'undefined')
   $('.ui.left.button').on('click', function(){
 
      active_flag = 1;
-    var next_id = $(this)[0].attributes[1].value;
+    next_id = $(this)[0].attributes[1].value;
     check_id = next_id;
     var move_id = (parseInt(next_id)-1).toString();
     if(move_id>=1)
@@ -350,14 +342,10 @@ if(typeof total_logedin_time != 'undefined')
     
   });
 
-  // initialize the timer after sign up !
-  // $().on('click', function(){
-
-  // });
 
   //get add new feed post modal to work
   $("#newpost, a.item.newpost").click(function () {
-    console.log('Check ID is now : ',check_id);
+    console.log('Next modal ID is now : ',check_id);
     $(' #newpost.ui.tiny.post.modal').modal('show');
      active_flag = 1;
      
@@ -422,28 +410,10 @@ if(typeof total_logedin_time != 'undefined')
       // attach the previously shown modal to this submit button...
       if($('.ui.feed.form')[0].attributes[5].value != 'feed')
       {
-        console.log('Check ID: ', check_id);
-        console.log('Next ID: ', next_id);
 
-        // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','#submitNewPost.ui.blue.fluid.button');
-
-
-        //Zhila: This idea works on Safari but not on Firefox and Chrome! it is weird but I'll try it after other issues are solved .. 
-        // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']")
-        //     .modal({
-        //       onApprove : function(){
-        //         return false;
-        //       },
-        //       onDeny : function(){
-        //         return false
-        //       }
-        //     })
-        //     .modal('show');
-     
-        console.log('Check ID: ', check_id);
         //  We don't need as as we write onApprove return false but in firefox and chrome it doesn't work it only work for Safari
         window.localStorage.setItem("reload",1);
-        console.log('Reload flag: ',localStorage.getItem("reload"));
+        //console.log('Reload flag: ',localStorage.getItem("reload"));
       }
       
       return false
@@ -454,12 +424,10 @@ if(parseInt(localStorage.getItem("reload")) == 1)
 {
   var j=1;
   $(" .ui.tiny.post.modal[modal_id='"+j+"']").modal('show');
-  // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
   window.localStorage.setItem("reload",0);
   move(check_id);
 }
 
-// on Login button set this timer to 2:00 minutes and store in in local storage ..
 //Picture Preview on Image Selection
 function readURL(input) {
         if (input.files && input.files[0]) {

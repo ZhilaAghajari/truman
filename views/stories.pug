@@ -3,11 +3,15 @@ extends ui_layout
 block content
 
   -var cdn = "";
-  //- link(rel='stylesheet', type='text/css', href='heart.css', media='screen')
+
+
   .computer.only.tablet.only.four.wide.column 
   #content.eight.wide.computer.ten.wide.tablet.sixteen.wide.mobile.column
 
-    .ui.raised.fluid.card.profile_card
+
+
+
+    .ui.raised.fluid.inverted.card.profile_card
       //- h3.ui.center.aligned.header(style="background:#42c8f4;") 
         //- checkered5.png bluecheckered contain cover
 
@@ -51,7 +55,9 @@ block content
       .content(style="white-space:nowrap;")
       .content(style="white-space:nowrap;")
         .center.aligned
-          .heartb()
+          i.heart.massive.red.icon
+
+          // .heartb()
           // .center.aligned
       .content(style="white-space:nowrap;")
       .content(style="white-space:nowrap;")
@@ -125,17 +131,18 @@ block content
                   span=user.username || user.id ||user.profile.name     
                   // img.ui.avatar.image.lazyload(src='/user_post/'+user.profile.picture)
                   
- 
-              .content
-                  .image
-                    if user.profile.picture
-                      img(src='/user_post/'+user.profile.picture, style="max-width:60%;width:60%;",  alt="centered image")
-                    else
-                      img.ui.avatar.image(src=user.gravatar(60))
-            
-              .content
-                .description
-                  h3(style=" color: #000000") Stories by you  
+              .ui.container.center.aligned
+                .content
+                    .image
+                      if user.profile.picture
+                        img(src='/user_post/'+user.profile.picture, style="max-width:50%;width:50%;",  alt="centered image")
+                      else
+                        img.ui.avatar.image(src=user.gravatar(60))
+                
+              .ui.container.center.aligned
+                .content
+                  .description
+                    h3(style=" color: #000000") Stories by you  
 
 
               .extra.content
@@ -165,10 +172,10 @@ block content
                 
                 // img(src="image.png" style="position: absolute; z-index: 3;")
                 // span#overlay_text(style="position: relative; top: -10px; z-index: 3;") OVERLAY
-
-              .content(alt="centered image")
-                .image(alt="centered image")
-                  img(src='/profile_pictures/'+val.picture, alt="centered image", style="max-width:60%;width:60%;" )
+              .ui.container.center.aligned
+                .content(alt="centered image")
+                  .image(alt="centered image")
+                    img(src='/profile_pictures/'+val.picture, alt="centered image", style="max-width:50%;width:50%;" )
                 // span=val.name
                   // a(href='/user/'+val.username) 
                 // .content 
@@ -176,15 +183,15 @@ block content
                 //   .meta
                   // .description
 
-              
-              .content(text-align='center')
-                // h2(style='color:red;font-size:40px;')
-                // .description='You have looked at all the stories by ' +val.name
-                .description
-                  - var nm = val.name
-                  // h3(style=" color: #016936") You have looked at all the stories by  #{nm}
-                  // h3(style=" color: #0E6EB8") You have looked at all the stories by  #{nm}
-                  h2(style=" color: #000000") Stories posted by  #{nm}
+              .ui.container.center.aligned
+                .content(text-align='center')
+                  // h2(style='color:red;font-size:40px;')
+                  // .description='You have looked at all the stories by ' +val.name
+                  .description
+                    - var nm = val.name
+                    // h3(style=" color: #016936") You have looked at all the stories by  #{nm}
+                    // h3(style=" color: #0E6EB8") You have looked at all the stories by  #{nm}
+                    h2(style=" color: #000000", text-align='center') Stories posted by  #{nm}
                   
 
               .extra.content

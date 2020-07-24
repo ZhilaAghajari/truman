@@ -56,7 +56,6 @@ if(localStorage.getItem("total_logedin_time")){
 if(typeof total_seconds != 'undefined')
 {
   console.log('something something');
-  // if there were new posts, first show
   function countDownTimer(){
       if(total_seconds == 0){
           if(localStorage.getItem("survey_flag") ==1)
@@ -65,6 +64,7 @@ if(typeof total_seconds != 'undefined')
             {
               console.log('Next modal id: ', (parseInt(next_id)+1));
               show_survey();
+              console.log('Done?');
             }         
             else
             {
@@ -139,14 +139,13 @@ if(typeof total_logedin_time != 'undefined')
           console.log('hide the previous one?');
           return false;
         }
-        // return false;
       })
       .modal('show')
     ;
-    $(".ui.small.post.modal[modal_id='"+'321'+"']").modal('show');
+    // $(".ui.small.post.modal[modal_id='"+'321'+"']").modal('show');
     survey_flag =0;
     window.localStorage.setItem("survey_flag", survey_flag);
-    console.log('RESET the session survey flag :', survey_flag);
+    console.log('Showed the session servey?');
   }
   
 
@@ -491,8 +490,8 @@ $('.right.floated.time.meta, .date').each(function() {
   //Community Rules Button (rocket!!!)
   $('.ui.big.green.labeled.icon.button.com')
   .on('click', function() {
-    // window.location.href='/info'; //maybe go to tour site???
-    window.location.href='/logout';
+    window.location.href='/info'; //maybe go to tour site???
+    // window.location.href='/logout';
   });
 
   //Community Rules Button (rocket!!!)

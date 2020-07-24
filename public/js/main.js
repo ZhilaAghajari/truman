@@ -131,19 +131,22 @@ if(typeof total_logedin_time != 'undefined')
   });
 
   function show_survey(){
-    // check_id = (parseInt(next_id)+1).toString();
-    // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('hide');
-    $(" .ui.tiny.post.modal[modal_id='"+(parseInt(next_id)+1).toString()+"']").modal('hide');
-    // $(" .ui.tiny.post.modal[modal_id='"+(parseInt(next_id)+1).toString()+"']").modal({
-    //   closable: true
-    //   // allowMultiple: false
-    // });
-    // j='321';
+    $(".ui.small.post.modal[modal_id='"+'321'+"']")
+      .modal({
+        closable  : false,
+        onVisible    : function(){
+          $(" .ui.tiny.post.modal[modal_id='"+(parseInt(next_id)+1).toString()+"']").modal('hide');
+          console.log('hide the previous one?');
+          return false;
+        }
+        // return false;
+      })
+      .modal('show')
+    ;
     $(".ui.small.post.modal[modal_id='"+'321'+"']").modal('show');
     survey_flag =0;
     window.localStorage.setItem("survey_flag", survey_flag);
     console.log('RESET the session survey flag :', survey_flag);
-    $(" .ui.tiny.post.modal[modal_id='"+(parseInt(next_id)+1).toString()+"']").modal('hide');
   }
   
 
@@ -488,7 +491,8 @@ $('.right.floated.time.meta, .date').each(function() {
   //Community Rules Button (rocket!!!)
   $('.ui.big.green.labeled.icon.button.com')
   .on('click', function() {
-    window.location.href='/info'; //maybe go to tour site???
+    // window.location.href='/info'; //maybe go to tour site???
+    window.location.href='/logout';
   });
 
   //Community Rules Button (rocket!!!)

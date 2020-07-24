@@ -51,16 +51,20 @@ block content
       //     .column.profile(body="Last one")
       //       img.ui.fluid.image(src="/post_pictures/"+'vegan6.jpg')
 
-
-      .content(style="white-space:nowrap;")
-      .content(style="white-space:nowrap;")
-        .center.aligned
-          i.heart.massive.red.icon
-
-          // .heartb()
-          // .center.aligned
-      .content(style="white-space:nowrap;")
-      .content(style="white-space:nowrap;")
+      .ui.container.center.aligned
+          .content(alt="centered image")
+          #loading.eight.wide.computer.ten.wide.tablet.sixteen.wide.mobile.column
+            img.ui.centered.small.image(src='/public/heart.svg')
+      // .content(style="white-space:nowrap;")
+      // .content(style="white-space:nowrap;")
+      //   // .center.aligned
+      //   //   i.heart.massive.red.icon
+      //     #loading.eight.wide.computer.ten.wide.tablet.sixteen.wide.mobile.column
+      //       img.ui.centered.small.image(src='/public/heart.svg')
+      //     // .heartb()
+      //     // .center.aligned
+      // .content(style="white-space:nowrap;")
+      // .content(style="white-space:nowrap;")
       #stratButton.large.button.fluid.ui.button(style="font-size:200%;font-weight: bold;") Click here to see todays stories
 
       // #survey-time-left
@@ -120,16 +124,12 @@ block content
             .ui.tiny.post.modal(modal_id=val.modal_id)
               .ui.fluid.card.dim(modal_id = val.modal_id)
               .content
-                // .right.floated.time.meta= (user.createdAt.getTime() + val.time)
-                // |  
-                //-a(href='/user/'+val.actor.username)
-                if user.profile.picture
-                  img.ui.avatar.image(src='/user_post/'+user.profile.picture)
-                else
-                    img.ui.avatar.image(src=user.gravatar(60))
-                a(href='/me')
-                  span=user.username || user.id ||user.profile.name     
-                  // img.ui.avatar.image.lazyload(src='/user_post/'+user.profile.picture)
+                // if user.profile.picture
+                //   img.ui.avatar.image(src='/user_post/'+user.profile.picture)
+                // else
+                //     img.ui.avatar.image(src=user.gravatar(60))
+                // a(href='/me')
+                //   span=user.username || user.id ||user.profile.name     
                   
               .ui.container.center.aligned
                 .content
@@ -142,7 +142,9 @@ block content
               .ui.container.center.aligned
                 .content
                   .description
-                    h3(style=" color: #000000") Stories by you  
+                    h3(style=" color: #000000") Stories by you
+                    a(href='/me')
+                      span=user.username || user.id ||user.profile.name      
 
 
               .extra.content
@@ -159,29 +161,18 @@ block content
           .ui.container.center.aligned
             .ui.tiny.post.modal(modal_id=val.modal_id)
               .ui.fluid.centered.card.dim(modal_id = val.modal_id)
-              .content
-                // .right.floated.time.meta= (user.createdAt.getTime() + val.time)
-                // |  
-                //-a(href='/user/'+val.actor.username)
-                  img.ui.avatar.image(src='/profile_pictures/'+val.picture)
-                  span=val.name
-                a(href='/user/'+val.username)     
-                  img.ui.avatar.image.lazyload(src="/profile_pictures/"+val.picture)
-                  span=val.name
-              //-div(style="position: relative; z-index: 1;")
-                
-                // img(src="image.png" style="position: absolute; z-index: 3;")
-                // span#overlay_text(style="position: relative; top: -10px; z-index: 3;") OVERLAY
+              // .content
+              //     img.ui.avatar.image(src='/profile_pictures/'+val.picture)
+              //     span=val.name
+              //   a(href='/user/'+val.username)     
+              //     img.ui.avatar.image.lazyload(src="/profile_pictures/"+val.picture)
+              //     span=val.name
+
               .ui.container.center.aligned
                 .content(alt="centered image")
                   .image(alt="centered image")
                     img(src='/profile_pictures/'+val.picture, alt="centered image", style="max-width:50%;width:50%;" )
-                // span=val.name
-                  // a(href='/user/'+val.username) 
-                // .content 
-                //   a.header " "+val.name
-                //   .meta
-                  // .description
+                
 
               .ui.container.center.aligned
                 .content(text-align='center')
@@ -189,9 +180,10 @@ block content
                   // .description='You have looked at all the stories by ' +val.name
                   .description
                     - var nm = val.name
-                    // h3(style=" color: #016936") You have looked at all the stories by  #{nm}
-                    // h3(style=" color: #0E6EB8") You have looked at all the stories by  #{nm}
-                    h2(style=" color: #000000", text-align='center') Stories posted by  #{nm}
+                    // h2(style=" color: #000000", text-align='center') Stories posted by  #{nm}
+                    h2(style=" color: #000000", text-align='center') Stories posted by 
+                    a(href='/user/'+val.username)     
+                      span(style="font-size:150%;font-weight: bold;")=val.name
                   
 
               .extra.content

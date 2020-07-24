@@ -64,7 +64,6 @@ if(typeof total_seconds != 'undefined')
             {
               console.log('Next modal id: ', (parseInt(next_id)+1));
               show_survey();
-              console.log('Done?');
             }         
             else
             {
@@ -99,7 +98,7 @@ if(typeof total_logedin_time != 'undefined')
     if(total_logedin_time == 0 && logged == 1){
       // kick the user out of the site because 10 minutes has passed from the user's last activitiy ... 
       console.log('User has been idel for 5 minutes, logging the user out!');
-      window.location.href='/info'; //How to log the user out here? 
+      window.location.href='/logout' 
       var z = 0;
       window.localStorage.setItem("logged",z);
       //window.localStorage.setItem("total_logedin_time",300);

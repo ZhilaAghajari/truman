@@ -1,0 +1,531 @@
+extends ui_layout_no
+//- extends ui_layout_feed
+  
+block content
+
+  //-Change this URI to a CDN you are using for Photos
+  -var cdn = "";
+  .computer.only.tablet.only.four.wide.column 
+    .ui.card
+      .image
+        if user.profile.picture
+          img(src='/user_post/'+user.profile.picture)
+        else
+          img(src=user.gravatar(60))
+      .content
+        a.header(href='/me')= user.profile.name || user.username || user.id
+        .meta="@"+user.username
+        .description=user.profile.bio
+        .description
+          if user.profile.location
+            i.marker.icon
+            span=user.profile.location
+      .one.ui.bottom.attached.icon.buttons
+          button.ui.editprofile.button(data-tooltip='Update Your Profile', data-position='bottom left')
+            i.write.icon
+
+  #loading.eight.wide.computer.ten.wide.tablet.sixteen.wide.mobile.column
+    img.ui.centered.small.image(src='/public/heart.svg')
+  #content.eight.wide.computer.ten.wide.tablet.sixteen.wide.mobile.column(style='display: none;')
+    //-.ui.active.dimmer.feed
+      .ui.large.text.loader Loading
+    //- Input for creating new post at top of feed
+    #newpost.ui.fluid.left.labeled.right.icon.input
+      .ui.label
+        if user.profile.picture
+          img.ui.avatar.image(src='/user_post/'+user.profile.picture)
+        else
+          img.ui.avatar.image(src=user.gravatar(60))
+      input(type='text', placeholder='Share your meal')
+      i.big.photo.link.icon
+  
+    script.
+      var i=0;
+    each val in script
+      //- -console.log('Modal ID: ', val.modal_id);
+      //- -console.log('the post group is: ', val.experiment_group)
+      //- -console.log('postID: ', val.postID)
+      //- create a card for each post in val (if by user make the card a little different)
+      //- if val.relativeTime - then post came from user_post (so user post, user reply to actor reply to user post)
+      //- -console.log("iiiss VAL@@@");
+      script.
+        var i=0;
+      -console.log(i);
+      //-  here I need to add the two conditions of val.type =='user' and val.type =='actor'
+      if val.type
+        if val.type =='user'
+          .ui.fluid.card()
+            .ui.container.center.aligned
+              .content
+                .image
+                  if user.profile.picture
+                    img(src='/user_post/'+user.profile.picture, style="max-width:50%;width:50%;",  alt="centered image")
+                  else
+                    img.ui.avatar.image(src=user.gravatar(60))
+
+              .ui.container.center.aligned
+                .content
+                  .description
+                    h3(style=" color: #000000") Posts by you
+                    a(href='/me')
+                      span=user.username || user.id ||user.profile.name
+
+        else if val.type =='actor'
+          .ui.fluid.card()
+            ui.container.center.aligned
+                .content(alt="centered image")
+                  .image(alt="centered image")
+                    img(src='/profile_pictures/'+val.picture, alt="centered image", style="max-width:50%;width:50%;" )
+                
+
+              
+                .ui.container.center.aligned
+                  .content(text-align='center')
+                    // h2(style='color:red;font-size:40px;')
+                    // .description='You have looked at all the stories by ' +val.name
+                    .description
+                      - var nm = val.name
+                      // h2(style=" color: #000000", text-align='center') Stories posted by  #{nm}
+                      h2(style=" color: #000000", text-align='center') Posts posted by 
+                      a(href='/user/'+val.username)     
+                        span(style="font-size:150%;font-weight: bold;")=val.name
+
+
+
+      else if val.relativeTime
+        -var u_class;
+        -if (val.actorAuthor) {u_class = "actorReply"}
+        -else if (val.reply) {u_class = "userReply"}
+        -else {u_class = "userPost"}
+        .ui.fluid.card(u_postID=val.id, type=u_class, postID=val.postID)
+          
+          //- This is a User made post
+          .content
+            .right.floated.time.meta= (user.createdAt.getTime() + val.relativeTime)
+            |  
+            a.ui.avatar.image(href='/me')
+              if user.profile.picture
+                img(src='/user_post/'+user.profile.picture)
+              else
+                img(src=user.gravatar(60))
+            a(href='/me')
+              span=user.profile.name || user.username || user.id
+          .image
+            img(src='/user_post/'+val.picture)
+          .content
+            .description=val.body
+
+          //- FLAG and like options...
+          .content
+            #flgComment.span.right.floated
+              if val.like
+                #likeButton.ui.basic.button
+                  //- i.big.red.heart.outline.like.icon
+                  i.red.large.heart.icon
+                  | Like
+                a.ui.basic.red.left.pointing.label=val.likes
+              else
+                #likeButton.ui.basic.button
+                  //- i.big.heart.outline.like.icon
+                  i.heart.large.icon
+                  | Like
+                a.ui.basic.red.left.pointing.label.count=val.likes
+            //- i.flag.icon
+            span.right.floated
+              #falgebutton.ui.basic.button
+               i.large.flag.icon
+            //- | Flag
+          // .two.ui.bottom.attached.icon.buttons
+          //   .ui.reply.button(tabindex='0')
+          //     i.reply.icon
+          //     |  Reply
+          //   if val.liked
+          //     .ui.red.like.button
+          //       i.heart.icon
+          //       |  Like
+          //   else
+          //     .ui.like.button
+          //       i.heart.icon
+          //       |  Like
+          if val.comments.length > 0
+            .content
+              .ui.comments
+                each comment in val.comments
+                  -console.log('comment is: ', val.comments)
+                  //-IF this comment is USER made, do this
+                  if (user.createdAt.getTime() + comment.time) < Date.now()
+                    if !comment.flagged
+                      if comment.new_comment
+                        -console.log("New COMMENT AREA");
+                        .comment(commentID=comment.commentID)
+                          a.avatar.image(href='/me')
+                            if user.profile.picture
+                              img(src='/user_post/'+user.profile.picture)
+                            else
+                              img(src=user.gravatar(60))
+                          .content
+                            a.author(href='/me')=user.profile.name || user.username || user.id
+                            .metadata
+                              span.date=(user.createdAt.getTime() + comment.time)
+                              .rating
+                                if comment.liked
+                                  i.red.heart.icon
+                                  span=comment.likes
+                                  | Likes 
+                                else
+                                  i.heart.icon
+                                  span.num=comment.likes
+                                  |  Likes
+                            .text=comment.body
+                            .actions
+                              if comment.liked
+                                a.red.like.comment Like
+                              else
+                                a.like.comment Like
+                              a.flag.comment Flag
+                      //- Else this is a normal comment from the script
+                      else
+                        .comment(commentID=comment.commentID)
+                          a.avatar(href='/user/'+comment.actor.username)
+                            //-img(src=cdn+'/profile_pictures/'+comment.actor.profile.picture)
+                            if comment.actor.profile
+                              img.lazyload(data-src=cdn+"/profile_pictures/"+comment.actor.profile.picture)
+                          .content
+                            if comment.actor.profile
+                              a.author(href='/user/'+comment.actor.username)=comment.actor.profile.name
+                            .metadata
+                              span.date=(user.createdAt.getTime() + comment.time)
+                              .rating
+                                if comment.liked
+                                  i.red.heart.icon
+                                  span=comment.likes
+                                  | Likes 
+                                else
+                                  i.heart.icon
+                                  span.num=comment.likes
+                                  |  Likes
+                            .text=comment.body
+                            .actions
+                              if comment.liked
+                                a.red.like.comment Like
+                              else
+                                a.like.comment Like
+                              a.flag.comment Flag
+          .extra.content
+            #comment.ui.fluid.left.labeled.right.icon.input
+              .ui.label
+                if user.profile.picture
+                  img.ui.avatar.image(src='/user_post/'+user.profile.picture, name=user.profile.name || user.username || user.id)
+                else
+                  img.ui.avatar.image(src=user.gravatar(60), name=user.profile.name || user.username || user.id)            
+              input.newcomment(type='text', placeholder='Write a Comment')
+              i.big.send.link.icon
+
+      //-THIS is for posts by Actors, not the USER
+      else
+        .ui.fluid.card.dim(postID=val.id, state=val.state || 'unread', type='actor', actor_un = val.actor.username, actor_name = val.actor.profile.name, actor_pic = val.actor.profile.picture)
+          //- dimmer DIV for flagging
+          .ui.dimmer.flag
+                .content
+                  .center
+                    h2.ui.inverted.icon.header
+                      i.red.flag.icon
+                      |  You&apos;ve flagged this!
+                      h3.ui.inverted.header
+                        span="The admins will review this post further. We are sorry you had this experience."
+          //- Normal Base Post
+          .content
+            .right.floated.time.meta= (user.createdAt.getTime() + val.time)
+            |  
+            //-a(href='/user/'+val.actor.username)
+              img.ui.avatar.image(src=cdn+'/profile_pictures/'+val.actor.profile.picture)
+              span=val.actor.profile.name
+            a(href='/user/'+val.actor.username)     
+              img.ui.avatar.image.lazyload(data-src=cdn+"/profile_pictures/"+val.actor.profile.picture)
+              span=val.actor.profile.name
+          //-div(style="position: relative; z-index: 1;")
+            img(src="image.png" style="position: absolute; z-index: 2;")
+            span#overlay_text(style="position: relative; top: -10px; z-index: 3;") OVERLAY
+          .img.post
+            //-img.post(src="/"+val.picture)
+            //img(src='/public/picture.svg', data-src="/post_pictures/"+val.picture, style="max-width:100%;width:100%;")
+            img.lazyload(data-src=cdn+"/post_pictures/"+val.picture, style="max-width:100%;width:100%;")
+          .content
+            .description=val.body
+          //- FLAG and like options...
+          .content
+            #flgComment.span.right.floated
+              if val.like
+                #likeButton.ui.basic.button
+                  //- i.big.red.heart.outline.like.icon
+                  i.red.large.heart.icon
+                  | Like
+                a.ui.basic.red.left.pointing.label=val.likes
+              else
+                #likeButton.ui.basic.button
+                  //- i.big.heart.outline.like.icon
+                  i.heart.large.icon
+                  | Like
+                a.ui.basic.red.left.pointing.label.count=val.likes
+            //- i.flag.icon
+            span.right.floated
+              #falgebutton.ui.basic.button
+               i.large.flag.icon
+            //- | Flag
+          //- .three.ui.bottom.attached.icon.buttons
+          //-   .ui.reply.button(tabindex='0')
+          //-     i.reply.icon
+          //-     |  Reply
+          //-   .ui.flag.button(tabindex='0')
+          //-     i.flag.icon
+          //-     |  Flag
+          //-   if val.like
+          //-     .ui.labeled.button(tabindex='0')
+          //-       .ui.red.like.button
+          //-         i.heart.icon
+          //-         |  Like
+          //-       a.ui.basic.red.left.pointing.label=val.likes
+          //-   else
+          //-     .ui.labeled.button(tabindex='0')
+          //-       .ui.like.button
+          //-         i.heart.icon
+          //-         |  Like
+          //-       a.ui.basic.red.left.pointing.label.count=val.likes
+          if val.comments.length > 0
+            .content
+              .ui.comments
+                each comment in val.comments
+                  //-IF this comment is USER made, do this
+                  if (user.createdAt.getTime() + comment.time) < Date.now()
+                    if comment.new_comment
+                      -console.log("New COMMENT AREA");
+                      .comment(commentID=comment.new_comment_id)
+                        a.avatar.image(href='/me')
+                          if user.profile.picture
+                            img(src='/user_post/'+user.profile.picture)
+                          else
+                            img(src=user.gravatar(60))
+                        .content
+                          a.author(href='/me')=user.profile.name || user.username || user.id
+                          .metadata
+                            span.date=(user.createdAt.getTime() + comment.time)
+                            .rating
+                              i.heart.icon
+                              span.num=0
+                              |  Likes
+                          .text=comment.body
+                          .actions
+                            a.like.comment Like
+                            a.flag.comment Flag
+                    //- Else this is a normal comment from the script
+                    else
+                      .comment(commentID=comment.id)
+                        a.avatar(href='/user/'+comment.actor.username)
+                          //-img(src=cdn+'/profile_pictures/'+comment.actor.profile.picture)                       
+                          img.lazyload(data-src=cdn+"/profile_pictures/"+comment.actor.profile.picture)
+                        .content
+                          a.author(href='/user/'+comment.actor.username)=comment.actor.profile.name
+                          .metadata
+                            span.date=(user.createdAt.getTime() + comment.time)
+                            .rating
+                              if comment.liked
+                                i.red.heart.icon
+                                span=comment.likes
+                                |  Likes 
+                              else
+                                i.heart.icon
+                                span.num=comment.likes
+                                |  Likes
+                          .text=comment.body
+                          .actions
+                            if comment.liked
+                              a.red.like.comment Like
+                            else
+                              a.like.comment Like
+                            a.flag.comment Flag
+          .extra.content
+            #comment.ui.fluid.left.labeled.right.icon.input
+              .ui.label
+                if user.profile.picture
+                  img.ui.avatar.image(src='/user_post/'+user.profile.picture, name=user.profile.name || user.username || user.id)
+                else
+                  img.ui.avatar.image(src=user.gravatar(60), name=user.profile.name || user.username || user.id)            
+              input.newcomment(type='text', placeholder='Write a Comment')
+              i.big.send.link.icon
+
+    .ui.fluid.card
+      .content
+        .description
+        |  End of Posts for the last 48 hours.
+        //- Here I need to activate the session survey for Feed version
+    .ui.fluid.card
+      #sessionSurvey.ui.blue.right.fluid.button(survey_id='feed') Session Survey
+        //- Here I need to activate the session survey for Feed version
+
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    #newpost.ui.tiny.post.modal()
+      i.close.icon
+      .header Add a New Post
+      .content
+        form#postform.ui.feed.form(action='/post/new', method='POST', enctype='multipart/form-data', study_group = 'feed')
+          input(type='hidden', name='_csrf', value=_csrf)
+          .field
+            textarea(rows='2', placeholder='Share your meal', name='body')
+          .field.image-upload
+            label(for='picinput')
+              .image.content
+                img#imgInp.ui.fluid.image(src='/public/photo-camera.svg')
+            //-input#picinput(type='file', accept='image/*', capture='camera', name='picinput')
+            input#picinput(type='file', accept='image/*', name='picinput')
+          .ui.error.message
+      .actions
+        input.ui.green.button(type='submit', name="foo", value='Submit', form='postform', study_group = 'feed')
+
+    .ui.container
+      #surveyModal.ui.small.post.modal(modal_id='321')
+        .ui.fluid.card.test
+          .content
+            .fields
+              .wrap
+                h2.likert-header During this visit to EatSnap.Love, we would like to know the extent to which you felt the following emotions towards other people using this site.
+                form(action='')
+                  h2.label.statement Softhearted
+                  ul.likert
+                    .inline.fields
+                      h3.field
+                        input(type='radio' name='Softhearted' value="strong_disagree")
+                        // input(type='radio' name='Softhearted' value='1')
+                        label Strong Disagree
+                      h3.field
+                        input(type='radio' name='Softhearted' value="disagree")
+                        label Disagree
+                      h3.field
+                        input(type='radio' name='Softhearted' value='somewhat_disagree')
+                        label Somewhat Disagree
+                      h3.field
+                        input(type='radio' name='Softhearted' value='neither_agree_nor_disagree')
+                        label neither_agree_nor_disagree
+                      h3.field
+                        input(type='radio' name='Softhearted' value='somewhat_agree')
+                        label Somewhat Agree
+                      h3.field
+                        input(type='radio' name='Softhearted' value='agree')
+                        label agree
+                      h3.field
+                        input(type='radio' name='Softhearted' value='strong_agree')
+                        label Strong Agree
+                  h3.label.statement Touched
+                  ul.likert
+                    .inline.fields
+                      h3.field
+                        input(type='radio' name='Touched' value='strong_disagree')
+                        label Strong Disagree
+                      h3.field
+                        input(type='radio' name='Touched' value='disagree')
+                        label Disagree
+                      h3.field
+                        input(type='radio' name='Touched' value='somewhat_disagree')
+                        label Somewhat Disagree
+                      h3.field
+                        input(type='radio' name='Touched' value='neither_agree_nor_disagree')
+                        label Neither agree nor disagree
+                      h3.field
+                        input(type='radio' name='Touched' value='somewhat_agree')
+                        label Somwhat Agree
+                      h3.field
+                        input(type='radio' name='Touched' value='agree')
+                        label Agree
+                      h3.field
+                        input(type='radio' name='Touched' value='strong_agree')
+                        label Strong Agree
+                  h3.label.statement Sympathetic
+                  ul.likert
+                    .inline.fields
+                      h3.field
+                        input(type='radio' name='Sympathetic' value='strong_disagree')
+                        label Strong Disagree
+                      h3.field
+                        input(type='radio' name='Sympathetic' value='disagree')
+                        label Disagree
+                      h3.field
+                        input(type='radio' name='Sympathetic' value='somewhat_disagree')
+                        label Somewhat Disagree
+                      h3.field
+                        input(type='radio' name='Sympathetic' value='neither_agree_nor_disagree')
+                        label Neither agree nor disagree
+                      h3.field
+                        input(type='radio' name='Sympathetic' value='somewhat_agree')
+                        label Somwhat Agree
+                      h3.field
+                        input(type='radio' name='Sympathetic' value='agree')
+                        label Agree
+                      h3.field
+                        input(type='radio' name='Sympathetic' value='strong_agree')
+                        label Strong Agree
+                  h3.label.statement Moved
+                  ul.likert
+                    .inline.fields
+                      h3.field
+                        input(type='radio' name='Moved' value='strong_disagree')
+                        label Strong Disagree
+                      h3.field
+                        input(type='radio' name='Moved' value='disagree')
+                        label Disagree
+                      h3.field
+                        input(type='radio' name='Moved' value='somewhat_disagree')
+                        label Somewhat Disagree
+                      h3.field
+                        input(type='radio' name='Moved' value='neither_agree_nor_disagree')
+                        label Neither agree nor disagree
+                      h3.field
+                        input(type='radio' name='Moved' value='somewhat_agree')
+                        label Somwhat Agree
+                      h3.field
+                        input(type='radio' name='Moved' value='agree')
+                        label Agree
+                      h3.field
+                        input(type='radio' name='Moved' value='strong_agree')
+                        label Strong Agree
+                  // h3.buttons
+                  //   button.clear Clear
+                  //   button.submit Submit
+        .content
+          // .ui.blue.right.floated.button(disabled='true') Submit
+          // #submitSession.ui.blue.right.disabled.fluid.button(survey_id='1') Submit
+          #submitSession.ui.blue.right.fluid.button(survey_id='feed') Submit
+

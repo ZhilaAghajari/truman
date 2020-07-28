@@ -419,14 +419,7 @@ exports.getScript = (req, res, next) => {
           {
             new_final_feeds.push(temp[j]);
           }
-          // //  what can I add to the feed here as a seperation between users' posts ...
-          // var middle_post = {
-          //   type:'user',
-          //   picture : user.profile.picture
-          // }
-          // new_final_feeds.push(middle_post);
-          // console.log('added user middle');
-          // console.log(middle_post);
+
         }
         
         else
@@ -460,14 +453,6 @@ exports.getScript = (req, res, next) => {
               temp_record = final_actors_feed[a];
             }
           }
-          //  need to add something to the final feed here to show these were the posts by this specific user
-          // var middle_post = {
-          //   type:'actor',
-          //   picture : temp_record.actor.profile.picture,
-          //   name: temp_record.actor.profile.name,
-          //   username: temp_record.actor.username
-          // }
-          // new_final_feeds.push(middle_post);
         }
         
       }
@@ -489,21 +474,86 @@ exports.getScript = (req, res, next) => {
       // for (var i=0; i < new_final_feeds.length; i++){
       //   new_final_feeds[i].modal_id = i+1;
       // }
-      console.log('after now After adding the middle posts ... ');
+      console.log('After adding the middle posts ... ');
       console.log(new_final_feeds);
       // update the modal feeds ... 
 
+      // Group the feed version posts by their authors.. the posts are now in feed_version...
+      var new_feed_version = []
+      for( var i=0; i<unique_authors.length; i++)
+      {
+        if(unique_authors[i] == user.username)
+        {
+          // do we want to add a post to introduce the person here as well?
+          var middle = {
+            // remmber to add it to the feedIndividualCentric.pug
+            type:'user',
+            picture: user.profile.picture
+          }
+          new_feed_version.push(middle);
+          let temp = final_user_posts;
+          console.log('lennn of final_user_posts: ', final_user_posts.length);
+          for (var j = 0; j<final_user_posts.length; j++)
+          {
+            new_feed_version.push(temp[j]);
+          }
+
+
+        }
+        else
+        {
+          let temp = final_actors_feed.find(item => item.actor.username == unique_authors[i])
+          var temp_record;
+
+          for( var a=0; a<final_actors_feed.length; a++)
+          {
+            if(final_actors_feed[a].actor.username == unique_authors[i])
+            {
+              // new_final_feeds.push(final_actors_feed[a]);
+              temp_record = final_actors_feed[a];
+              break;
+            }
+          }
+
+          var middle_post = {
+            type:'actor',
+            picture : temp_record.actor.profile.picture,
+            name: temp_record.actor.profile.name,
+            username: temp_record.actor.username
+          }
+          new_feed_version.push(middle_post);
+          
+          for( var a=0; a<final_actors_feed.length; a++)
+          {
+            if(final_actors_feed[a].actor.username == unique_authors[i])
+            {
+              new_feed_version.push(final_actors_feed[a]);
+              temp_record = final_actors_feed[a];
+            }
+          }
+        }
+      }
+
       // Zhila: here add new modal id to the posts and use the new one!!! 
       console.log('experimental group of this user is: ', scriptFilter);
-      // if(scriptFilter == 'var1' || scriptFilter == 'var2'){
+      // if(scriptFilter == 'var1'){
       //   res.render('stories',{script:new_final_feeds})
       // }
-      // else{
-      //   res.render('script', { script: finalfeed});
+      // else if(scriptFilter == 'var2'){
+      //   res.render('storiesClickThrough',{script:new_final_feeds})
       // }
+      // else if(scriptFilter == 'var3'){
+      //   res.render('script', { script: feed_version});
+      // }
+      // else if(scriptFilter == 'var4'){
+      //   res.render('feedIndividualCentric', { script: new_feed_version}); // this one is not implemented yet.. feed but sorted by person
+      // }
+      
+      // res.render('storiesClickThrough',{script:new_final_feeds})
       res.render('stories',{script:new_final_feeds})
       // res.render('script', { script: feed_version});
-
+      // res.render('script', { script: new_final_feeds});
+      // res.render('feedIndividualCentric', { script: new_feed_version})
       });//end of Script.find()
 
     

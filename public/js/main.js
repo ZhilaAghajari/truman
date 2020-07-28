@@ -214,7 +214,8 @@ if(typeof total_logedin_time != 'undefined')
     var j=1;  //Zh: this should change to the modal id related to the starting modal of the day .. 
     var first_modal=$(".ui.tiny.post.modal[modal_id='"+j+"']");
     first_modal.modal('show');
-    move(1);
+    if($("[pre_id='"+1+"']")[0].attributes[2].value == "stories")
+      move(1);
   });
   
 
@@ -256,7 +257,10 @@ if(typeof total_logedin_time != 'undefined')
       else if(flag[next_id]==0)
         {
           flag[next_id]=1;
-          move(move_id);
+          if($("[pre_id='"+1+"']")[0].attributes[2].value=="stories")
+            {
+              move(move_id);
+            }
         }
     
   });
@@ -426,7 +430,9 @@ if(parseInt(localStorage.getItem("reload")) == 1)
   var j=1;
   $(" .ui.tiny.post.modal[modal_id='"+j+"']").modal('show');
   window.localStorage.setItem("reload",0);
-  move(check_id);
+  if($("[pre_id='"+1+"']")[0].attributes[2].value=="stories"){
+    move(check_id);
+  } 
 }
 
 //Picture Preview on Image Selection
@@ -551,8 +557,11 @@ $("i.big.send.link.icon").click(function() {
     // buttons.after( '<div class="content"><div class="ui comments"></div>' );
 
 
-    var buttons = card.find(".two.fluid.ui.buttons");
-    buttons.before('<div class="content"><div class="ui comments"></div>');
+    // var buttons = card.find(".two.fluid.ui.buttons");
+    // buttons.after('<div class="content"><div class="ui comments"></div>');
+    // var comments = card.find( ".ui.comments" )
+    var buttons = card.find('#falgebutton.ui.basic.button').parents('div.content')
+    buttons.after('<div class="content"><div class="ui comments"></div>')
     var comments = card.find( ".ui.comments" )
   }
   if (text.trim() !== '')
@@ -875,7 +884,7 @@ $("#newpost.ui.tiny.post.modal")
         $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','#submitSession.ui.blue.fluid.button');
         // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events',$(".ui.small.post.modal[modal_id='"+j+"']"));
         $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
-        if(check_id=='1')
+        if(check_id=='1' && $("[pre_id='"+1+"']")[0].attributes[2].value=="stories")
         {
           move(1);
         }

@@ -331,7 +331,8 @@ if(typeof total_logedin_time != 'undefined')
     window.localStorage.setItem("logged",f);
     window.localStorage.setItem("total_seconds", t);
     window.localStorage.setItem("total_logedin_time",logged_time);
-    if($('button.ui.button').text()=="Login")
+    // if($('button.ui.button').text()=="Login")
+    if($('button.ui.button').text()=="Login" || $('button.ui.button').text() =="Signup")
     {
       console.log('SET TIMER');
       window.localStorage.setItem("total_seconds", t);

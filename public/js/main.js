@@ -230,7 +230,7 @@ if(typeof total_logedin_time != 'undefined')
   $('.ui.right.button').on('click', function(){    
       active_flag = 1;
       temp = parseInt(localStorage.getItem("session_posts"))+1;
-      // window.localStorage.setItem("session_posts",temp);
+      window.localStorage.setItem("session_posts",temp);
 
       // reset session timer ... 
       // console.log('Posts seen in this session : ', localStorage.getItem("session_posts"));

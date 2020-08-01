@@ -339,7 +339,7 @@ exports.getScript = (req, res, next) => {
       finalfeed = shuffle(finalfeed);
     
       feed_version = JSON.parse(JSON.stringify(finalfeed));
-      console.log('final e 0: ', finalfeed[0]);
+      console.log('Feed: ', feed_version);
       // finalfeed.push(last_user_post);
       finalfeed[0] = last_user_post;
       // finalfeed.push(last_user_post);
@@ -429,6 +429,17 @@ exports.getScript = (req, res, next) => {
       }
 
 
+    //add id for feed version
+    // for(var i=0; i<feed_version.length; i++){
+    //   var temp = new Object();
+    //   temp.modal_id = i+1
+    //   tmp = feed_version[i].id;
+    //   const temp_feed_version = JSON.parse(JSON.stringify(feed_version[i]));
+    //   feed_version[i] = Object.assign(temp_feed_version,temp);
+    //   feed_version[i].id = tmp;
+    // }
+
+
       // console.log('before updatign modal ids : ', new_final_feeds);
       // for (var i=0; i < new_final_feeds.length; i++){
       //   new_final_feeds[i].modal_id = i+1;
@@ -505,13 +516,12 @@ exports.getScript = (req, res, next) => {
       //   res.render('script', { script: feed_version});
       // }
       // else if(scriptFilter == 'var4'){
-      //   res.render('feedIndividualCentric', { script: new_feed_version}); // this one is not implemented yet.. feed but sorted by person
+      //   res.render('feedIndividualCentric', { script: new_feed_version}); // .... feed but sorted by person
       // }
       
       // res.render('storiesClickThrough',{script:new_final_feeds})
       res.render('stories',{script:new_final_feeds})
-      // res.render('script', { script: feed_version});
-      // res.render('script', { script: new_final_feeds});
+      //res.render('script', { script: feed_version});
       // res.render('feedIndividualCentric', { script: new_feed_version})
       });//end of Script.find()
 

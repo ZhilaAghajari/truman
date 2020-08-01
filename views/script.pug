@@ -51,6 +51,7 @@ block content
       script.
         var i=0;
       -console.log(i);
+      -console.log('feed VAL.id: ', val._id)
       if val.relativeTime
         -var u_class;
         -if (val.actorAuthor) {u_class = "actorReply"}
@@ -182,7 +183,7 @@ block content
 
       //-THIS is for posts by Actors, not the USER
       else
-        .ui.fluid.card.dim(postID=val.id, state=val.state || 'unread', type='actor', actor_un = val.actor.username, actor_name = val.actor.profile.name, actor_pic = val.actor.profile.picture)
+        .ui.fluid.card.dim(postID=val._id, state=val.state || 'unread', type='actor', actor_un = val.actor.username, actor_name = val.actor.profile.name, actor_pic = val.actor.profile.picture)
           //- dimmer DIV for flagging
           .ui.dimmer.flag
                 .content

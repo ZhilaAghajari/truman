@@ -578,7 +578,8 @@ if(parseInt(localStorage.getItem("reload")) == 1)
   $(" .ui.tiny.post.modal[modal_id='"+j+"']").modal('show');
   window.localStorage.setItem("reload",0);
   if($("[pre_id='"+1+"']")[0].attributes[2].value=="stories"){
-    move(check_id);
+    move(1);
+    // move(check_id);
   } 
 }
 

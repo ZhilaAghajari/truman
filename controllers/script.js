@@ -163,18 +163,7 @@ exports.getScript = (req, res, next) => {
         var final_user_posts =[];
         var user_posts = [];
         var final_actors_feed = [];
-        //Zh: test sorting by username ...
-        // console.log(script_feed);
-
-        // // console.log('script after sort: ', script_feed);
-        // var properties = function(script_feed){
-        //   return script_feed.actor.username;
-        // }
-        // //ZH: we need to remove this for the feed version ! it is just for individual centric 
-        // sort(properties,script_feed);
-        //  now add group id to script_feed and give same id to posts by one user!!!
-
-        //Look up Notifications??? And do this as well?
+        
 
         user_posts = user.getPostInPeriod(time_limit, time_diff);
 
@@ -189,27 +178,14 @@ exports.getScript = (req, res, next) => {
           console.log(user_posts[0]);
           if(typeof script_feed[0] === 'undefined') {
               console.log("Script_Feed is empty, only push user_posts");
-              // var temp = new Object();
-              // temp.modal_id = modal_id;
-              // const temp_user_posts = JSON.parse(JSON.stringify(user_posts[0]));
-              // user_posts[0] = Object.assign(temp_user_posts,temp);
               
-              // modal_id = modal_id+1;
-              // console.log('Expanded2!');
-              // console.log(user_posts[0]);
               finalfeed.push(user_posts[0]);
               final_user_posts.push(user_posts[0]);
               user_posts.splice(0,1);
           }
           else if(!(typeof user_posts[0] === 'undefined') && (script_feed[0].time < user_posts[0].relativeTime)){
               console.log("Push user_posts");
-              // var temp = new Object();
-              // temp.modal_id = modal_id;
-              // const temp_user_posts = JSON.parse(JSON.stringify(user_posts[0]));
-              // user_posts[0] = Object.assign(temp_user_posts,temp);
-              // modal_id = modal_id+1;
-              // console.log('Expanded2!');
-              // console.log(user_posts[0]);
+              
               finalfeed.push(user_posts[0]);
               final_user_posts.push(user_posts[0]);
               user_posts.splice(0,1);
@@ -328,15 +304,7 @@ exports.getScript = (req, res, next) => {
               else
               {
                 
-                // var temp = new Object();
-                // temp.modal_id = modal_id;
-                // const temp_script_feed = JSON.parse(JSON.stringify(script_feed[0]));
-                // script_feed[0] = Object.assign(temp_script_feed,temp);
-                // console.log('modal added!');
-                // console.log(script_feed[0]);
-                // modal_id = modal_id+1;
-                // console.log('New SCRIPT FEED');
-                // console.log('Script feed added to final feed');
+               
                 finalfeed.push(script_feed[0]);
                 final_actors_feed.push(script_feed[0]);
                 script_feed.splice(0,1);
@@ -354,16 +322,7 @@ exports.getScript = (req, res, next) => {
 
               else
               {
-                //add modal number to it
-                // var temp = new Object();
-                // temp.modal_id = modal_id;
-                // console.log('Did I destroy the id just here: ', script_feed[0].id);
-                // tmp = script_feed[0].id;
-                // const temp_script_feed = JSON.parse(JSON.stringify(script_feed[0]));
-                // script_feed[0] = Object.assign(temp_script_feed,temp);
-                // script_feed[0].id = tmp;
-                // console.log(script_feed[0]);
-                // modal_id = modal_id+1;
+                
                 finalfeed.push(script_feed[0]);
                 final_actors_feed.push(script_feed[0]);
                 script_feed.splice(0,1);
@@ -463,10 +422,10 @@ exports.getScript = (req, res, next) => {
       for(var i=0; i<new_final_feeds.length; i++){
         var temp = new Object();
         temp.modal_id = i+1
-        // tmp = new_final_feeds[i].id;
+        tmp = new_final_feeds[i].id;
         const temp_final_feed = JSON.parse(JSON.stringify(new_final_feeds[i]));
         new_final_feeds[i] = Object.assign(temp_final_feed,temp);
-        // new_final_feeds[i].id = tmp;
+        new_final_feeds[i].id = tmp;
       }
 
 
@@ -759,8 +718,12 @@ exports.postUpdateFeedAction = (req, res, next) => {
 
   User.findById(req.user.id, (err, user) => {
     //somehow user does not exist here
-    if (err) { return next(err); }
+    if (err) { 
+      console.log('somehow user does not exist here');
+      return next(err);
+       }
 
+    console.log('@@checking the req.body:@@ ',req.body);
     console.log("@@@@@@@@@@@ TOP postID is  ", req.body.postID);
 
     //find the object from the right post in feed 

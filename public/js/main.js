@@ -60,12 +60,15 @@ if(typeof total_seconds != 'undefined')
       if(total_seconds == 0){
           if(localStorage.getItem("survey_flag")==1)
           {
-            n=1;
-            localStorage.setItem("timer_flag",n);
+            
             if(next_id>3)
             {
               console.log('Next modal id: ', (parseInt(next_id)+1));
               show_survey();
+            }
+            else{
+              n=1;
+              localStorage.setItem("timer_flag",n);
             }
             // else{
             //   setTimeout(countDownTimer,1000);
@@ -340,14 +343,30 @@ if(typeof total_logedin_time != 'undefined')
 //   });
 
 function handler(){
-  if(localStorage.getItem("timer_flag")==1)
+  if(localStorage.getItem("timer_flag")==1 && localStorage.getItem("survey_flag")==1 )
   {
-    show_survey();
+    // show_survey();
+    $(".ui.small.post.modal[modal_id='"+'321'+"']")
+      .modal({
+        closable  : false,
+        onVisible    : function(){
+          $(" .ui.tiny.post.modal[modal_id='"+(parseInt(next_id)+1).toString()+"']").modal('hide');
+          console.log('hide the previous one?');
+          return false;
+        }
+      })
+      .modal('show')
+    ;
+    // $(".ui.small.post.modal[modal_id='"+'321'+"']").modal('show');
+    flg =0;
+    window.localStorage.setItem("survey_flag", flg);
+    console.log('Showed the session servey?');
+    window.localStorage.setItem("timer_flag",flg);
+    return false;
   }
-  return false
+  // 
 }
 $(".ui.right.button[next_id='"+'3'+"']").on("click",{
-
 },handler);
 
 
@@ -466,7 +485,7 @@ $(".ui.right.button[next_id='"+'3'+"']").on("click",{
   // ZH: Set local variables after loging. ( do I need to set session id here as well?)
   $('button.ui.button').on('click', function(){
     active_flag = 1;
-    var t = 1*60; //ZHILA: change it back to 120
+    var t = 2*60; //ZHILA: change it back to 120
     var f =1;
     var logged_time = 5*60;
     window.localStorage.setItem("logged",f);

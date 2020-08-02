@@ -519,9 +519,9 @@ exports.getScript = (req, res, next) => {
       //   res.render('feedIndividualCentric', { script: new_feed_version}); // .... feed but sorted by person
       // }
       
-      // res.render('storiesClickThrough',{script:new_final_feeds})
       res.render('stories',{script:new_final_feeds})
-      //res.render('script', { script: feed_version});
+      // res.render('storiesClickThrough',{script:new_final_feeds})
+      // res.render('script', { script: feed_version});
       // res.render('feedIndividualCentric', { script: new_feed_version})
       });//end of Script.find()
 
@@ -649,6 +649,7 @@ exports.newPost = (req, res) => {
     {
       console.log("Text PICTURE of Post is "+req.file.filename);
       post.picture = req.file.filename;
+      console.log('num of posts: ', user.numPosts);
 
       user.numPosts = user.numPosts + 1;
       post.postID = user.numPosts;

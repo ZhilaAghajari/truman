@@ -11,6 +11,7 @@ var next_post;
 var $window = $(window);
 var iteration;
 var active_flag;
+var timer_flg='0';
 // @@@@@@@@@
 $(window).on("load", function() {
 
@@ -63,12 +64,14 @@ if(typeof total_seconds != 'undefined')
             
             if(next_id>3)
             {
-              console.log('Next modal id: ', (parseInt(next_id)+1));
               show_survey();
+              console.log('once or twice?');
             }
             else{
               n=1;
+              timer_flg = 1;
               localStorage.setItem("timer_flag",n);
+              setTimeout(countDownTimer,1000000000);
             }
             // else{
             //   setTimeout(countDownTimer,1000);
@@ -140,15 +143,6 @@ if(typeof total_logedin_time != 'undefined')
   });
 
 
-
-// function triggerSurvey()
-// {
-//   if(localStorage.getItem("timer_flag")==0)
-//   {
-//     show_survey()
-//   }
-// }
-
   function show_survey(){
     $(".ui.small.post.modal[modal_id='"+'321'+"']")
       .modal({
@@ -157,14 +151,16 @@ if(typeof total_logedin_time != 'undefined')
           $(" .ui.tiny.post.modal[modal_id='"+(parseInt(next_id)+1).toString()+"']").modal('hide');
           console.log('hide the previous one?');
           return false;
+        },
+        onApprove : function() {
+          return false;
         }
+
       })
       .modal('show')
     ;
-    // $(".ui.small.post.modal[modal_id='"+'321'+"']").modal('show');
     flg =0;
     window.localStorage.setItem("survey_flag", flg);
-    console.log('Showed the session servey?');
     window.localStorage.setItem("timer_flag",flg);
   }
   
@@ -293,90 +289,33 @@ if(typeof total_logedin_time != 'undefined')
  // });
 
 // $(this).addEventListener('trigger_survey', function(e){
-//   if(localStorage.getItem("timer_flag")==1){
+//   if(localStorage.getItem("timer_flag")==1 && localStorage.getItem("survey_flag")==1){
 //     show_survey();
 //   }   
 // });
 
 // $("[next_id='"+'3'+"']").on('click', function(){
-//     if(localStorage.getItem("timer_flag")==1 )
+//     if(localStorage.getItem("timer_flag")==1 && localStorage.getItem("survey_flag")==1)
 //     {
 //       show_survey();
 //     }
 
 // });
-  // $(" .ui.right.button[next_id'"+'3'+"']").on('click', function(){
-  //   if(localStorage.getItem("survey_flag")==1 && localStorage.getItem("timer_flag")==1 )
-  //   {
-  //     show_survey();
-  //   }
-  // });
 
-// x_reg = {
-//   aInternal: 10,
-//   aListener: function(val) {},
-//   set a(val) {
-//     this.aInternal = val;
-//     this.aListener(val);
-//   },
-//   get a() {
-//     return this.aInternal;
-//   },
-//   registerListener: function(listener) {
-//     this.aListener = listener;
-//   }
-// }
-
-// x_reg.registerListener(function(val) {
-//   // alert("Someone changed the value of x.a to " + val);
-//   if(next_id>=3 && localStorage.getItem("timer_flag")==1 && localStorage.getItem("survey_flag")==1)
-//   {
-//     show_survey()
-//   }
-// });
-
-// $(".ui.right.button[next_id='"+'3'+"']").on("click",function(){
-//     if(localStorage.getItem("timer_flag")==1)
-//     {
-//       show_survey();
-//     }
-//   });
 
 function handler(){
-  if(localStorage.getItem("timer_flag")==1 && localStorage.getItem("survey_flag")==1 )
+  // if(localStorage.getItem("timer_flag")==1 && localStorage.getItem("survey_flag")==1)
+  if(timer_flg==1 && localStorage.getItem("survey_flag")==1)
   {
-    // show_survey();
-    $(".ui.small.post.modal[modal_id='"+'321'+"']")
-      .modal({
-        closable  : false,
-        onVisible    : function(){
-          $(" .ui.tiny.post.modal[modal_id='"+(parseInt(next_id)+1).toString()+"']").modal('hide');
-          console.log('hide the previous one?');
-          return false;
-        }
-      })
-      .modal('show')
-    ;
-    // $(".ui.small.post.modal[modal_id='"+'321'+"']").modal('show');
-    flg =0;
-    window.localStorage.setItem("survey_flag", flg);
-    console.log('Showed the session servey?');
-    window.localStorage.setItem("timer_flag",flg);
-    return false;
+      show_survey();
+
   }
-  // 
 }
+
 $(".ui.right.button[next_id='"+'3'+"']").on("click",{
+
 },handler);
 
-
-// $(".ui.right.button[next_id='"+'3'+"']").on('click',function(){
-//     alert("The text has been changed.");
-//     if(localStorage.getItem("timer_flag")==1)
-//     {
-//       show_survey()
-//     }
-//   });
 
 // var el = document.querySelector(" .ui.right.button[next_id'"+'3'+"']");
 // el.addEventListener('DOMSubtreeModified', function(){
@@ -387,15 +326,21 @@ $(".ui.right.button[next_id='"+'3'+"']").on("click",{
 // });
 
 
-  $('.ui.right.button').on('click', function(){    
+  $('.ui.right.button').on('click', function(){ 
+      // $(".ui.right.button[next_id='"+'3'+"']").on("click",{
+      // },handler);
+       
       active_flag = 1;
       temp = parseInt(localStorage.getItem("session_posts"))+1;
       window.localStorage.setItem("session_posts",temp);
-
-      // reset session timer ... 
       // console.log('Posts seen in this session : ', localStorage.getItem("session_posts"));
       console.log('Time Left: ', total_seconds);
       next_id = $(this)[0].attributes[1].value;
+      // $(".ui.right.button[next_id='"+'3'+"']").click( function() { return false; } );
+      // if(next_id ==3)
+      // {
+      //   return false;
+      // }
 
       check_id = (parseInt(next_id)+1).toString(); //next modal to be shown .. 
       var move_id = (parseInt(next_id)+1).toString();

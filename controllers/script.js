@@ -345,7 +345,10 @@ exports.getScript = (req, res, next) => {
       // finalfeed.push(last_user_post);
       unique_authors = [...new Set(final_actors_feed.map(item => item.actor.username))];
       console.log('Unique actprs who posted: ', unique_authors);
-      unique_authors.push(user.username); 
+      if(final_user_posts.length>0)
+      {
+        unique_authors.push(user.username); 
+      }    
       unique_authors = shuffle(unique_authors);
 
       user.save((err) => {

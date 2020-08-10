@@ -54,25 +54,43 @@ block content
                   img(src="/"+val.reply.picture)
               .content
                 .description=val.reply.body
-          .three.ui.bottom.attached.icon.buttons
-              //-.ui.reply.button(tabindex='0')
-              .ui.button(tabindex='0')
-                i.reply.icon
-                |  Reply
-              //-.ui.flag.button(tabindex='0')
-              .ui.button(tabindex='0')
-                i.flag.icon
-                |  Flag
-              if val.like
-                //-.ui.red.like.button
-                .ui.red.button
-                  i.heart.icon
-                  |  Like
-              else
-                //-.ui.like.button
-                .ui.button
-                  i.heart.icon
-                  |  Like
+              .content
+                #flgComment.span.right.floated
+                  if val.like
+                    #likeButton.ui.basic.button
+                      //- i.big.red.heart.outline.like.icon
+                      i.red.large.heart.icon
+                      | Like
+                    a.ui.basic.red.left.pointing.label=val.likes
+                  else
+                    #likeButton.ui.basic.button
+                      //- i.big.heart.outline.like.icon
+                      i.heart.large.icon
+                      | Like
+                    a.ui.basic.red.left.pointing.label.count=val.likes
+                //- i.flag.icon
+                span.right.floated
+                  #falgebutton.ui.basic.button
+                   i.large.flag.icon
+          //- .three.ui.bottom.attached.icon.buttons
+          //-     //-.ui.reply.button(tabindex='0')
+          //-     .ui.button(tabindex='0')
+          //-       i.reply.icon
+          //-       |  Reply
+          //-     //-.ui.flag.button(tabindex='0')
+          //-     .ui.button(tabindex='0')
+          //-       i.flag.icon
+          //-       |  Flag
+          //-     if val.like
+          //-       //-.ui.red.like.button
+          //-       .ui.red.button
+          //-         i.heart.icon
+          //-         |  Like
+          //-     else
+          //-       //-.ui.like.button
+          //-       .ui.button
+          //-         i.heart.icon
+          //-         |  Like
         else
           .content
             .right.floated.time.meta= (user.createdAt.getTime() + val.relativeTime)

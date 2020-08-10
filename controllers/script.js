@@ -431,24 +431,18 @@ exports.getScript = (req, res, next) => {
         new_final_feeds[i].id = tmp;
       }
 
+      var stories_message =JSON.parse(JSON.stringify(feed_version));
+      for(var i=0; i<stories_message.length; i++){
+        var temp = new Object();
+        temp.modal_id = i+1
+        tmp = stories_message[i]._id;        
+        const temp_stories_feed = JSON.parse(JSON.stringify(stories_message[i]));
+        stories_message[i] = Object.assign(temp_stories_feed,temp);
+        stories_message[i].id = tmp;
+      }
 
-    //add id for feed version
-    // for(var i=0; i<feed_version.length; i++){
-    //   var temp = new Object();
-    //   temp.modal_id = i+1
-    //   tmp = feed_version[i].id;
-    //   const temp_feed_version = JSON.parse(JSON.stringify(feed_version[i]));
-    //   feed_version[i] = Object.assign(temp_feed_version,temp);
-    //   feed_version[i].id = tmp;
-    // }
 
 
-      // console.log('before updatign modal ids : ', new_final_feeds);
-      // for (var i=0; i < new_final_feeds.length; i++){
-      //   new_final_feeds[i].modal_id = i+1;
-      // }
-      console.log('After adding the middle posts ... ');
-      console.log(new_final_feeds);
       // update the modal feeds ... 
 
       // Group the feed version posts by their authors.. the posts are now in feed_version...
@@ -469,7 +463,9 @@ exports.getScript = (req, res, next) => {
           for (var j = 0; j<final_user_posts.length; j++)
           {
             new_feed_version.push(temp[j]);
+            console.log('ADDED user posts!!!',new_feed_version );
           }
+          
 
 
         }
@@ -507,25 +503,30 @@ exports.getScript = (req, res, next) => {
         }
       }
 
+      console.log('checking final feed ', new_feed_version);
+
       // Zhila: here add new modal id to the posts and use the new one!!! 
       console.log('experimental group of this user is: ', scriptFilter);
-      // if(scriptFilter == 'var1'){
-      //   res.render('stories',{script:new_final_feeds})
-      // }
-      // else if(scriptFilter == 'var2'){
-      //   res.render('storiesClickThrough',{script:new_final_feeds})
-      // }
-      // else if(scriptFilter == 'var3'){
-      //   res.render('script', { script: feed_version});
-      // }
-      // else if(scriptFilter == 'var4'){
-      //   res.render('feedIndividualCentric', { script: new_feed_version}); // .... feed but sorted by person
-      // }
-      
-      res.render('stories',{script:new_final_feeds})
-      // res.render('storiesClickThrough',{script:new_final_feeds})
-      // res.render('script', { script: feed_version});
-      // res.render('feedIndividualCentric', { script: new_feed_version})
+      if(scriptFilter == 'var1'){
+        res.render('stories',{script:new_final_feeds})
+      }
+      else if(scriptFilter == 'var2'){
+        res.render('storiesClickThrough',{script:new_final_feeds})
+      }
+      else if(scriptFilter == 'var3'){
+        res.render('script', { script: feed_version}); //control condition .. 
+      }
+      else if(scriptFilter == 'var4'){
+        res.render('feedIndividualCentric', { script: new_feed_version}); // .... feed but sorted by person
+      }
+
+      else if(scriptFilter == 'var6'){
+        res.render('storiesMessageClick', { script: stories_message}); // .... 
+      }
+      else if(scriptFilter == 'var5'){
+        res.render('storiesMessageDelay', { script: stories_message}); // .... 
+      }
+
       });//end of Script.find()
 
     

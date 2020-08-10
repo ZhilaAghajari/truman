@@ -61,8 +61,11 @@ if(typeof total_seconds != 'undefined')
       if(total_seconds == 0){
           if(localStorage.getItem("survey_flag")==1)
           {
-            
-            if(next_id>3)
+            if($('.ui.blue.fluid.button')[0].attributes[2].value!="stories")
+            {
+              show_survey(); // For the feed version ... 
+            }
+            else if(next_id>3)
             {
               show_survey();
               console.log('once or twice?');
@@ -303,18 +306,18 @@ if(typeof total_logedin_time != 'undefined')
 // });
 
 
-function handler(){
-  // if(localStorage.getItem("timer_flag")==1 && localStorage.getItem("survey_flag")==1)
-  if(timer_flg==1 && localStorage.getItem("survey_flag")==1)
-  {
-      show_survey();
+// function handler(){
+//   // if(localStorage.getItem("timer_flag")==1 && localStorage.getItem("survey_flag")==1)
+//   if(timer_flg==1 && localStorage.getItem("survey_flag")==1)
+//   {
+//       show_survey();
 
-  }
-}
+//   }
+// }
 
-$(".ui.right.button[next_id='"+'3'+"']").on("click",{
+// $(".ui.right.button[next_id='"+'3'+"']").on("click",{
 
-},handler);
+// },handler);
 
 
 // var el = document.querySelector(" .ui.right.button[next_id'"+'3'+"']");
@@ -336,37 +339,40 @@ $(".ui.right.button[next_id='"+'3'+"']").on("click",{
       // console.log('Posts seen in this session : ', localStorage.getItem("session_posts"));
       console.log('Time Left: ', total_seconds);
       next_id = $(this)[0].attributes[1].value;
-      // $(".ui.right.button[next_id='"+'3'+"']").click( function() { return false; } );
-      // if(next_id ==3)
-      // {
-      //   return false;
-      // }
-
       check_id = (parseInt(next_id)+1).toString(); //next modal to be shown .. 
       var move_id = (parseInt(next_id)+1).toString();
       modal_id = $('.ui.tiny.post.modal')[0].attributes[1].value;
-
-      if($("[next_id='"+check_id+"']").length==0)
+      // $(".ui.right.button[next_id='"+'3'+"']").click( function() { return false; } );
+      if(next_id ==3 && timer_flg==1 && localStorage.getItem("survey_flag")==1)
       {
-        console.log('next id is: ', next_id);
-        if(localStorage.getItem("survey_flag") ==1)
-        {
-          show_survey();
-          console.log('Last story of the day!');
-        }
-        else{
-          console.log('last story -- the session survey has already been filled');
-        }
-        
+        show_survey();
       }
-      else if(flag[next_id]==0)
+      else
+      {
+        
+
+        if($("[next_id='"+check_id+"']").length==0)
         {
-          flag[next_id]=1;
-          if($("[pre_id='"+1+"']")[0].attributes[2].value=="stories")
-            {
-              move(move_id);
-            }
+          console.log('next id is: ', next_id);
+          if(localStorage.getItem("survey_flag") ==1)
+          {
+            show_survey();
+            console.log('Last story of the day!');
+          }
+          else{
+            console.log('last story -- the session survey has already been filled');
+          }
+          
         }
+        else if(flag[next_id]==0)
+          {
+            flag[next_id]=1;
+            if($("[pre_id='"+1+"']")[0].attributes[2].value=="stories")
+              {
+                move(move_id);
+              }
+          }
+      } 
     
   });
 

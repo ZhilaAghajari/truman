@@ -92,7 +92,8 @@ block content
 
 
 
-      else if val.relativeTime
+      if val.relativeTime
+        -console.log('FRONT END USER POSTSs invididuals: ', val.postID)
         -var u_class;
         -if (val.actorAuthor) {u_class = "actorReply"}
         -else if (val.reply) {u_class = "userReply"}
@@ -222,7 +223,7 @@ block content
               i.big.send.link.icon
 
       //-THIS is for posts by Actors, not the USER
-      else
+      else if !val.relativeTime && !val.type
         .ui.fluid.card.dim(postID=val._id, state=val.state || 'unread', type='actor', actor_un = val.actor.username, actor_name = val.actor.profile.name, actor_pic = val.actor.profile.picture)
           //- dimmer DIV for flagging
           .ui.dimmer.flag
@@ -428,104 +429,158 @@ block content
                   ul.likert
                     .inline.fields
                       h3.field
-                        input(type='radio' name='Softhearted' value="strong_disagree")
-                        // input(type='radio' name='Softhearted' value='1')
-                        label Strong Disagree
+                        label
+                          input(type='radio' name='Softhearted' value='strong_disagree')
+                          | Strong Disgree
+                        br
                       h3.field
-                        input(type='radio' name='Softhearted' value="disagree")
-                        label Disagree
+                        label
+                          input(type='radio' name='Softhearted' value="disagree")
+                          | Disagree
+                        br
                       h3.field
-                        input(type='radio' name='Softhearted' value='somewhat_disagree')
-                        label Somewhat Disagree
+                        label
+                          input(type='radio' name='Softhearted' value='somewhat_disagree')
+                          | Somewhat Disagree
+                        br
                       h3.field
-                        input(type='radio' name='Softhearted' value='neither_agree_nor_disagree')
-                        label neither_agree_nor_disagree
+                        label
+                          input(type='radio' name='Softhearted' value='neither_agree_nor_disagree')
+                          | neither agree nor disagree
+                        br
                       h3.field
-                        input(type='radio' name='Softhearted' value='somewhat_agree')
-                        label Somewhat Agree
+                        label
+                          input(type='radio' name='Softhearted' value='somewhat_agree')
+                          | Somewhat Agree
+                        br
                       h3.field
-                        input(type='radio' name='Softhearted' value='agree')
-                        label agree
+                        label
+                          input(type='radio' name='Softhearted' value='agree')
+                          | agree
+                        br
                       h3.field
-                        input(type='radio' name='Softhearted' value='strong_agree')
-                        label Strong Agree
-                  h3.label.statement Touched
+                        label
+                          input(type='radio' name='Softhearted' value='strong_agree')
+                          | Strong Agree
+                        br
+                  h2.label.statement Touched
                   ul.likert
                     .inline.fields
                       h3.field
-                        input(type='radio' name='Touched' value='strong_disagree')
-                        label Strong Disagree
+                        label
+                          input(type='radio' name='Touched' value='strong_disagree')
+                          | Strong Disagree
+                        br
                       h3.field
-                        input(type='radio' name='Touched' value='disagree')
-                        label Disagree
+                        label
+                          input(type='radio' name='Touched' value='disagree')
+                          | Disagree
+                        br
                       h3.field
-                        input(type='radio' name='Touched' value='somewhat_disagree')
-                        label Somewhat Disagree
+                        label
+                          input(type='radio' name='Touched' value='somewhat_disagree')
+                          | Somewhat Disagree
+                        br
                       h3.field
-                        input(type='radio' name='Touched' value='neither_agree_nor_disagree')
-                        label Neither agree nor disagree
+                        label
+                          input(type='radio' name='Touched' value='neither_agree_nor_disagree')
+                          | Neither agree nor disagree
+                        br
                       h3.field
-                        input(type='radio' name='Touched' value='somewhat_agree')
-                        label Somwhat Agree
+                        label
+                          input(type='radio' name='Touched' value='somewhat_agree')
+                          | Somwhat Agree
+                        br
                       h3.field
-                        input(type='radio' name='Touched' value='agree')
-                        label Agree
+                        label
+                          input(type='radio' name='Touched' value='agree')
+                          | Agree
+                        br
                       h3.field
-                        input(type='radio' name='Touched' value='strong_agree')
-                        label Strong Agree
-                  h3.label.statement Sympathetic
+                        label
+                          input(type='radio' name='Touched' value='strong_agree')
+                          | Strong Agree
+                        br
+                  h2.label.statement Sympathetic
                   ul.likert
                     .inline.fields
                       h3.field
-                        input(type='radio' name='Sympathetic' value='strong_disagree')
-                        label Strong Disagree
+                        label
+                          input(type='radio' name='Sympathetic' value='strong_disagree')
+                          | Strong Disagree
+                        br
                       h3.field
-                        input(type='radio' name='Sympathetic' value='disagree')
-                        label Disagree
+                        label
+                          input(type='radio' name='Sympathetic' value='disagree')
+                          | Disagree
+                        br
                       h3.field
-                        input(type='radio' name='Sympathetic' value='somewhat_disagree')
-                        label Somewhat Disagree
+                        label
+                          input(type='radio' name='Sympathetic' value='somewhat_disagree')
+                          | Somewhat Disagree
+                        br
                       h3.field
-                        input(type='radio' name='Sympathetic' value='neither_agree_nor_disagree')
-                        label Neither agree nor disagree
+                        label
+                          input(type='radio' name='Sympathetic' value='neither_agree_nor_disagree')
+                          | Neither agree nor disagree
+                        br
                       h3.field
-                        input(type='radio' name='Sympathetic' value='somewhat_agree')
-                        label Somwhat Agree
+                        label
+                          input(type='radio' name='Sympathetic' value='somewhat_agree')
+                          | Somwhat Agree
+                        br
                       h3.field
-                        input(type='radio' name='Sympathetic' value='agree')
-                        label Agree
+                        label
+                          input(type='radio' name='Sympathetic' value='agree')
+                          | Agree
+                        br
                       h3.field
-                        input(type='radio' name='Sympathetic' value='strong_agree')
-                        label Strong Agree
-                  h3.label.statement Moved
+                        label
+                          input(type='radio' name='Sympathetic' value='strong_agree')
+                          | Strong Agree
+                        br
+                  h2.label.statement Moved
                   ul.likert
                     .inline.fields
                       h3.field
-                        input(type='radio' name='Moved' value='strong_disagree')
-                        label Strong Disagree
+                        label
+                          input(type='radio' name='Moved' value='strong_disagree')
+                          | Strong Disagree
                       h3.field
-                        input(type='radio' name='Moved' value='disagree')
-                        label Disagree
+                        label
+                          input(type='radio' name='Moved' value='disagree')
+                          | Disagree
+                        br
                       h3.field
-                        input(type='radio' name='Moved' value='somewhat_disagree')
-                        label Somewhat Disagree
+                        label
+                          input(type='radio' name='Moved' value='somewhat_disagree')
+                          | Somewhat Disagree
+                        br
                       h3.field
-                        input(type='radio' name='Moved' value='neither_agree_nor_disagree')
-                        label Neither agree nor disagree
+                        label
+                          input(type='radio' name='Moved' value='neither_agree_nor_disagree')
+                          | Neither agree nor disagree
+                        br
                       h3.field
-                        input(type='radio' name='Moved' value='somewhat_agree')
-                        label Somwhat Agree
+                        label
+                          input(type='radio' name='Moved' value='somewhat_agree')
+                          | Somwhat Agree
+                        br
                       h3.field
-                        input(type='radio' name='Moved' value='agree')
-                        label Agree
+                        label
+                          input(type='radio' name='Moved' value='agree')
+                          | Agree
+                        br
                       h3.field
-                        input(type='radio' name='Moved' value='strong_agree')
-                        label Strong Agree
+                        label
+                          input(type='radio' name='Moved' value='strong_agree')
+                          | Strong Agree
+                        br
                   // h3.buttons
                   //   button.clear Clear
                   //   button.submit Submit
         .content
           // .ui.blue.right.floated.button(disabled='true') Submit
           // #submitSession.ui.blue.right.disabled.fluid.button(survey_id='1') Submit
-          #submitSession.ui.blue.right.fluid.button(survey_id='feed') Submit
+          #submitSession.ui.blue.fluid.button(study_group='feed') Submit
 

@@ -54,6 +54,7 @@ block content
       -console.log('feed VAL.id: ', val._id)
       -console.log('postID in feed version: ', val.postID)
       if val.relativeTime
+        -console.log('FRONT END USER POSTS: ', val.postID)
         -var u_class;
         -if (val.actorAuthor) {u_class = "actorReply"}
         -else if (val.reply) {u_class = "userReply"}
@@ -426,7 +427,7 @@ block content
                           input(type='radio' name='Softhearted' value='strong_agree')
                           | Strong Agree
                         br
-                  h3.label.statement Touched
+                  h2.label.statement Touched
                   ul.likert
                     .inline.fields
                       h3.field
@@ -464,7 +465,7 @@ block content
                           input(type='radio' name='Touched' value='strong_agree')
                           | Strong Agree
                         br
-                  h3.label.statement Sympathetic
+                  h2.label.statement Sympathetic
                   ul.likert
                     .inline.fields
                       h3.field
@@ -502,7 +503,7 @@ block content
                           input(type='radio' name='Sympathetic' value='strong_agree')
                           | Strong Agree
                         br
-                  h3.label.statement Moved
+                  h2.label.statement Moved
                   ul.likert
                     .inline.fields
                       h3.field

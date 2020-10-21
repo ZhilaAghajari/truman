@@ -169,17 +169,16 @@ exports.getScript = (req, res, next) => {
 
         user_posts.sort(function (a, b) {
             return b.relativeTime - a.relativeTime;
-          });
+        });
         
         last_user_post = user_posts[0];
-        //finalfeed.push(last_user_post);
-        console.log('ANDD the last post is : : ',last_user_post);
+        console.log('THE USER LAST POST ',last_user_post);
         while(script_feed.length || user_posts.length) {
           console.log(user_posts[0]);
           if(typeof script_feed[0] === 'undefined') {
               console.log("Script_Feed is empty, only push user_posts");
-              
-              finalfeed.push(user_posts[0]);
+    
+              finalfeed.push(user_posts[0]); // 
               final_user_posts.push(user_posts[0]);
               user_posts.splice(0,1);
           }
@@ -225,10 +224,8 @@ exports.getScript = (req, res, next) => {
                       cat.time = user.feedAction[feedIndex].comments[i].time;
                       cat.commentID = user.feedAction[feedIndex].comments[i].new_comment_id;
                       cat.likes = 0;
-
                       script_feed[0].comments.push(cat);
                       //console.log("Already have COMMENT ARRAY");
-                
 
                     }
 
@@ -328,28 +325,10 @@ exports.getScript = (req, res, next) => {
                 script_feed.splice(0,1);
               }
             }
-            
-
-            
+                        
             }//else in while loop
       }//while loop
-
       
-      //shuffle up the list
-      finalfeed = shuffle(finalfeed);
-    
-      feed_version = JSON.parse(JSON.stringify(finalfeed));
-      console.log('Feed: ', feed_version);
-      // finalfeed.push(last_user_post);
-      finalfeed[0] = last_user_post;
-      // finalfeed.push(last_user_post);
-      unique_authors = [...new Set(final_actors_feed.map(item => item.actor.username))];
-      console.log('Unique actprs who posted: ', unique_authors);
-      if(final_user_posts.length>0)
-      {
-        unique_authors.push(user.username); 
-      }    
-      unique_authors = shuffle(unique_authors);
 
       user.save((err) => {
         if (err) {
@@ -359,101 +338,182 @@ exports.getScript = (req, res, next) => {
         //req.flash('success', { msg: 'Profile information has been updated.' });
       });
 
+      // Zh
+      //shuffle up the list
+      finalfeed = shuffle(finalfeed); // it includes all the user's and actors' posts .. 
+      // creating feed for all the conditions, because there are minor change in their ordering ... 
+      // Control condition:
+      feed_version = JSON.parse(JSON.stringify(finalfeed));   
+      //put the user's post on the top in case he/she has just posted
+      if(typeof last_user_post!== 'undefined')
+      {
+        if(last_user_post.relativeTime>feed_version[0].time)
+        {
+          
+          var control_feed = []
+          control_feed[0] = last_user_post
+          for(var i = 0; i<feed_version.length; i++)
+          {
+            if(feed_version[i]._id == control_feed[0]._id)
+            {
+              continue;
+            }
+            control_feed.push(feed_version[i]);
+          }
+        }
+      }
+      else {
+        var control_feed = JSON.parse(JSON.stringify(feed_version));
+      }
 
-      // Later, we might need to first show the users posts first and then show the actors' posts ... 
-      var new_final_feeds = []
+      
+
+      finalfeed[0] = last_user_post; //get back to it!! Don't remmber why I did this!
+
+      // for the stories-individual centric, group the stories by their authors: 
+      unique_authors = [...new Set(final_actors_feed.map(item => item.actor.username))];
+      if(final_user_posts.length>0)
+      {
+        unique_authors.push(user.username); 
+      }    
+      unique_authors = shuffle(unique_authors);
+
+      var stories_person_feed = []
       for( var i=0; i<unique_authors.length; i++)
       {
         // find posts that are created by this authors ..
         if(unique_authors[i] == user.username)
         {
+          //Zhila: Sam says we don't need to have a module to say these are posts created by you (user)
+          //comment it for now to check how it looks ..
           var middle_post = {
             type:'user',
             picture : user.profile.picture
           }
-          new_final_feeds.push(middle_post);
-          console.log('added user middle');
-          console.log(middle_post);
-
+          stories_person_feed.push(middle_post);
+          // console.log('added user profile to the feed', middle_post);
           let temp = final_user_posts;
-          // console.log('users posts from final_user_posts are about to be addded: ', temp);
           for (var j = 0; j<final_user_posts.length; j++)
           {
-            new_final_feeds.push(temp[j]);
+            stories_person_feed.push(final_user_posts[j]);
           }
 
         }
-        
-        else
+        else //adding actor's post
         {
           let temp = final_actors_feed.find(item => item.actor.username == unique_authors[i])
-          var temp_record;
-
+          var temp_record;          
           for( var a=0; a<final_actors_feed.length; a++)
           {
             if(final_actors_feed[a].actor.username == unique_authors[i])
             {
-              // new_final_feeds.push(final_actors_feed[a]);
               temp_record = final_actors_feed[a];
               break;
             }
           }
-
           var middle_post = {
             type:'actor',
             picture : temp_record.actor.profile.picture,
             name: temp_record.actor.profile.name,
             username: temp_record.actor.username
           }
-          new_final_feeds.push(middle_post);
+          stories_person_feed.push(middle_post);
           
           for( var a=0; a<final_actors_feed.length; a++)
           {
             if(final_actors_feed[a].actor.username == unique_authors[i])
             {
-              new_final_feeds.push(final_actors_feed[a]);
+              stories_person_feed.push(final_actors_feed[a]);
               temp_record = final_actors_feed[a];
             }
           }
         }
         
-      }
+      } // end of adding the author's related info (to be shown between posts of each authors) 
         
 
-
-                
-      for(var i=0; i<new_final_feeds.length; i++){
-        var temp = new Object();
-        temp.modal_id = i+1
-        tmp = new_final_feeds[i].id;
-        const temp_final_feed = JSON.parse(JSON.stringify(new_final_feeds[i]));
-        new_final_feeds[i] = Object.assign(temp_final_feed,temp);
-        new_final_feeds[i].id = tmp;
+      // stories-individual centric .. put users' post on the top
+      
+      if(typeof last_user_post!== 'undefined')
+      {
+        var stry_prsn = []
+        if(last_user_post.relativeTime>stories_person_feed[1].time)
+        {
+          // put the user's post on the top!
+          // stry_prsn[0] = last_user_post
+          stry_prsn.push(last_user_post)
+          for(var i = 0; i<stories_person_feed.length; i++)
+          {
+            if(stories_person_feed[i]._id == stry_prsn[0]._id)
+            {
+              continue;
+            }
+            stry_prsn.push(stories_person_feed[i]);
+          }
+        }
+        else{
+          var stry_prsn = JSON.parse(JSON.stringify(stories_person_feed));
+        }
+      }
+      else{
+        var stry_prsn = JSON.parse(JSON.stringify(stories_person_feed));
       }
 
+      // we need to do it to restore the ids
+      for(var i=0; i<stry_prsn.length; i++){
+        var temp = new Object();
+        temp.modal_id = i+1
+        tmp = stry_prsn[i].id;
+        const temp_final_feed = JSON.parse(JSON.stringify(stry_prsn[i]));
+        stry_prsn[i] = Object.assign(temp_final_feed,temp);
+        stry_prsn[i].id = tmp;
+      }
+
+      // Condtion: stories message based with delay
       var stories_message =JSON.parse(JSON.stringify(feed_version));
-      for(var i=0; i<stories_message.length; i++){
+      if(typeof last_user_post!== 'undefined'){
+        var stry_msg = []
+        // if user posted recently, put the user's post on the top!
+        if(last_user_post.relativeTime>stories_message[1].time)
+        {
+          // stry_msg[0] = last_user_post
+          stry_msg.push(last_user_post);
+          for(var i = 0; i<stories_message.length; i++)
+          {
+            if(stories_message[i]._id == stry_msg[0]._id)
+            {
+              continue;
+            }
+            stry_msg.push(stories_message[i]);
+          }
+        }
+        else{
+          var stry_msg = JSON.parse(JSON.stringify(stories_message));
+        }
+      }
+      // if user hasn't post recently..
+      else{
+        var stry_msg = JSON.parse(JSON.stringify(stories_message));
+      }
+      // need to restore the ids ( for modals we need them )
+      for(var i=0; i<stry_msg.length; i++){
         var temp = new Object();
         temp.modal_id = i+1
-        tmp = stories_message[i]._id;        
-        const temp_stories_feed = JSON.parse(JSON.stringify(stories_message[i]));
-        stories_message[i] = Object.assign(temp_stories_feed,temp);
-        stories_message[i].id = tmp;
+        tmp = stry_msg[i]._id;        
+        const temp_stories_feed = JSON.parse(JSON.stringify(stry_msg[i]));
+        stry_msg[i] = Object.assign(temp_stories_feed,temp);
+        stry_msg[i].id = tmp;
       }
 
+ 
 
-
-      // update the modal feeds ... 
-
-      // Group the feed version posts by their authors.. the posts are now in feed_version...
+      // Feed version: group the posts based on their authors
       var new_feed_version = []
       for( var i=0; i<unique_authors.length; i++)
       {
         if(unique_authors[i] == user.username)
         {
-          // do we want to add a post to introduce the person here as well?
           var middle = {
-            // remmber to add it to the feedIndividualCentric.pug
             type:'user',
             picture: user.profile.picture
           }
@@ -464,9 +524,7 @@ exports.getScript = (req, res, next) => {
           {
             new_feed_version.push(temp[j]);
             console.log('ADDED user posts!!!',new_feed_version );
-          }
-          
-
+          } 
 
         }
         else
@@ -478,7 +536,6 @@ exports.getScript = (req, res, next) => {
           {
             if(final_actors_feed[a].actor.username == unique_authors[i])
             {
-              // new_final_feeds.push(final_actors_feed[a]);
               temp_record = final_actors_feed[a];
               break;
             }
@@ -503,29 +560,38 @@ exports.getScript = (req, res, next) => {
         }
       }
 
-      console.log('checking final feed ', new_feed_version);
-
-      // Zhila: here add new modal id to the posts and use the new one!!! 
-      console.log('experimental group of this user is: ', scriptFilter);
+      // Current problems:  One of the modal_id is missing and that's why I cannot see the rest of the posts.. 
+      // and I get this is the last post of the day (which is wrong!)
       if(scriptFilter == 'var1'){
-        res.render('stories',{script:new_final_feeds})
+        res.render('stories',{script:stry_prsn}) 
+        // account: stories@gmail.com
+        // 
       }
+      else if(scriptFilter == 'var6'){
+        res.render('storiesMessageClick', { script: stry_msg});
+        //current problems:
+      }
+
+      else if(scriptFilter == 'var5'){
+        res.render('storiesMessageDelay', { script: stry_msg}); // .... 
+        // account: stories_message_delay
+      }
+
       else if(scriptFilter == 'var2'){
-        res.render('storiesClickThrough',{script:new_final_feeds})
+        // res.render('storiesClickThrough',{script:stories_person_feed})
+        res.render('storiesClickThrough',{script:stry_prsn})
       }
+
       else if(scriptFilter == 'var3'){
-        res.render('script', { script: feed_version}); //control condition .. 
+        // res.render('script', { script: feed_version}); //control condition .. 
+        res.render('script', { script: control_feed}); //control condition .. +
+
       }
       else if(scriptFilter == 'var4'){
         res.render('feedIndividualCentric', { script: new_feed_version}); // .... feed but sorted by person
       }
 
-      else if(scriptFilter == 'var6'){
-        res.render('storiesMessageClick', { script: stories_message}); // .... 
-      }
-      else if(scriptFilter == 'var5'){
-        res.render('storiesMessageDelay', { script: stories_message}); // .... 
-      }
+      
 
       });//end of Script.find()
 
@@ -591,12 +657,7 @@ exports.getScriptFeed = (req, res, next) => {
         //update script feed to see if reading and posts has already happened
         var finalfeed = [];
         finalfeed = script_feed;
-        // finalfeed[0] = {};
-
-      
-      //shuffle up the list
-      //finalfeed = shuffle(finalfeed);
-
+  
 
       console.log("Script Size is now: "+finalfeed.length);
       res.render('feed', { script: finalfeed, namefilter:profileFilter}); //ZH: does this feed include all the posts

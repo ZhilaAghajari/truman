@@ -61,35 +61,22 @@ if(typeof total_seconds != 'undefined')
       if(total_seconds == 0){
           if(localStorage.getItem("survey_flag")==1)
           {
-            if($('.ui.blue.fluid.button')[0].attributes[2].value!="stories")
-            {
-              show_survey(); // For the feed version ... 
-            }
-            else if(next_id>3)
-            {
-              show_survey();
-              console.log('once or twice?');
-            }
-            else{
-              n=1;
-              timer_flg = 1;
-              localStorage.setItem("timer_flag",n);
-              setTimeout(countDownTimer,1000000000);
-            }
-            // else{
-            //   setTimeout(countDownTimer,1000);
-            // }
-            // else
+            // if($('.ui.blue.fluid.button')[0].attributes[2].value!="stories")
             // {
-            //   if($('.ui.blue.fluid.button')[0].attributes[2].value==="stories"){
-            //     console.log('retry:',next_id); //try every second and each time it checks if the user sees more than 3 posts, then pop up the session survey ...
-            //     setTimeout(countDownTimer,1000);
-            //   }
-            //   else{
-            //     show_survey();
-            //   }
-              
+            //   show_survey(); // For the feed version ... 
             // }
+            show_survey();
+            // else if(next_id>3)
+            // {
+            //   show_survey();
+            // }
+            // else{
+            //   n=1;
+            //   timer_flg = 1;
+            //   localStorage.setItem("timer_flag",n);
+            //   setTimeout(countDownTimer,1000000000);
+            // }
+            
           }
       } else if(total_seconds>0) {
           total_seconds = total_seconds -1 ;
@@ -128,7 +115,7 @@ if(typeof total_logedin_time != 'undefined')
       }
       else{
         // reset the timer on active flag, each time the user does something ... 
-        var z = 5*60;
+        var z = 15*60;
         window.localStorage.setItem("total_logedin_time",z);
         total_logedin_time = window.localStorage.getItem("total_logedin_time");
         active_flag = 0;
@@ -202,7 +189,7 @@ if(typeof total_logedin_time != 'undefined')
             element_next[0].classList.remove("disabled");     
           }
           },1000) //
-       })(8) ; //time duration in seconds to show each post
+       })(8) ; //time duration in seconds to show each post --> change it to 8
     }
      
     else{//if it is a actors photo modal
@@ -234,15 +221,16 @@ if(typeof total_logedin_time != 'undefined')
     var j=1;  //Zh: this should change to the modal id related to the starting modal of the day .. 
     var first_modal=$(".ui.tiny.post.modal[modal_id='"+j+"']");
     first_modal.modal('show');
-    if($("[pre_id='"+1+"']")[0].attributes[2].value == "stories")
+    if($("[pre_id='"+1+"']")[0].attributes[3].value == "stories")
       move(1);
   });
   
 
- // the flag array should be as large as posts numbers .. for now I have it fixed but I need to fix it ...  
-  flag=new Array(100).fill(0)
+ // the flag array should be as large as posts numbers .. for now I have it fixed but I need to fix it ...
+  var l= $('.ui.tiny.post.modal').length;  
+  flag=new Array(l).fill(0)
   //I assume there are at most 100 posts a day.. how many posts are we going to show them? 
-  for (let i=1; i<100;i++){
+  for (let i=1; i<l;i++){
     j=i+1;
     $(" .ui.tiny.post.modal[modal_id='"+j+"']").modal('attach events',".ui.right.button[next_id='"+i+"']");
   } 
@@ -342,37 +330,27 @@ if(typeof total_logedin_time != 'undefined')
       check_id = (parseInt(next_id)+1).toString(); //next modal to be shown .. 
       var move_id = (parseInt(next_id)+1).toString();
       modal_id = $('.ui.tiny.post.modal')[0].attributes[1].value;
-      // $(".ui.right.button[next_id='"+'3'+"']").click( function() { return false; } );
-      if(next_id ==3 && timer_flg==1 && localStorage.getItem("survey_flag")==1)
-      {
-        show_survey();
-      }
-      else
-      {
-        
-
-        if($("[next_id='"+check_id+"']").length==0)
+      if($("[next_id='"+check_id+"']").length===0)
         {
-          console.log('next id is: ', next_id);
           if(localStorage.getItem("survey_flag") ==1)
           {
             show_survey();
-            console.log('Last story of the day!');
+            alert('This is the last post of this session!');
           }
           else{
-            console.log('last story -- the session survey has already been filled');
+            alert('This is the last post of this session!');
+            window.location.href='/'; //maybe go to tour site??? or redirect 
           }
           
         }
         else if(flag[next_id]==0)
           {
             flag[next_id]=1;
-            if($("[pre_id='"+1+"']")[0].attributes[2].value=="stories")
+            if($("[pre_id='"+1+"']")[0].attributes[3].value=="stories")
               {
                 move(move_id);
               }
           }
-      } 
     
   });
 
@@ -498,57 +476,46 @@ if(typeof total_logedin_time != 'undefined')
       }
     },
 
+    // onSuccess:function(event, fields){
     onSuccess:function(event, fields){
-      console.log("Event is :");
-      // event.preventDefault();
-      //console.log(event);
-      console.log("fields is :");
-      //console.log(fields);
       if($('.ui.feed.form')[0].attributes[5].value != 'feed')
       {
         $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','#submitNewPost.ui.blue.fluid.button');
       }      
       $(".ui.feed.form")[0].submit();
+      event.preventDefault();
+      //return false;
     }
 
   });
 
 
-//Add a validator for login submit, and save the timer in the local storage
-
-// $('#submitnewpost.ui.blue.fluid.button').click(function(){
-//   $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','#submitnewpost.ui.blue.fluid.button');
-//   $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
-// });
-
   // $('#submitNewPost.ui.blue.fluid.button').click(function() {
   $('.ui.feed.form').submit(function(e) {
      active_flag = 1;
-      // alert('Submited the post?');
+      //this.submit();
       e.preventDefault();
-      // e.stopPropagation();
-      this.submit(); //if I don't submit ... will it get through and do I only need to take care of fron end .. ?
-      console.log("Submit the junks!!!!")
-      // attach the previously shown modal to this submit button...
       if($('.ui.feed.form')[0].attributes[5].value != 'feed')
       {
-
         //  We don't need as as we write onApprove return false but in firefox and chrome it doesn't work it only work for Safari
         window.localStorage.setItem("reload",1);
-        //console.log('Reload flag: ',localStorage.getItem("reload"));
-      }
-      
-      return false
+      }  
+      if($('.ui.feed.form')[0].attributes[5].value != 'feed')
+      {
+        $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','#submitNewPost.ui.blue.fluid.button');
+      }       
     });
 // zhila:uncomment this one ..
-
 if(parseInt(localStorage.getItem("reload")) == 1)
 {
   var j=1;
   $(" .ui.tiny.post.modal[modal_id='"+j+"']").modal('show');
   window.localStorage.setItem("reload",0);
-  if($("[pre_id='"+1+"']")[0].attributes[2].value=="stories"){
+  // move(1);
+  if($("[pre_id='"+1+"']")[0].attributes[3].value=="stories"){
     move(1);
+    // n = j+1
+    // $(" .ui.tiny.post.modal[modal_id='"+n+"']").modal('attach events'," .ui.tiny.post.modal[modal_id='"+j+"']");
     // move(check_id);
   } 
 }

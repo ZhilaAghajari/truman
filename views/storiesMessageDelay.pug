@@ -116,49 +116,9 @@ block content
     each val in script
       -console.log('Modal ID: ', val.modal_id);
       -console.log('the post group is: ', val.experiment_group)
-      -console.log('val.id is : ', val.id)
       //  this is a modal to seperate the post by the author ...
       if val.type
-        if val.type == 'user'
-
-          .ui.container
-            .ui.tiny.post.modal(modal_id=val.modal_id)
-              .ui.fluid.card.dim(modal_id = val.modal_id)
-              .content
-                // if user.profile.picture
-                //   img.ui.avatar.image(src='/user_post/'+user.profile.picture)
-                // else
-                //     img.ui.avatar.image(src=user.gravatar(60))
-                // a(href='/me')
-                //   span=user.username || user.id ||user.profile.name     
-                  
-              .ui.container.center.aligned
-                .content
-                    .image
-                      if user.profile.picture
-                        img(src='/user_post/'+user.profile.picture, style="max-width:50%;width:50%;",  alt="centered image")
-                      else
-                        img.ui.avatar.image(src=user.gravatar(60))
-                
-              .ui.container.center.aligned
-                .content
-                  .description
-                    h3(style=" color: #000000") Stories by you
-                    a(href='/me')
-                      span=user.username || user.id ||user.profile.name      
-
-
-              .extra.content
-                .two.fluid.ui.buttons(postID=val.postID)
-                  .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
-                  .ui.right.disabled.button(next_id=val.modal_id, postID=val.postID, study_group ='stories')  Next
-                   
-                .ui.tiny.red.progress(progressing_id=val.modal_id, progressing_type = 'profile')
-                  .bar
-                  .label ... 
-
-
-        else if val.type =='actor'
+        if val.type =='actor'
           .ui.container.center.aligned
             .ui.tiny.post.modal(modal_id=val.modal_id)
               .ui.fluid.centered.card.dim(modal_id = val.modal_id)
@@ -189,12 +149,12 @@ block content
 
               .extra.content
                 .two.fluid.ui.buttons(postID=val.postID)
-                  .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
-                  .ui.right.disabled.button(next_id=val.modal_id, postID=val.postID, study_group ='stories')  Next
+                  .ui.left.button(pre_id=val.modal_id, postID=val.postID, study_group ='clickThrough') Previous
+                  .ui.right.button(next_id=val.modal_id, postID=val.postID, study_group ='clickThrough')  Next
                    
-                .ui.tiny.red.progress(progressing_id=val.modal_id, progressing_type = 'profile')
-                  .bar
-                  .label ... 
+                // .ui.tiny.red.progress(progressing_id=val.modal_id, progressing_type = 'profile')
+                //   .bar
+                //   .label ... 
 
       //- this is a user post ..
       if val.relativeTime 
@@ -205,17 +165,63 @@ block content
         .ui.container
           -console.log(val.modal_id)
           // -console.log('@@USERs POST ID:@@', val.id)
-          -console.log('@@@@@@@@@@@@USERs POST ID:@@', val.postID)
+          -console.log('@@USERs POST ID:@@', val.postID)
           .ui.tiny.post.modal(modal_id=val.modal_id, postID=val.postID, modal_type = 'post')
             .ui.fluid.card(u_postID=val.id, type=u_class, postID=val.postID)
-              // .content
-              //   .two.fluid.ui.buttons(postID=val.postID)
-              //     .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
-              //     .ui.right.disabled.button(next_id=val.modal_id, postID=val.postID, study_group ='stories')  Next
-                   
-              //   .ui.tiny.gray.progress(progressing_id=val.modal_id)
-              //     .bar
-              //     .label ... 
+              .content
+                .computer.only.tablet.only.row 
+                  .ui.borderless.fixed.menu
+                    .ui.container
+                      a.item(href='/')
+                        img.ui.tiny.image(src='/public/logo.png', id='logo')
+                      |  
+                      .right.menu
+                        if !user
+                          a.item(href='/login') Login
+                          a.item(href='/signup') Create Account
+                        else
+                          //-a.item.newpost
+                            i.big.write.square.icon
+                          a.item(href='/notifications') 
+                            i.big.alarm.icon
+                          .ui.simple.dropdown.item
+                            if user.profile.picture
+                              img.ui.mini.spaced.circular.image(src='/user_post/'+user.profile.picture)
+                            else
+                              img.ui.mini.spaced.circular.image(src=user.gravatar(60))
+                            |
+                            span= user.profile.name || user.username || user.id
+                            i.dropdown.icon
+                            .menu
+                              a.item(href='/account') My Account
+                              .divider
+                              a.item(href='/me') My Profile
+                              .divider
+                              a.item(href='/logout') Logout
+              .mobile.only.row
+                .ui.fluid.top.fixed.four.item.menu
+                  a.item(href='/')
+                    img.ui.tiny.image(src='/public/logo.png', id='cell_logo')
+                  if !user
+                    a.item(href='/login') Login
+                    a.item(href='/signup') Create Account
+                  else
+                    a.item.newpost
+                      i.big.write.square.icon
+                    a.item(href='/notifications') 
+                      i.big.alarm.icon
+                    .ui.simple.dropdown.item
+                      if user.profile.picture
+                        img.ui.mini.spaced.circular.image(src='/user_post/'+user.profile.picture)
+                      else
+                        img.ui.mini.spaced.circular.image(src=user.gravatar(60))
+                      i.dropdown.icon
+                      .menu
+                        a.item(href='/account') My Account
+                        .divider
+                        a.item(href='/me') My Profile
+                        .divider
+                        a.item(href='/logout') Logout
               .content
                 #newpost.ui.fluid.left.labeled.right.icon.input
                   .ui.label
@@ -263,35 +269,7 @@ block content
                 span.right.floated
                   #falgebutton.ui.basic.button
                    i.large.flag.icon
-
-
-
-              //- I added this part only..
-              //- .content
-              //-   span.right.floated
-              //-     i.heart.outline.like.icon
-              //-     | Like
-              //-     i.flag.icon
-              //-       | Flag
-              //- .two.ui.bottom.attached.icon.buttons
-              //-   //- .ui.reply.button(tabindex='0')
-              //-   //-   i.reply.icon
-              //-   //-   |  Reply
-              //-   .ui.flag.button(tabindex='0')
-              //-     i.flag.icon
-              //-     |  Flag
-              //-   if val.like
-              //-     .ui.labeled.button(tabindex='0')
-              //-       .ui.red.like.button
-              //-         i.heart.icon
-              //-         |  Like
-              //-       a.ui.basic.red.left.pointing.label=val.likes
-              //-   else
-              //-     .ui.labeled.button(tabindex='0')
-              //-       .ui.like.button
-              //-         i.heart.icon
-              //-         |  Like
-              //-       a.ui.basic.red.left.pointing.label.count=val.likes
+   
 
               if val.comments.length > 0
                 .content
@@ -356,12 +334,12 @@ block content
                   i.big.send.link.icon
 
               .two.fluid.ui.buttons(postID=val.postID)
-                .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
-                .ui.right.disabled.button(next_id=val.modal_id, postID=val.postID, study_group ='stories')  Next
+                .ui.left.button(pre_id=val.modal_id, postID=val.postID, study_group ='clickThrough') Previous
+                .ui.right.button(next_id=val.modal_id, postID=val.postID, study_group ='clickThrough')  Next
                  
-              .ui.tiny.gray.progress(progressing_id=val.modal_id, progressing_type = 'post')
-                .bar
-                .label ... 
+              //- .ui.tiny.gray.progress(progressing_id=val.modal_id, progressing_type = 'post')
+              //-   .bar
+              //-   .label ... 
 
 
 
@@ -375,14 +353,60 @@ block content
             -console.log('@@ACTOR POST ID:@@', val.postID)
               //- need to change modal_id to postID
             .ui.fluid.card.dim( postID=val.id, state=val.state || 'unread', type='actor', actor_un = val.actor.username, actor_name = val.actor.profile.name, actor_pic = val.actor.profile.picture) 
-              //- .ui.dimmer.flag
-              //-     .content
-              //-       .center
-              //-         h2.ui.inverted.icon.header
-              //-           i.red.flag.icon
-              //-           |  You&apos;ve flagged this!
-              //-           h3.ui.inverted.header
-              //-             span="The admins will review this post further. We are sorry you had this experience."
+              .content
+                .computer.only.tablet.only.row 
+                  .ui.borderless.fixed.menu
+                    .ui.container
+                      a.item(href='/')
+                        img.ui.tiny.image(src='/public/logo.png', id='logo')
+                      |  
+                      .right.menu
+                        if !user
+                          a.item(href='/login') Login
+                          a.item(href='/signup') Create Account
+                        else
+                          //-a.item.newpost
+                            i.big.write.square.icon
+                          a.item(href='/notifications') 
+                            i.big.alarm.icon
+                          .ui.simple.dropdown.item
+                            if user.profile.picture
+                              img.ui.mini.spaced.circular.image(src='/user_post/'+user.profile.picture)
+                            else
+                              img.ui.mini.spaced.circular.image(src=user.gravatar(60))
+                            |
+                            span= user.profile.name || user.username || user.id
+                            i.dropdown.icon
+                            .menu
+                              a.item(href='/account') My Account
+                              .divider
+                              a.item(href='/me') My Profile
+                              .divider
+                              a.item(href='/logout') Logout
+              .mobile.only.row
+                .ui.fluid.top.fixed.four.item.menu
+                  a.item(href='/')
+                    img.ui.tiny.image(src='/public/logo.png', id='cell_logo')
+                  if !user
+                    a.item(href='/login') Login
+                    a.item(href='/signup') Create Account
+                  else
+                    a.item.newpost
+                      i.big.write.square.icon
+                    a.item(href='/notifications') 
+                      i.big.alarm.icon
+                    .ui.simple.dropdown.item
+                      if user.profile.picture
+                        img.ui.mini.spaced.circular.image(src='/user_post/'+user.profile.picture)
+                      else
+                        img.ui.mini.spaced.circular.image(src=user.gravatar(60))
+                      i.dropdown.icon
+                      .menu
+                        a.item(href='/account') My Account
+                        .divider
+                        a.item(href='/me') My Profile
+                        .divider
+                        a.item(href='/logout') Logout
               .content
                 #newpost.ui.fluid.left.labeled.right.icon.input
                   .ui.label
@@ -529,12 +553,12 @@ block content
 
 
               .two.fluid.ui.buttons(postID=val.postID)
-                .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
-                .ui.right.disabled.button(next_id=val.modal_id , postID=val.postID, study_group ='stories')  Next
+                .ui.left.button(pre_id=val.modal_id, postID=val.postID, study_group ='clickThrough') Previous
+                .ui.right.button(next_id=val.modal_id , postID=val.postID, study_group ='clickThrough')  Next
                 
-              .ui.tiny.gray.progress(progressing_id=val.modal_id, progressing_type = 'post')
-                .bar
-                .label ... 
+              //- .ui.tiny.gray.progress(progressing_id=val.modal_id, progressing_type = 'post')
+              //-   .bar
+              //-   .label ... 
 
               //- .fluid.ui.button
               //-   #sessionSurvey.ui.left.disabled.button(survey_button='survey_button') Session Survey
@@ -584,7 +608,7 @@ block content
                           input(type='radio' name='Softhearted' value='strong_agree')
                           | Strong Agree
                         br
-                  h2.label.statement Touched
+                  h3.label.statement Touched
                   ul.likert
                     .inline.fields
                       h3.field
@@ -622,7 +646,7 @@ block content
                           input(type='radio' name='Touched' value='strong_agree')
                           | Strong Agree
                         br
-                  h2.label.statement Sympathetic
+                  h3.label.statement Sympathetic
                   ul.likert
                     .inline.fields
                       h3.field
@@ -660,7 +684,7 @@ block content
                           input(type='radio' name='Sympathetic' value='strong_agree')
                           | Strong Agree
                         br
-                  h2.label.statement Moved
+                  h3.label.statement Moved
                   ul.likert
                     .inline.fields
                       h3.field
@@ -726,10 +750,3 @@ block content
       //-   #submit.ui.blue.fluid.button(study_group='stories') Submit
       .actions
         input.ui.blue.button(type='submit', name="foo", value='Submit', form='postform', study_group='stories')
-
-
-
-
-    
-
-

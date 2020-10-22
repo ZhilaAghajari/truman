@@ -564,11 +564,12 @@ exports.getScript = (req, res, next) => {
       // and I get this is the last post of the day (which is wrong!)
       if(scriptFilter == 'var1'){
         res.render('stories',{script:stry_prsn}) 
-        // account: stories@gmail.com
+        // delay_individual@gmail.com
         // 
       }
       else if(scriptFilter == 'var6'){
         res.render('storiesMessageClick', { script: stry_msg});
+        // account: stories@gmail.com
         //current problems:
       }
 

@@ -221,7 +221,8 @@ if(typeof total_logedin_time != 'undefined')
     var j=1;  //Zh: this should change to the modal id related to the starting modal of the day .. 
     var first_modal=$(".ui.tiny.post.modal[modal_id='"+j+"']");
     first_modal.modal('show');
-    if($("[pre_id='"+1+"']")[0].attributes[3].value == "stories")
+    // if($("[pre_id='"+1+"']")[0].attributes[3].value == "stories")
+    if($("[pre_id='"+1+"']").attr('study_group') =="stories")
       move(1);
   });
   
@@ -346,7 +347,8 @@ if(typeof total_logedin_time != 'undefined')
         else if(flag[next_id]==0)
           {
             flag[next_id]=1;
-            if($("[pre_id='"+1+"']")[0].attributes[3].value=="stories")
+            // if($("[pre_id='"+1+"']")[0].attributes[3].value=="stories")
+            if($("[pre_id='"+1+"']").attr('study_group') =="stories")
               {
                 move(move_id);
               }
@@ -512,7 +514,9 @@ if(parseInt(localStorage.getItem("reload")) == 1)
   $(" .ui.tiny.post.modal[modal_id='"+j+"']").modal('show');
   window.localStorage.setItem("reload",0);
   // move(1);
-  if($("[pre_id='"+1+"']")[0].attributes[3].value=="stories"){
+  // if($("[pre_id='"+1+"']")[0].attributes[3].value=="stories")
+  if($("[pre_id='"+1+"']").attr('study_group') =="stories")
+  {
     move(1);
     // n = j+1
     // $(" .ui.tiny.post.modal[modal_id='"+n+"']").modal('attach events'," .ui.tiny.post.modal[modal_id='"+j+"']");
@@ -969,7 +973,8 @@ $("#newpost.ui.tiny.post.modal")
         $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','#submitSession.ui.blue.fluid.button');
         // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events',$(".ui.small.post.modal[modal_id='"+j+"']"));
         $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
-        if(check_id=='1' && $("[pre_id='"+1+"']")[0].attributes[2].value=="stories")
+        // if(check_id=='1' && $("[pre_id='"+1+"']")[0].attributes[2].value=="stories")
+        if(check_id=='1' && $("[pre_id='"+1+"']").attr('study_group') =="stories")
         {
           move(1);
         }

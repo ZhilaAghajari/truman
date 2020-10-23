@@ -486,7 +486,8 @@ if(typeof total_logedin_time != 'undefined')
       }      
       $(".ui.feed.form")[0].submit();
       event.preventDefault();
-      //return false;
+      return false;
+      // The new idea: instead of submiting, send the data to the database manually..
     }
 
   });

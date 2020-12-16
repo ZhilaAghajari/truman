@@ -416,7 +416,7 @@ if(typeof total_logedin_time != 'undefined')
   // ZH: Set local variables after loging. ( do I need to set session id here as well?)
   $('button.ui.button').on('click', function(){
     active_flag = 1;
-    var t = 30; //ZHILA: change it back to 120
+    var t = 120; //ZHILA: change it back to 120
     var f =1;
     var logged_time = 5*60;
     window.localStorage.setItem("logged",f);

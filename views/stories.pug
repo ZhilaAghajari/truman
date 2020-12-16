@@ -134,13 +134,13 @@ block content
                   
 
               .extra.content
-                .two.fluid.ui.buttons(postID=val.postID)
-                  .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
-                  .ui.right.disabled.button(next_id=val.modal_id, postID=val.postID, study_group ='stories')  Next
+              .two.fluid.ui.buttons(postID=val.id)
+                .ui.left.disabled.button(pre_id=val.modal_id, postID=val.id, study_group ='stories') Previous
+                .ui.right.disabled.button(next_id=val.modal_id, postID=val.id, study_group ='stories')  Next
                    
-                .ui.tiny.red.progress(progressing_id=val.modal_id, progressing_type = 'profile')
-                  .bar
-                  .label ... 
+              .ui.tiny.red.progress(progressing_id=val.modal_id, progressing_type = 'profile')
+                .bar
+                .label ... 
 
       //- this is a user post ..
       if val.relativeTime 
@@ -330,6 +330,9 @@ block content
 
       //- These are posts by Actors, not the participants !!!
       else if !val.relativeTime  && !val.type
+        -console.log("Does the new comment has an id?? ", val.postID);
+        -console.log("Does the new comment has an id in val.id?? ", val.id);
+
         .ui.borderless.container
           .ui.tiny.post.modal(modal_id=val.modal_id)
             .ui.fluid.card.dim( postID=val.id, state=val.state || 'unread', type='actor', actor_un = val.actor.username, actor_name = val.actor.profile.name, actor_pic = val.actor.profile.picture) 
@@ -514,181 +517,523 @@ block content
                   i.big.send.link.icon
 
 
-              .two.fluid.ui.buttons(postID=val.postID)
-                .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
-                .ui.right.disabled.button(next_id=val.modal_id , postID=val.postID, study_group ='stories')  Next
+              .two.fluid.ui.buttons(postID=val.id)
+                .ui.left.disabled.button(pre_id=val.modal_id, postID=val.id, study_group ='stories') Previous
+                .ui.right.disabled.button(next_id=val.modal_id , postID=val.id, study_group ='stories')  Next
                 
               .ui.tiny.gray.progress(progressing_id=val.modal_id, progressing_type = 'post')
                 .bar
               //- .fluid.ui.button
-              //-   #sessionSurvey.ui.left.disabled.button(survey_button='survey_button') Session Survey
-    .ui.container
-      #surveyModal.ui.small.post.modal(modal_id='321')
-        .ui.fluid.card.test
-          .content
-            .fields
-              .wrap
-                h2.likert-header During this visit to EatSnap.Love, we would like to know the extent to which you felt the following emotions towards other people using this site.
-                form(action='')
-                  h2.label.statement Softhearted
-                  ul.likert
-                    .inline.fields
-                      h3.field
-                        label
-                          input(type='radio' name='Softhearted' value='strong_disagree')
-                          | Strong Disgree
-                        br
-                      h3.field
-                        label
-                          input(type='radio' name='Softhearted' value="disagree")
-                          | Disagree
-                        br
-                      h3.field
-                        label
-                          input(type='radio' name='Softhearted' value='somewhat_disagree')
-                          | Somewhat Disagree
-                        br
-                      h3.field
-                        label
-                          input(type='radio' name='Softhearted' value='neither_agree_nor_disagree')
-                          | neither agree nor disagree
-                        br
-                      h3.field
-                        label
-                          input(type='radio' name='Softhearted' value='somewhat_agree')
-                          | Somewhat Agree
-                        br
-                      h3.field
-                        label
-                          input(type='radio' name='Softhearted' value='agree')
-                          | agree
-                        br
-                      h3.field
-                        label
-                          input(type='radio' name='Softhearted' value='strong_agree')
-                          | Strong Agree
-                        br
-                  h2.label.statement Touched
-                  ul.likert
-                    .inline.fields
-                      h3.field
-                        label
-                          input(type='radio' name='Touched' value='strong_disagree')
-                          | Strong Disagree
-                        br
-                      h3.field
-                        label
-                          input(type='radio' name='Touched' value='disagree')
-                          | Disagree
-                        br
-                      h3.field
-                        label
-                          input(type='radio' name='Touched' value='somewhat_disagree')
-                          | Somewhat Disagree
-                        br
-                      h3.field
-                        label
-                          input(type='radio' name='Touched' value='neither_agree_nor_disagree')
-                          | Neither agree nor disagree
-                        br
-                      h3.field
-                        label
-                          input(type='radio' name='Touched' value='somewhat_agree')
-                          | Somwhat Agree
-                        br
-                      h3.field
-                        label
-                          input(type='radio' name='Touched' value='agree')
-                          | Agree
-                        br
-                      h3.field
-                        label
-                          input(type='radio' name='Touched' value='strong_agree')
-                          | Strong Agree
-                        br
-                  h2.label.statement Sympathetic
-                  ul.likert
-                    .inline.fields
-                      h3.field
-                        label
-                          input(type='radio' name='Sympathetic' value='strong_disagree')
-                          | Strong Disagree
-                        br
-                      h3.field
-                        label
-                          input(type='radio' name='Sympathetic' value='disagree')
-                          | Disagree
-                        br
-                      h3.field
-                        label
-                          input(type='radio' name='Sympathetic' value='somewhat_disagree')
-                          | Somewhat Disagree
-                        br
-                      h3.field
-                        label
-                          input(type='radio' name='Sympathetic' value='neither_agree_nor_disagree')
-                          | Neither agree nor disagree
-                        br
-                      h3.field
-                        label
-                          input(type='radio' name='Sympathetic' value='somewhat_agree')
-                          | Somwhat Agree
-                        br
-                      h3.field
-                        label
-                          input(type='radio' name='Sympathetic' value='agree')
-                          | Agree
-                        br
-                      h3.field
-                        label
-                          input(type='radio' name='Sympathetic' value='strong_agree')
-                          | Strong Agree
-                        br
-                  h2.label.statement Moved
-                  ul.likert
-                    .inline.fields
-                      h3.field
-                        label
-                          input(type='radio' name='Moved' value='strong_disagree')
-                          | Strong Disagree
-                      h3.field
-                        label
-                          input(type='radio' name='Moved' value='disagree')
-                          | Disagree
-                        br
-                      h3.field
-                        label
-                          input(type='radio' name='Moved' value='somewhat_disagree')
-                          | Somewhat Disagree
-                        br
-                      h3.field
-                        label
-                          input(type='radio' name='Moved' value='neither_agree_nor_disagree')
-                          | Neither agree nor disagree
-                        br
-                      h3.field
-                        label
-                          input(type='radio' name='Moved' value='somewhat_agree')
-                          | Somwhat Agree
-                        br
-                      h3.field
-                        label
-                          input(type='radio' name='Moved' value='agree')
-                          | Agree
-                        br
-                      h3.field
-                        label
-                          input(type='radio' name='Moved' value='strong_agree')
-                          | Strong Agree
-                        br
-                  // h3.buttons
-                  //   button.clear Clear
-                  //   button.submit Submit
-        .content
-          // .ui.blue.right.floated.button(disabled='true') Submit
-          // #submitSession.ui.blue.right.disabled.fluid.button(survey_id='1') Submit
-          #submitSession.ui.blue.fluid.button(study_group='stories') Submit
 
+  .ui.container
+    #surveyModal.ui.gray.large.post.modal(modal_id='321')
+      .ui.fluid.inverted.red.card.test
+        .content
+          .fields
+            .wrap
+              .ui.form
+                //- p(style='font-style: bold;font-size:25px; color:black') 1. How sympathetic do you feel toward the people who posted to EatSnap.Love?
+                //-   p(style='font-style: italic;font-size:20px; color:gray') 1 = Not at all, 4 = Very much
+                
+                //- span(style='font-style: bold;font-size:20px; color:black') 1. How sympathetic do you feel toward the people who posted to EatSnap.Love? 
+                br
+                br
+                table.ui.large.seven.column.table 
+                  thead
+                    tr
+                        th(colspan='7')
+                          | 1. How sympathetic do you feel toward the people who posted to EatSnap.Love? 
+                    
+                  tbody
+                    tr
+                      th Not at all
+                      th
+                      th
+                      th A moderate amount
+                      th
+                      th
+                      th  A great deal
+                    tr
+                      .inline.fields
+                        //- label(for='gender') First question.
+                        //- h3 Not at all
+                        
+                        td
+                          //- p(style='font-style: italic;font-size:15px; color:gray') Not at all
+                          .h3.field
+                            .ui.radio.checkbox
+                              input(type='radio' name='Sympathetic' value='strong_disagree', style="margin-right: 10" )
+                              h3.label 1
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input.hidden(type='radio' name='Sympathetic' value='disagree', style="margin-right: 10" )
+                              h3.label 2
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input.hidden(type='radio' name='Sympathetic' value='somewhat_disagree', style="margin-right: 10" )
+                              h3.label 3
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input.hidden(type='radio' name='Sympathetic' value='neither_agree_nor_disagree', style="margin-right: 10" )
+                              h3.label 4
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input.hidden(type='radio' name='Sympathetic' value='somewhat_agree', style="margin-right: 10" )
+                              h3.label 5
+                          //- h3 Very much
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input(type='radio' name='Sympathetic' value='agree', style="margin-right: 10" )
+                              h3.label 6
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input(type='radio' name='Sympathetic' value='strong_agree', style="margin-right: 10" )
+                              h3.label 7
+                          //- p(style='font-style: italic;font-size:20px; color:gray') Very much
+
+
+                
+
+                table.ui.large.seven.column.table
+                  p(style='font-style: italic;font-size:50px; color:gray') 
+                  thead
+                    tr
+                        th(colspan='7')
+                          | 2. How softhearted do you feel toward the people who posted to EatSnap.Love?   
+                    
+                  tbody
+
+                    tr
+                      th Not at all
+                      th 
+                      th
+                      th A moderate amount
+                      th
+                      th
+                      th  A great deal
+                    tr
+                      .inline.fields
+                        //- label(for='gender') First question.
+                        //- h3 Not at all
+                        td
+                          //- p(style='font-style: italic;font-size:20px; color:gray') Not at all
+                          .h3.field
+                            .ui.radio.checkbox
+                              input(type='radio' name='softhearted' value='1', style="margin-right: 10" )
+                              h3.label 1
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input.hidden(type='radio' name='softhearted' value='2', style="margin-right: 10" )
+                              h3.label 2
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input.hidden(type='radio' name='softhearted' value='3', style="margin-right: 10" )
+                              h3.label 3
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input.hidden(type='radio' name='softhearted' value='4', style="margin-right: 10" )
+                              h3.label 4
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input.hidden(type='radio' name='softhearted' value='5', style="margin-right: 10" )
+                              h3.label 5
+                          //- h3 Very much
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input(type='radio' name='softhearted' value='6', style="margin-right: 10" )
+                              h3.label 6
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input(type='radio' name='softhearted' value='7', style="margin-right: 10" )
+                              h3.label 7
+                          //- p(style='font-style: italic;font-size:20px; color:gray') Very much
+                
+
+
+
+
+                //- span(style='font-style: bold;font-size:20px; color:black') 3. How warm do you feel toward the people who posted to EatSnap.Love? 
+                table.ui.large.seven.column.table
+                  p(style='font-style: italic;font-size:50px; color:gray') 
+                  thead
+                    tr
+                        th(colspan='7')
+                          | 3. How warm do you feel toward the people who posted to EatSnap.Love?
+                    
+                  tbody
+                    tr
+                      th Not at all
+                      th 
+                      th
+                      th A moderate amount
+                      th
+                      th
+                      th  A great deal
+                    tr
+                      .inline.fields
+                        //- label(for='gender') First question.
+                        //- h3 Not at all
+                        td
+                          //- p(style='font-style: italic;font-size:20px; color:gray') Not at all
+                          .h3.field
+                            .ui.radio.checkbox
+                              input(type='radio' name='Warm' value='1', style="margin-right: 10" )
+                              h3.label 1
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input.hidden(type='radio' name='Warm' value='2', style="margin-right: 10" )
+                              h3.label 2
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input.hidden(type='radio' name='Warm' value='3', style="margin-right: 10" )
+                              h3.label 3
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input.hidden(type='radio' name='Warm' value='4', style="margin-right: 10" )
+                              h3.label 4
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input.hidden(type='radio' name='Warm' value='5', style="margin-right: 10" )
+                              h3.label 5
+                          //- h3 Very much
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input(type='radio' name='Warm' value='6', style="margin-right: 10" )
+                              h3.label 6
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input(type='radio' name='Warm' value='7', style="margin-right: 10" )
+                              h3.label 7
+                          //- p(style='font-style: italic;font-size:20px; color:gray') Very much
+
+
+
+                //- span(style='font-style: bold;font-size:20px; color:black') 4. How touched do you feel toward the people who posted to EatSnap.Love? 
+                table.ui.large.seven.column.table
+                  p(style='font-style: italic;font-size:50px; color:gray')
+                  thead
+                    tr
+                        th(colspan='7')
+                          | 4. How touched do you feel toward the people who posted to EatSnap.Love?  
+                    
+                  tbody
+                    tr
+                      th Not at all
+                      th 
+                      th
+                      th A moderate amount
+                      th
+                      th
+                      th  A great deal
+                    tr
+                      .fluid.inline.fields
+                        //- label(for='gender') First question.
+                        //- h3 Not at all
+                        td
+                          //- p(style='font-style: italic;font-size:20px; color:gray') Not at all
+                          .h3.field
+                            .ui.radio.checkbox
+                              input(type='radio' name='touched' value='1', style="margin-right: 10" )
+                              h3.label 1
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input.hidden(type='radio' name='touched' value='2', style="margin-right: 10" )
+                              h3.label 2
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input.hidden(type='radio' name='touched' value='3', style="margin-right: 10" )
+                              h3.label 3
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input.hidden(type='radio' name='touched' value='4', style="margin-right: 10" )
+                              h3.label 4
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input.hidden(type='radio' name='touched' value='5', style="margin-right: 10" )
+                              h3.label 5
+                          //- h3 Very much
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input(type='radio' name='touched' value='6', style="margin-right: 10" )
+                              h3.label 6
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input(type='radio' name='touched' value='7', style="margin-right: 10" )
+                              h3.label 7
+                          //- p(style='font-style: italic;font-size:20px; color:gray') Very much
+
+
+
+                //- span(style='font-style: bold;font-size:20px; color:black') 5. How do you feel after browsing EatSnap.Love? 
+                
+                table.ui.large.seven.column.table
+                  p(style='font-style: italic;font-size:50px; color:gray')
+                  thead
+                    tr
+                        th(colspan='7')
+                          | 5. How do you feel after browsing EatSnap.Love? 
+                    
+                  tbody
+                    tr
+                      th Extremely Negative
+                      th
+                      th 
+                      th Neither Positive or Negative
+                      th
+                      th
+                      th Extremely Positive
+                    tr
+                      .fluid.inline.fields
+                        //- label(for='gender') First question.
+                        //- h3 Not at all
+                        td
+                          //- p(style='font-style: italic;font-size:20px; color:gray') Not at all
+                          .h3.field
+                            .ui.radio.checkbox
+                              input(type='radio' name='feel' value='1', style="margin-right: 10" )
+                              h3.label 1
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input(type='radio' name='feel' value='2', style="margin-right: 10" )
+                              h3.label 2
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input.hidden(type='radio' name='feel' value='3', style="margin-right: 10" )
+                              h3.label 3
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input.hidden(type='radio' name='feel' value='4', style="margin-right: 10" )
+                              h3.label 4
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input.hidden(type='radio' name='feel' value='5', style="margin-right: 10" )
+                              h3.label 5
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input.hidden(type='radio' name='feel' value='6', style="margin-right: 10" )
+                              h3.label 6
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input(type='radio' name='feel' value='7', style="margin-right: 10" )
+                              h3.label 7
+                        //- td
+                        //-   .h3.field
+                        //-     .ui.radio.checkbox
+                        //-       input.hidden(type='radio' name='feel' value='agree', style="margin-right: 10" )
+                        //-       h3.label 7
+                        //- td
+                        //-   .h3.field
+                        //-     .ui.radio.checkbox
+                        //-       input.hidden(type='radio' name='feel' value='strong_agree', style="margin-right: 10" )
+                        //-       h3.label 8
+                        //- td
+                        //-   .h3.field
+                        //-     .ui.radio.checkbox
+                        //-       input.hidden(type='radio' name='feel' value='totally_agree', style="margin-right: 10" )
+                        //-       h3.label 9
+                        //- td
+                        //-   .h3.field
+                        //-     .ui.radio.checkbox
+                        //-       input.hidden(type='radio' name='feel' value='absolutely_agree', style="margin-right: 10" )
+                        //-       h3.label 10
+                          //- h3 Very much
+                          //- p(style='font-style: italic;font-size:20px; color:gray') Very much
+
+                //- span(style='font-style: bold;font-size:0px; color:black') 6. How touched do you feel toward the people who posted to EatSnap.Love? 
+                table.ui.large.seven.column.table
+                  thead 
+                    tr
+                        th(colspan='7')
+                          | 6. How much effort did it take to understand the emotional experience of the people on EatSnap.Love?
+                    
+
+
+                  tbody
+                    tr
+                      th Not at all
+                      th
+                      th
+                      th A moderate amount
+                      th
+                      th
+                      th A great deal
+                    tr
+                      .fluid.inline.fields
+                        //- label(for='gender') First question.
+                        //- h3 Not at all
+                        td
+                          //- p(style='font-style: italic;font-size:20px; color:gray') Not at all
+                          .h3.field
+                            .ui.radio.checkbox
+                              input(type='radio' name='Effort' value='1', style="margin-right: 10" )
+                              h3.label 1
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input(type='radio' name='Effort' value='2', style="margin-right: 10" )
+                              h3.label 2
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input.hidden(type='radio' name='Effort' value='3', style="margin-right: 10" )
+                              h3.label 3
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input.hidden(type='radio' name='Effort' value='4', style="margin-right: 10" )
+                              h3.label 4
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input.hidden(type='radio' name='Effort' value='5', style="margin-right: 10" )
+                              h3.label 5
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input.hidden(type='radio' name='Effort' value='6', style="margin-right: 10" )
+                              h3.label 6
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input(type='radio' name='Effort' value='7', style="margin-right: 10" )
+                              h3.label 7
+                        //- td
+                        //-   .h3.field
+                        //-     .ui.radio.checkbox
+                        //-       input.hidden(type='radio' name='Effort' value='agree', style="margin-right: 10" )
+                        //-       h3.label 7
+                        //- td
+                        //-   .h3.field
+                        //-     .ui.radio.checkbox
+                        //-       input.hidden(type='radio' name='Effort' value='somewhat_disagree', style="margin-right: 10" )
+                        //-       h3.label 8
+                        //- td
+                        //-   .h3.field
+                        //-     .ui.radio.checkbox
+                        //-       input.hidden(type='radio' name='Effort' value='totally_agree', style="margin-right: 10" )
+                        //-       h3.label 9
+                        //- td
+                        //-   .h3.field
+                        //-     .ui.radio.checkbox
+                        //-       input.hidden(type='radio' name='Effort' value='absolutely_agree', style="margin-right: 10" )
+                        //-       h3.label 10
+                          //- p(style='font-style: italic;font-size:20px; color:gray') Very much
+
+                
+                table.ui.large.seven.column.table
+                  thead 
+                    tr
+                        th(colspan='7')
+                          | 7. How effective would you be in helping other people on EatSnap.Love?
+
+
+                  tbody
+                    tr
+                      th Not at all 
+                      th
+                      th
+                      th A moderate amount
+                      th
+                      th
+                      th A great deal
+                    tr
+                      .fluid.inline.fields
+                        //- label(for='gender') First question.
+                        //- h3 Not at all
+                        td
+                          //- p(style='font-style: italic;font-size:20px; color:gray') Not at all
+                          .h3.field
+                            .ui.radio.checkbox
+                              input(type='radio' name='Efficacy' value='1', style="margin-right: 10" )
+                              h3.label 1
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input(type='radio' name='Efficacy' value='2', style="margin-right: 10" )
+                              h3.label 2
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input.hidden(type='radio' name='Efficacy' value='3', style="margin-right: 10" )
+                              h3.label 3
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input.hidden(type='radio' name='Efficacy' value='4', style="margin-right: 10" )
+                              h3.label 4
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input.hidden(type='radio' name='Efficacy' value='5', style="margin-right: 10" )
+                              h3.label 5
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input.hidden(type='radio' name='Efficacy' value='6', style="margin-right: 10" )
+                              h3.label 6
+                        td
+                          .h3.field
+                            .ui.radio.checkbox
+                              input(type='radio' name='Efficacy' value='7', style="margin-right: 10" )
+                              h3.label 7
+                        //- td
+                        //-   .h3.field
+                        //-     .ui.radio.checkbox
+                        //-       input.hidden(type='radio' name='Efficacy' value='agree', style="margin-right: 10" )
+                        //-       h3.label 7
+                        //- td
+                        //-   .h3.field
+                        //-     .ui.radio.checkbox
+                        //-       input.hidden(type='radio' name='Efficacy' value='somewhat_disagree', style="margin-right: 10" )
+                        //-       h3.label 8
+                        //- td
+                        //-   .h3.field
+                        //-     .ui.radio.checkbox
+                        //-       input.hidden(type='radio' name='Efficacy' value='totally_agree', style="margin-right: 10" )
+                        //-       h3.label 9
+                        //- td
+                        //-   .h3.field
+                        //-     .ui.radio.checkbox
+                        //-       input.hidden(type='radio' name='Efficacy' value='absolutely_agree', style="margin-right: 10" )
+                        //-       h3.label 10
+                          //- p(style='font-style: italic;font-size:20px; color:gray') Very much
+
+            
+            .content
+              // .ui.blue.right.floated.button(disabled='true') Submit
+              // #submitSession.ui.blue.right.disabled.fluid.button(survey_id='1') Submit
+              #submitSession.ui.blue.fluid.button(study_group='stories') Submit
+  
     #newpost.ui.tiny.post.modal(study_group='stories')
       i.close.icon
       .header Add a New Post

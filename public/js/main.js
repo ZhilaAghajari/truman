@@ -134,7 +134,7 @@ if(typeof total_logedin_time != 'undefined')
 
 
   function show_survey(){
-    $(".ui.small.post.modal[modal_id='"+'321'+"']")
+    $(".ui.large.post.modal[modal_id='"+'321'+"']")
       .modal({
         closable  : false,
         onVisible    : function(){
@@ -416,7 +416,7 @@ if(typeof total_logedin_time != 'undefined')
   // ZH: Set local variables after loging. ( do I need to set session id here as well?)
   $('button.ui.button').on('click', function(){
     active_flag = 1;
-    var t = 2*60; //ZHILA: change it back to 120
+    var t = 30; //ZHILA: change it back to 120
     var f =1;
     var logged_time = 5*60;
     window.localStorage.setItem("logged",f);
@@ -916,7 +916,7 @@ $("i.big.send.link.icon").click(function() {
 //@@@@@@@ Gathering the survey results @@@@@@@
 //  Modify it to work for both versions.
 j='321';
-$(".ui.small.post.modal[modal_id='"+j+"']")
+$(".ui.large.post.modal[modal_id='"+j+"']")
 .modal({
   selector: { 
     close: '#submitSession.ui.blue.fluid'
@@ -927,7 +927,7 @@ $(".ui.small.post.modal[modal_id='"+j+"']")
 $(".ui.tiny.post.modal[modal_id='"+check_id+"']")
 .modal({
   selector: { 
-    close: ".ui.small.post.modal[modal_id='"+j+"']"
+    close: ".ui.large.post.modal[modal_id='"+j+"']"
   } 
 })
 ;
@@ -943,12 +943,16 @@ $("#newpost.ui.tiny.post.modal")
   $('#submitSession.ui.blue.fluid.button').on('click', function(){
     var post = $(this).closest( ".ui.fluid.card.dim");
     var session_time = Date.now();
-    var softhearted = $('input:radio[name=Softhearted]:checked').val();
-    var touched = $('input:radio[name=Touched]:checked').val();
     var sympathetic = $('input:radio[name=Sympathetic]:checked').val();
-    var moved = $('input:radio[name=Moved]:checked').val();
-    $.post("/userPost_feed", { time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_unique_posts: check_id, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
-    $.post("/feed", { time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_unique_posts: check_id, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[ softhearted, touched, sympathetic, moved], _csrf : $('meta[name="csrf-token"]').attr('content')});
+    var softhearted = $('input:radio[name=softhearted]:checked').val();
+    var warm = $('input:radio[name=Warm]:checked').val();
+    var touched = $('input:radio[name=touched]:checked').val();
+    
+    var feel = $('input:radio[name=feel]:checked').val();
+    var effort = $('input:radio[name=Effort]:checked').val();
+    var efficacy = $('input:radio[name=Efficacy]:checked').val();
+    $.post("/userPost_feed", { time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_unique_posts: check_id, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[sympathetic,softhearted, warm, touched, feel, effort, efficacy], _csrf : $('meta[name="csrf-token"]').attr('content')});
+    $.post("/feed", { time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_unique_posts: check_id, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[ sympathetic,softhearted, warm, touched, feel, effort, efficacy], _csrf : $('meta[name="csrf-token"]').attr('content')});
     // reset the session variables .. 
     console.log('session likes stored : ', localStorage.getItem("session_likes"));
     window.localStorage.setItem("session_likes",0);
@@ -986,7 +990,7 @@ $("#newpost.ui.tiny.post.modal")
     {
       console.log('Not sure what to do here yet!'); // in this case we only need to close the modal after submit
       j='321';
-      $(".ui.small.post.modal[modal_id='"+j+"']")
+      $(".ui.large.post.modal[modal_id='"+j+"']")
       .modal({
         selector: { 
           close: '#submitSession.ui.blue.fluid'

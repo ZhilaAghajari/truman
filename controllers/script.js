@@ -463,7 +463,7 @@ exports.getScript = (req, res, next) => {
       for(var i=0; i<stry_prsn.length; i++){
         var temp = new Object();
         temp.modal_id = i+1
-        tmp = stry_prsn[i].id;
+        tmp = stry_prsn[i]._id;
         const temp_final_feed = JSON.parse(JSON.stringify(stry_prsn[i]));
         stry_prsn[i] = Object.assign(temp_final_feed,temp);
         stry_prsn[i].id = tmp;

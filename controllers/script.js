@@ -210,7 +210,7 @@ exports.getScript = (req, res, next) => {
               if (Array.isArray(user.feedAction[feedIndex].comments) && user.feedAction[feedIndex].comments) 
               {
 
-                //console.log("WE HAVE COMMENTS!!!!!");
+                console.log("WE HAVE COMMENTS!!!!!");
                 //iterate over all comments in post - add likes, flag, etc
                 for (var i = 0; i < user.feedAction[feedIndex].comments.length; i++) {
                   //i is now user.feedAction[feedIndex].comments index
@@ -418,6 +418,8 @@ exports.getScript = (req, res, next) => {
       }    
       unique_authors = shuffle(unique_authors);
 
+      
+      var bullied_actor_stories = []
       var stories_person_feed = []
       for( var i=0; i<unique_authors.length; i++)
       {
@@ -460,20 +462,48 @@ exports.getScript = (req, res, next) => {
           }
           stories_person_feed.push(middle_post);
           
+          var tmp_bullied_stories=[]
           for( var a=0; a<final_actors_feed.length; a++)
           {
             if(final_actors_feed[a].actor.username == unique_authors[i])
             {
               stories_person_feed.push(final_actors_feed[a]);
+              tmp_bullied_stories.push(final_actors_feed[a]);
               temp_record = final_actors_feed[a];
             }
+          }
+
+          if(unique_authors[i] == bully_post.actor.username)
+          {
+            bullied_actor_stories.push(middle_post);
+            bullied_actor_stories.push(bully_post);
+            bullied_actor_stories.push.apply(bullied_actor_stories, tmp_bullied_stories)
           }
           
         }
         
       } // end of adding the author's related info (to be shown between posts of each authors) 
 
-      
+       // add bully post to the first 6 posts of stories_person_feed 
+      if (user.study_days[current_day] > 0 && bully_post)
+      {
+        var bully_index = Math.floor(Math.random() * 4) + 1 
+        if(stories_person_feed[bully_index].type)
+        {
+          bully_index = bully_index+1;
+        }
+        while(stories_person_feed[bully_index].type ==='undefined')//means these are posts and not the middle post to show the profile picture 
+        { 
+          bully_index = bully_index+1;
+        }
+        for(var i=1; i<=bullied_actor_stories.length; i++)
+        {
+          stories_person_feed.splice(bully_index+i, 0, bullied_actor_stories[i-1]);
+        }
+
+
+      }
+
       // feed Individual Centric: group the posts based on their authors
       var bullied_actor = []
       var new_feed_version = []
@@ -562,7 +592,8 @@ exports.getScript = (req, res, next) => {
 
 
 
-// control_feed.splice(bully_index, 0, bully_post);
+
+
       // stories-individual centric .. put users' recent post on the top     
       if(typeof last_user_post!== 'undefined')
       {
@@ -628,6 +659,14 @@ exports.getScript = (req, res, next) => {
       else{
         var stry_msg = JSON.parse(JSON.stringify(stories_message));
       }
+      // add the bully post here.
+      if (user.study_days[current_day] > 0 && bully_post)
+      {
+        var bully_index = Math.floor(Math.random() * 4) + 1 
+        stry_msg.splice(bully_index, 0, bully_post);
+        console.log("@@@@@@@@@@ Pushed a Bully Post to index story"+bully_index);
+      }
+
       // need to restore the ids for some reason they will be lost if I don't do it manually 
       for(var i=0; i<stry_msg.length; i++){
         var temp = new Object();
@@ -636,13 +675,6 @@ exports.getScript = (req, res, next) => {
         const temp_stories_feed = JSON.parse(JSON.stringify(stry_msg[i]));
         stry_msg[i] = Object.assign(temp_stories_feed,temp);
         stry_msg[i].id = tmp;
-      }
-      // now put the bully post here... IF THE BULLY POST IS SHOWN ONCE IN THE FIRST FOUR POSTS, DO WE SEE IT AGAIN?
-      if (user.study_days[current_day] > 0 && bully_post)
-      {
-        var bully_index = Math.floor(Math.random() * 4) + 1 
-        stry_msg.splice(bully_index, 0, bully_post);
-        console.log("@@@@@@@@@@ Pushed a Bully Post to index story"+bully_index);
       }
 
 
@@ -1275,7 +1307,7 @@ exports.postUpdateUserPostFeedAction = (req, res, next) => {
         cat.body = req.body.comment_text;
         cat.isUser = true;
         cat.absTime = Date.now();
-        cat.time = cat.absTime - user.createdAt;
+        cat.time = cat.absTime - user.createdAt; // relative time ...
         user.posts[feedIndex].comments.push(cat);
         console.log("$#$#$#$#$#$$New  USER COMMENT Time: ", cat.time);
     }

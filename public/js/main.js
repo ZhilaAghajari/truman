@@ -625,7 +625,7 @@ $("input.newcomment").keyup(function(event) {
 
 //create a new Comment
 $("i.big.send.link.icon").click(function() {
-   active_flag = 1;
+  active_flag = 1;
   var text = $(this).siblings( "input.newcomment").val();
   var card = $(this).parents( ".ui.fluid.card" );
   var comments = card.find( ".ui.comments" )

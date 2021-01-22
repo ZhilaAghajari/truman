@@ -163,7 +163,7 @@ exports.getScript = (req, res, next) => {
         var modal_id = 1;
         //update script feed to see if reading and posts has already happened
         var finalfeed = [];
-        var feed_version = [];
+        // var feed_version = [];
         var unique_actors=[];
         var final_user_posts =[];
         var user_posts = [];
@@ -366,12 +366,12 @@ exports.getScript = (req, res, next) => {
       finalfeed = shuffle(finalfeed); // it includes all the user's and actors' posts .. 
 
       // Control Condition:
-      feed_version = JSON.parse(JSON.stringify(finalfeed));   
+      // feed_version = JSON.parse(JSON.stringify(finalfeed));   
       //put the user's post on the top in case he/she has just posted
-      var control_feed = JSON.parse(JSON.stringify(feed_version));
+      var control_feed = JSON.parse(JSON.stringify(finalfeed));
       if(typeof last_user_post!== 'undefined')
       {
-        if(last_user_post.relativeTime>feed_version[0].time)
+        if(last_user_post.relativeTime>control_feed[0].time)
         {
           // find the user's last post in the feed, and move it on the top of the feed:
           // var user_last_post = feed_version.filter(obj => { return obj. == unique_authors[i]})
@@ -414,31 +414,17 @@ exports.getScript = (req, res, next) => {
         {
           //Zhila: Sam says we don't need to have a module to say these are posts created by you (user)
           //comment it for now to check how it looks ..
-          // var middle_post = {
-          //   type:'user',
-          //   picture : user.profile.picture
-          // }
-          // stories_person_feed.push(middle_post);
-          let temp = final_user_posts;
-          for (var j = 0; j<final_user_posts.length; j++)
-          {
-            stories_person_feed.push(final_user_posts[j]);
+          var middle_post = {
+            type:'user',
+            picture : user.profile.picture
           }
+          stories_person_feed.push(middle_post);
+          Array.prototype.push.apply(stories_person_feed, final_user_posts);
 
         }
         else //adding actor's post
         {
-          let temp = final_actors_feed.find(item => item.actor.username == unique_authors[i])
-          var temp_record; 
-
-          // for( var a=0; a<final_actors_feed.length; a++)
-          // {
-          //   if(final_actors_feed[a].actor.username == unique_authors[i])
-          //   {
-          //     temp_record = final_actors_feed[a];
-          //     break;
-          //   }
-          // }
+          
           var temp_record = final_actors_feed.filter(obj => { return obj.actor.username == unique_authors[i]})
 
           var middle_post = {
@@ -451,23 +437,10 @@ exports.getScript = (req, res, next) => {
           Array.prototype.push.apply(stories_person_feed, temp_record);
 
 
-          // var tmp_bullied_stories=[]
-          // for( var a=0; a<final_actors_feed.length; a++)
-          // {
-          //   if(final_actors_feed[a].actor.username == unique_authors[i])
-          //   {
-          //     stories_person_feed.push(final_actors_feed[a]);
-          //     tmp_bullied_stories.push(final_actors_feed[a]);
-          //     temp_record = final_actors_feed[a];
-          //   }
-          // }
-
           if(unique_authors[i] == bully_post.actor.username)
           {
             bullied_actor_stories.push(middle_post);
             Array.prototype.push.apply(bullied_actor_stories, temp_record)
-            // bullied_actor_stories.push(bully_post);
-            // bullied_actor_stories.push.apply(bullied_actor_stories, tmp_bullied_stories)
           }
           
         }
@@ -482,14 +455,13 @@ exports.getScript = (req, res, next) => {
         {
           bully_index = bully_index+1;
         }
+
         while(!stories_person_feed[bully_index].hasOwnProperty('type'))//means these are posts and not the middle post to show the profile picture 
         { 
           bully_index = bully_index+1;
         }
-        // for(var i=1; i<=bullied_actor_stories.length; i++)
-        // {
-        //   stories_person_feed.splice(bully_index+i, 0, bullied_actor_stories[i-1]);
-        // }
+        
+        // add the profile of the bullied actor at the index "bully_index"
         for(var i=0; i<stories_person_feed.length; i++)
         {
           if(stories_person_feed[i].hasOwnProperty('type') && stories_person_feed[i].type ==='actor' && stories_person_feed[i].username === bully_post.actor.username)
@@ -499,12 +471,22 @@ exports.getScript = (req, res, next) => {
             break;
           }
         }
-        // add the rest of posts of the bullied actor ..
+        // add the posts created by the bullied actor ..
+
         for(var i=2; i<=bullied_actor_stories.length; i++)
         {
           for(var j=1; j<stories_person_feed.length; j++)
-          {            
-            if(!(stories_person_feed[j].hasOwnProperty('type')) && bullied_actor_stories[i-1].actor.username ===stories_person_feed[j].actor.username)
+          { 
+            console.log('checking something: ', bullied_actor_stories[i-1].actor.username)
+            console.log('checking something ELSE: ', stories_person_feed[j])
+            if(stories_person_feed[j].hasOwnProperty('actor'))
+            {
+              console.log('if it has actor ',stories_person_feed[j])
+            }
+
+            // console.log('checking something ELSE ELSEE: ', stories_person_feed[j].actor.username)
+            
+            if( (typeof stories_person_feed[j]['type']=='undefined') && bullied_actor_stories[i-1].actor.username ===stories_person_feed[j].actor.username)
             {
               var a = stories_person_feed.splice(j, 1);
               stories_person_feed.splice(bully_index+i-1, 0, bullied_actor_stories[i-1]);
@@ -524,16 +506,23 @@ exports.getScript = (req, res, next) => {
       {
         if(unique_authors[i] == user.username)
         {
+          // sam says we don't need to say these are th
           var middle = {
             type:'user',
             picture: user.profile.picture
           }
           new_feed_version.push(middle);
-          let temp = final_user_posts;
-          for (var j = 0; j<final_user_posts.length; j++) //why didn't I push all the posts without for loop.. what was the reason?          {
-          {
-            new_feed_version.push(temp[j]);
-          } 
+
+
+
+          Array.prototype.push.apply(new_feed_version, final_user_posts);
+
+
+          // let temp = final_user_posts;
+          // for (var j = 0; j<final_user_posts.length; j++) //why didn't I push all the posts without for loop.. what was the reason?          {
+          // {
+          //   new_feed_version.push(temp[j]);
+          // } 
 
         }
         else // if the author is an actor
@@ -608,9 +597,13 @@ exports.getScript = (req, res, next) => {
         for(var i=2; i<=bullied_actor.length; i++)
         {
           for(var j=1; j<new_feed_version.length; j++)
-          {            
-            if(!(new_feed_version[j].hasOwnProperty('type')) && bullied_actor[i-1].actor.username ===new_feed_version[j].actor.username)
+          { 
+            
+            console.log('property type: ',new_feed_version[j]['type'])  
+            console.log('does this user has a property? 3',typeof new_feed_version[j]['type']=='undefined')
+            if((typeof new_feed_version[j]['type']=='undefined') && bullied_actor[i-1].actor.username ===new_feed_version[j].actor.username)
             {
+              console.log('Does it ever add these posts?? '); 
               var a = new_feed_version.splice(j, 1);
               new_feed_version.splice(bully_index+i-1, 0, bullied_actor[i-1]);
             }
@@ -623,47 +616,39 @@ exports.getScript = (req, res, next) => {
 
 
       // stories-individual centric .. put users' recent post on the top 
-      var stry_prsn = JSON.parse(JSON.stringify(stories_person_feed));    
+      // var stry_prsn = JSON.parse(JSON.stringify(stories_person_feed));    
       if(typeof last_user_post!== 'undefined')
       {
 
-        if(last_user_post.relativeTime>stry_prsn[1].time)
+        if(last_user_post.relativeTime>stories_person_feed[1].time)
         {
           // stry_prsn.splice(0, 0, last_user_post);
-          for(var i = 0; i<stry_prsn.length; i++)
+          for(var i = 0; i<stories_person_feed.length; i++)
           {
-            if(last_user_post._id == stry_prsn[i]._id)
+            if(last_user_post._id == stories_person_feed[i]._id)
             {
-              var a = stry_prsn.splice(i, 1);
-              stry_prsn.splice(0,0, a[0]);
+              var a = stories_person_feed.splice(i, 1);
+              stories_person_feed.splice(0,0, a[0]);
               break;
             }
           }
         }
       }
-      //   else{
-      //     console.log('user has not post recently');
-      //     // var stry_prsn = JSON.parse(JSON.stringify(stories_person_feed));
-      //   }
-      // }
-      // else{
-      //   var stry_prsn = JSON.parse(JSON.stringify(stories_person_feed));
-      // }
-
+      
       // we need to do it to restore the IDs, otherwise they will be lost!
-      for(var i=0; i<stry_prsn.length; i++){
+      for(var i=0; i<stories_person_feed.length; i++){
         var temp = new Object();
         temp.modal_id = i+1
-        tmp = stry_prsn[i]._id;
-        const temp_final_feed = JSON.parse(JSON.stringify(stry_prsn[i]));
-        stry_prsn[i] = Object.assign(temp_final_feed,temp);
-        stry_prsn[i].id = tmp;
+        tmp = stories_person_feed[i]._id;
+        const temp_final_feed = JSON.parse(JSON.stringify(stories_person_feed[i]));
+        stories_person_feed[i] = Object.assign(temp_final_feed,temp);
+        stories_person_feed[i].id = tmp;
       }
 
 
 
       // Condtion: stories message centric
-      var stories_message =JSON.parse(JSON.stringify(feed_version));
+      var stories_message =JSON.parse(JSON.stringify(finalfeed));
       var stry_msg = JSON.parse(JSON.stringify(stories_message));
       if(typeof last_user_post!== 'undefined'){
         // var stry_msg = []
@@ -711,7 +696,7 @@ exports.getScript = (req, res, next) => {
       // Current problems:  One of the modal_id is missing and that's why I cannot see the rest of the posts.. 
       // and I get this is the last post of the day (which is wrong!)
       if(scriptFilter == 'var1'){
-        res.render('stories',{script:stry_prsn}) 
+        res.render('stories',{script:stories_person_feed}) 
       }
       else if(scriptFilter == 'var6'){
         res.render('storiesMessageClick', { script: stry_msg});
@@ -722,7 +707,7 @@ exports.getScript = (req, res, next) => {
       }
 
       else if(scriptFilter == 'var2'){
-        res.render('storiesIndividualCentric',{script:stry_prsn})
+        res.render('storiesIndividualCentric',{script:stories_person_feed})
       }
 
       else if(scriptFilter == 'var3'){

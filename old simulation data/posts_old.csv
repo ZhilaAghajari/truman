@@ -1,5 +1,6 @@
-id,body,picture,actor,time,class,experiment_group
+﻿id,body,picture,actor,time,class,experiment_group
 0,The spiralizer got some use for brunch today! #cleaneating #veggielife,20170212_152905108_iOS.jpg,coachmatthews,-20:35,cohort,var1
+7770,Love this so much!!!!!,IMG_20190223_203936254_HDR.jpg,difrad,-01:35,cohort,var1
 1,GORGEOUS spread at Saigon House for my sister's b-day dinner!,IMAG0003.jpg,coachmatthews,-11:13,cohort,var2
 2,"These tilapia fillets are CRAZY easy and super healthy! Just a sprinkle of dried dill, a squeeze of lemon, and 15 minutes in the oven!",IMG_20170105_192151.jpg,coachmatthews,-00:45,cohort,var3
 3,When the light on the porch is so perfect it makes your leftovers look gourmet...,james-harris-228578.jpeg,coachmatthews,03:16,cohort,var4
@@ -41,8 +42,8 @@ id,body,picture,actor,time,class,experiment_group
 39,every sandwich is better with fries in it lol,IMG_20160725_141010.jpg,localewis,-18:04,cohort,var4
 40,chunky or creamy? im a chunky man myself,IMG_20160702_153102.jpg,localewis,58:30,cohort,var1
 41,"I finally got around to trying to make chicken parm, you guys! ",IMG_20170204_225840.jpg,casssssssssie,-20:11,cohort,var2
-42,homemade spaghetti with that chicken parm i just posted! #pastaweek #yum,IMG_20170204_225828.jpg,casssssssssie,-12:40,cohort,var3
-43,"Look at these freaking adorable hand pies!! I really want to know what's in them, there was no sign on the display!",IMG_20131025_104912.jpg,casssssssssie,-10:25,bullying,var4
+42,homemade spaghetti with that chicken parm i just posted! #pastaweek #yum,IMG_20170204_225828.jpg,casssssssssie,-12:40,bullying,var3
+43,"Look at these freaking adorable hand pies!! I really want to know what's in them, there was no sign on the display!",IMG_20131025_104912.jpg,casssssssssie,-10:25,cohort,var4
 45,next up: ravioli!! just a ricotta/parmesan blend inside but I'm definitely branching out next time. Spinach? Butternut squash? Any other good ideas? #pastaweek #ravioli #yum,IMG_20170128_184927.jpg,casssssssssie,11:41,bullying,var1
 48,taking a break from #pastaweek for some crab rangoons... made with leftover pasta dough!! :D,IMG_20170129_131732.jpg,casssssssssie,25:42,bullying,var2
 50,I love that they also serve coffee on the adorable vintage china!!,IMG_4416.JPG,casssssssssie,38:43,cohort,var3
@@ -205,7 +206,7 @@ id,body,picture,actor,time,class,experiment_group
 209,Took my daughter to thai for the first time and she loved it.,IMG_9155.jpg,TimBJenkins,14:15,normal,var3
 210,Ramen for today's lunch with colleagues,IMG_5241.JPG,TimBJenkins,39:57,normal,var4
 211,Dinner with a client yesterday. Anybody knows what cuisine this is?,IMG_20161213_213224.jpg,TimBJenkins,55:14,normal,var1
-212,Japanese-style fries with mayo and bonito flakes. Real good!,180221-5.JPG,BeardedMatt,69:22,normal,var2
+212,Japanese-style fries with mayo and bonito flakes. Real good!,180221-5.JPG,BeardedMatt,39:20,normal,var2
 213,🌮🌮🌮Taco festival at the fairgrounds! ,180221-8.JPG,MedicalRyan,-20:33,normal,var3
 214,Egg Benidict for brunch on this Sunny but windy day. Iced coffee was... let's just say I can make better ones at home. Haha.,180221-24.JPG,Lisa181818,15:15,normal,var4
 215,#tbt to last year when I was in Chicago having #ChicagoBagelAuthority,180221-17.JPG,this_jack,50:00,normal,var1
@@ -213,7 +214,7 @@ id,body,picture,actor,time,class,experiment_group
 217,Ramen. ,180221-16.JPG,DonDonDonna,32:00,normal,var3
 218,"Visited my brother at Cornell University today and they have their own hotel called ""The Statler"" and it has some amazing curry over rice for $7",180221-3.JPG,EmmaSmith0214,15:15,normal,var4
 219,Hanging out with the bitches today. ,180221-4.JPG,B.Mike,20:20,normal,var1
-220,The Boil specialized in cajun in NYC. Looks good to me!,180221-20.JPG,BeardedMatt,-32:44,normal,var2
+220,The Boil specialized in cajun in NYC. Looks good to me!,180221-20.JPG,BeardedMatt,45:44,normal,var2
 221,When you wanna be a doc but food is too good and you get fat. ,180221-9.JPG,MedicalRyan,-76:33,normal,var3
 222,More egg benidict :D #ExcuseMyLaptopWatchingModernFamily,180221-22.JPG,Lisa181818,34:23,normal,var4
 223,Don't tell Samantha. lol,180221-12.JPG,this_jack,01:10,normal,var1
@@ -265,7 +266,7 @@ id,body,picture,actor,time,class,experiment_group
 269,this reminded me of you @ryanfitzs,meme2.jpg,SnakeCharmer,-02:22,normal,var3
 270,last one I swear....had to post it for the city of brotherly love,meme3.jpg,SnakeCharmer,45:32,normal,var4
 271,The more you know,meme4.jpg,earthpulse,12:10,normal,var1
-272, me when I walk into Earl's Buffet tonight,meme5.jpg,B.Mike,21:10,normal,var2
+272, me when I walk into Earl's Buffet tonight,meme5.jpg,B.Mike,50:12:10,normal,var2
 273,lololol me when I get home and mom hasn't starting cooking yet,meme6.png,southerngirlCel,58:31,normal,var3
 274,Salad for lunch. #AccidentallyPutTooMuchDressing and cost me $15 :(,180228-0.JPG,Lisa181818,18:18,normal,var4
 275,BF said he's coming over tonight... so... here's my lunch.,180228-6.JPG,B.Mike,-15:55,normal,var1

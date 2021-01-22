@@ -62,6 +62,7 @@ exports.getScript = (req, res, next) => {
 
   var bully_post;
   var bully_count = 0;
+  var recent_post =0;
 
   var scriptFilter;
 
@@ -177,6 +178,7 @@ exports.getScript = (req, res, next) => {
         });
         
         last_user_post = user_posts[0];
+        console.log('THE USER LAST POST ',last_user_post);
         while(script_feed.length || user_posts.length) {
           console.log(user_posts[0]);
           if(typeof script_feed[0] === 'undefined') {
@@ -264,7 +266,10 @@ exports.getScript = (req, res, next) => {
 
               }//end of IF Comments
               
-              
+              if (script_feed[0].class == "bullying")
+              {
+                console.log('Found a Bullying post!!!');
+              }
               
               if (user.feedAction[feedIndex].readTime[0])
               { 
@@ -327,6 +332,11 @@ exports.getScript = (req, res, next) => {
 
             else
             {
+              if (script_feed[0].class == "bullying")
+              {
+                console.log('Found a Bullying post!!!');
+              }
+              //console.log("NO FEED ACTION SO, ADDED TO FINAL FEED");
               if (user.blocked.includes(script_feed[0].actor.username))
               {
                 script_feed.splice(0,1);
@@ -368,33 +378,39 @@ exports.getScript = (req, res, next) => {
       // Control Condition:
       feed_version = JSON.parse(JSON.stringify(finalfeed));   
       //put the user's post on the top in case he/she has just posted
-      var control_feed = JSON.parse(JSON.stringify(feed_version));
       if(typeof last_user_post!== 'undefined')
       {
-        if(last_user_post.relativeTime>feed_version[0].time)
+        if(last_user_post.relativeTime>feed_version[0].time) // check it for all versions .. 
         {
-          // find the user's last post in the feed, and move it on the top of the feed:
-          // var user_last_post = feed_version.filter(obj => { return obj. == unique_authors[i]})
-          for(var i=0; i<control_feed.length; i++)
+          
+          var control_feed = []
+          control_feed[0] = last_user_post
+          // is there a better way to do it? I want to make sure the user's recent posts won't be shown twice
+          for(var i = 0; i<feed_version.length; i++)
           {
-            if(last_user_post._id == control_feed[i]._id)
+            if(feed_version[i]._id == control_feed[0]._id)
             {
-              var a = control_feed.splice(i, 1);
-              control_feed.splice(0,0, a[0]);
-              break;
+              continue;
             }
+            control_feed.push(feed_version[i]);
           }
         }
       }
-      
+      else {
+        var control_feed = JSON.parse(JSON.stringify(feed_version));
+      }
+      // add the bullying posts to the control feed
+      //  remove that from the rest of the post ... 
       if (user.study_days[current_day] > 0 && bully_post)
       {
         var bully_index = Math.floor(Math.random() * 4) + 1 
         control_feed.splice(bully_index, 0, bully_post);
-
+        console.log("@@@@@@@@@@ Pushed a Bully Post to index "+bully_index);
       }
 
       
+
+      finalfeed[0] = last_user_post; //I don't remmber why I did this!
 
       // for the stories-individual centric, group the stories by their authors: 
       unique_authors = [...new Set(final_actors_feed.map(item => item.actor.username))];
@@ -431,50 +447,46 @@ exports.getScript = (req, res, next) => {
           let temp = final_actors_feed.find(item => item.actor.username == unique_authors[i])
           var temp_record; 
 
-          // for( var a=0; a<final_actors_feed.length; a++)
-          // {
-          //   if(final_actors_feed[a].actor.username == unique_authors[i])
-          //   {
-          //     temp_record = final_actors_feed[a];
-          //     break;
-          //   }
-          // }
-          var temp_record = final_actors_feed.filter(obj => { return obj.actor.username == unique_authors[i]})
+          for( var a=0; a<final_actors_feed.length; a++)
+          {
+            if(final_actors_feed[a].actor.username == unique_authors[i])
+            {
+              temp_record = final_actors_feed[a];
+              break;
+            }
+          }
 
           var middle_post = {
             type:'actor',
-            picture : temp_record[0].actor.profile.picture,
-            name: temp_record[0].actor.profile.name,
-            username: temp_record[0].actor.username
+            picture : temp_record.actor.profile.picture,
+            name: temp_record.actor.profile.name,
+            username: temp_record.actor.username
           }
           stories_person_feed.push(middle_post);
-          Array.prototype.push.apply(stories_person_feed, temp_record);
-
-
-          // var tmp_bullied_stories=[]
-          // for( var a=0; a<final_actors_feed.length; a++)
-          // {
-          //   if(final_actors_feed[a].actor.username == unique_authors[i])
-          //   {
-          //     stories_person_feed.push(final_actors_feed[a]);
-          //     tmp_bullied_stories.push(final_actors_feed[a]);
-          //     temp_record = final_actors_feed[a];
-          //   }
-          // }
+          
+          var tmp_bullied_stories=[]
+          for( var a=0; a<final_actors_feed.length; a++)
+          {
+            if(final_actors_feed[a].actor.username == unique_authors[i])
+            {
+              stories_person_feed.push(final_actors_feed[a]);
+              tmp_bullied_stories.push(final_actors_feed[a]);
+              temp_record = final_actors_feed[a];
+            }
+          }
 
           if(unique_authors[i] == bully_post.actor.username)
           {
             bullied_actor_stories.push(middle_post);
-            Array.prototype.push.apply(bullied_actor_stories, temp_record)
-            // bullied_actor_stories.push(bully_post);
-            // bullied_actor_stories.push.apply(bullied_actor_stories, tmp_bullied_stories)
+            bullied_actor_stories.push(bully_post);
+            bullied_actor_stories.push.apply(bullied_actor_stories, tmp_bullied_stories)
           }
           
         }
         
       } // end of adding the author's related info (to be shown between posts of each authors) 
 
-       // adding bully post to individual-centric stories: 
+       // add bully post to the first 6 posts of stories_person_feed 
       if (user.study_days[current_day] > 0 && bully_post)
       {
         var bully_index = Math.floor(Math.random() * 4) + 1 
@@ -482,42 +494,19 @@ exports.getScript = (req, res, next) => {
         {
           bully_index = bully_index+1;
         }
-        while(!stories_person_feed[bully_index].hasOwnProperty('type'))//means these are posts and not the middle post to show the profile picture 
+        while(stories_person_feed[bully_index].type ==='undefined')//means these are posts and not the middle post to show the profile picture 
         { 
           bully_index = bully_index+1;
         }
-        // for(var i=1; i<=bullied_actor_stories.length; i++)
-        // {
-        //   stories_person_feed.splice(bully_index+i, 0, bullied_actor_stories[i-1]);
-        // }
-        for(var i=0; i<stories_person_feed.length; i++)
+        for(var i=1; i<=bullied_actor_stories.length; i++)
         {
-          if(stories_person_feed[i].hasOwnProperty('type') && stories_person_feed[i].type ==='actor' && stories_person_feed[i].username === bully_post.actor.username)
-          {
-            var a = stories_person_feed.splice(i, 1);
-            stories_person_feed.splice(bully_index, 0, bullied_actor_stories[0]);
-            break;
-          }
+          stories_person_feed.splice(bully_index+i, 0, bullied_actor_stories[i-1]);
         }
-        // add the rest of posts of the bullied actor ..
-        for(var i=2; i<=bullied_actor_stories.length; i++)
-        {
-          for(var j=1; j<stories_person_feed.length; j++)
-          {            
-            if(!(stories_person_feed[j].hasOwnProperty('type')) && bullied_actor_stories[i-1].actor.username ===stories_person_feed[j].actor.username)
-            {
-              var a = stories_person_feed.splice(j, 1);
-              stories_person_feed.splice(bully_index+i-1, 0, bullied_actor_stories[i-1]);
-            }
-          }
-          
-        }
-
 
 
       }
 
-      // feed Individual-Centric: group the posts based on their authors
+      // feed Individual Centric: group the posts based on their authors
       var bullied_actor = []
       var new_feed_version = []
       for( var i=0; i<unique_authors.length; i++)
@@ -530,53 +519,56 @@ exports.getScript = (req, res, next) => {
           }
           new_feed_version.push(middle);
           let temp = final_user_posts;
-          for (var j = 0; j<final_user_posts.length; j++) //why didn't I push all the posts without for loop.. what was the reason?          {
+          for (var j = 0; j<final_user_posts.length; j++) //why didn't I push all the posts and break????
           {
             new_feed_version.push(temp[j]);
+            console.log('ADDED the user posts!!!',new_feed_version );
           } 
 
         }
-        else // if the author is an actor
+        else
         {
           let temp = final_actors_feed.find(item => item.actor.username == unique_authors[i])
           var temp_record;
 
-          var temp_record = final_actors_feed.filter(obj => { return obj.actor.username == unique_authors[i]})
-          
+          for( var a=0; a<final_actors_feed.length; a++)
+          {
+            if(final_actors_feed[a].actor.username == unique_authors[i])
+            {
+              temp_record = final_actors_feed[a];
+              break;
+            }
+          }
+
+          // Zh: now check if the author is the same as the author of the bullying post, record all of their post somewhere..
           var middle_post = {
             type:'actor',
-            picture : temp_record[0].actor.profile.picture,
-            name: temp_record[0].actor.profile.name,
-            username: temp_record[0].actor.username
+            picture : temp_record.actor.profile.picture,
+            name: temp_record.actor.profile.name,
+            username: temp_record.actor.username
           }
           new_feed_version.push(middle_post);
-          
-          Array.prototype.push.apply(new_feed_version, temp_record);
           var temp_bullied = []
-          // for( var a=0; a<final_actors_feed.length; a++)
-          // {
-          //   if(final_actors_feed[a].actor.username == unique_authors[i])
-          //   {
-          //     new_feed_version.push(final_actors_feed[a]);
-              
-          //     temp_record = final_actors_feed[a];
-          //   }
-          //   if(final_actors_feed[a].actor.username== bully_post.actor.username)
-          //   {
-          //     temp_bullied.push(final_actors_feed[a])
-          //   }
-          // }
+          for( var a=0; a<final_actors_feed.length; a++)
+          {
+            if(final_actors_feed[a].actor.username == unique_authors[i])
+            {
+              new_feed_version.push(final_actors_feed[a]);
+              temp_bullied.push(final_actors_feed[a])
+              temp_record = final_actors_feed[a];
+            }
+          }
           if(unique_authors[i] == bully_post.actor.username)
           { 
             // store all this actor's posts in a temporary array to shift these posts within the first four posts...
             bullied_actor.push(middle_post)
-            // bullied_actor.push.apply(bullied_actor, temp_record)
-            Array.prototype.push.apply(bullied_actor, temp_record)
+            bullied_actor.push(bully_post) //need to double check it...
+            bullied_actor.push.apply(bullied_actor, temp_bullied)
 
           }
         }
       }
-
+      console.log('the bully post: ', bully_post);
       // add the bullied person's post in the first 4 posts
       if (user.study_days[current_day] > 0 && bully_post)
       {
@@ -586,69 +578,50 @@ exports.getScript = (req, res, next) => {
         {
          bully_index = bully_index+1; 
         }
-
-        // while(new_feed_version[bully_index].type ==='undefined')//passing over the posts pf previous author
-        while(!new_feed_version[bully_index].hasOwnProperty('type'))
+        while(new_feed_version[bully_index].type ==='undefined')//means these are posts and not the middle post to show the profile picture 
         {
-          bully_index = bully_index+1;
-        }                
-
-
-        for(var i=0; i<new_feed_version.length; i++)
-        {
-          if(new_feed_version[i].hasOwnProperty('type') && new_feed_version[i].type ==='actor' && new_feed_version[i].username === bully_post.actor.username)
-          {
-            var a = new_feed_version.splice(i, 1);
-            new_feed_version.splice(bully_index, 0, bullied_actor[0]);
-            break;
-          }
-        }
-
-        // add the posts of the bullied actor
-        for(var i=2; i<=bullied_actor.length; i++)
-        {
-          for(var j=1; j<new_feed_version.length; j++)
-          {            
-            if(!(new_feed_version[j].hasOwnProperty('type')) && bullied_actor[i-1].actor.username ===new_feed_version[j].actor.username)
-            {
-              var a = new_feed_version.splice(j, 1);
-              new_feed_version.splice(bully_index+i-1, 0, bullied_actor[i-1]);
-            }
-          }
           
+          bully_index = bully_index+1;
         }
-
-       console.log("@@@@@@@@@@ Pushed all the posts of the bullied actor "+new_feed_version);
+        
+        for(var i=1; i<=bullied_actor.length; i++)
+        {
+          new_feed_version.splice(bully_index+i, 0, bullied_actor[i-1]);
+        }
+        console.log("@@@@@@@@@@ Pushed all the posts of the bullied actor "+new_feed_version);
       }
 
 
-      // stories-individual centric .. put users' recent post on the top 
-      var stry_prsn = JSON.parse(JSON.stringify(stories_person_feed));    
+
+
+
+
+      // stories-individual centric .. put users' recent post on the top     
       if(typeof last_user_post!== 'undefined')
       {
+        var stry_prsn = JSON.parse(JSON.stringify(stories_person_feed));
 
-        if(last_user_post.relativeTime>stry_prsn[1].time)
+        if(last_user_post.relativeTime>stories_person_feed[1].time)
         {
-          // stry_prsn.splice(0, 0, last_user_post);
-          for(var i = 0; i<stry_prsn.length; i++)
-          {
-            if(last_user_post._id == stry_prsn[i]._id)
-            {
-              var a = stry_prsn.splice(i, 1);
-              stry_prsn.splice(0,0, a[0]);
-              break;
-            }
-          }
+          stry_prsn.splice(0, 0, last_user_post);
+        //   stry_prsn.push(last_user_post)
+        //   for(var i = 0; i<stories_person_feed.length; i++)
+        //   {
+        //     if(stories_person_feed[i]._id == stry_prsn[0]._id)
+        //     {
+        //       continue;
+        //     }
+        //     stry_prsn.push(stories_person_feed[i]);
+        //   }
+        }
+        else{
+          console.log('user has not post recently');
+          // var stry_prsn = JSON.parse(JSON.stringify(stories_person_feed));
         }
       }
-      //   else{
-      //     console.log('user has not post recently');
-      //     // var stry_prsn = JSON.parse(JSON.stringify(stories_person_feed));
-      //   }
-      // }
-      // else{
-      //   var stry_prsn = JSON.parse(JSON.stringify(stories_person_feed));
-      // }
+      else{
+        var stry_prsn = JSON.parse(JSON.stringify(stories_person_feed));
+      }
 
       // we need to do it to restore the IDs, otherwise they will be lost!
       for(var i=0; i<stry_prsn.length; i++){
@@ -664,32 +637,37 @@ exports.getScript = (req, res, next) => {
 
       // Condtion: stories message centric
       var stories_message =JSON.parse(JSON.stringify(feed_version));
-      var stry_msg = JSON.parse(JSON.stringify(stories_message));
       if(typeof last_user_post!== 'undefined'){
-        // var stry_msg = []
+        var stry_msg = []
         // if user posted recently, put the user's post on the top!
-        if(last_user_post.relativeTime>stories_message[1].time)
+        if(last_user_post.relativeTime>stories_message[1].time && bully_count ==0)
         {
-
-          // stry_msg.push(last_user_post);
+          // stry_msg[0] = last_user_post
+          bully_count = 1
+          stry_msg.push(last_user_post);
           for(var i = 0; i<stories_message.length; i++)
           {
-            if(last_user_post._id == stories_message[i]._id)
+            if(stories_message[i]._id == stry_msg[0]._id)
             {
-
-              var a = stories_message.splice(i, 1);
-              stories_message.splice(0,0, a[0]);
-              break;
+              continue;
             }
+            stry_msg.push(stories_message[i]);
           }
         }
+        else{
+          var stry_msg = JSON.parse(JSON.stringify(stories_message));
+        }
       }
-      // add the bully post to stories message centric.
+      // if user hasn't post recently..
+      else{
+        var stry_msg = JSON.parse(JSON.stringify(stories_message));
+      }
+      // add the bully post here.
       if (user.study_days[current_day] > 0 && bully_post)
       {
         var bully_index = Math.floor(Math.random() * 4) + 1 
-        // if it duplicates the bullied post, first remove the bullied post from the str_msg, then add it to the bully_index!!!!
         stry_msg.splice(bully_index, 0, bully_post);
+        console.log("@@@@@@@@@@ Pushed a Bully Post to index story"+bully_index);
       }
 
       // need to restore the ids for some reason they will be lost if I don't do it manually 
@@ -722,15 +700,15 @@ exports.getScript = (req, res, next) => {
       }
 
       else if(scriptFilter == 'var2'){
-        res.render('storiesIndividualCentric',{script:stry_prsn})
+        res.render('storiesClickThrough',{script:stry_prsn})
       }
 
       else if(scriptFilter == 'var3'){
-        res.render('script', { script: control_feed}); //control condition ... /
+        res.render('script', { script: control_feed}); //control condition .. ++
 
       }
       else if(scriptFilter == 'var4'){
-        res.render('feedIndividualCentric', { script: new_feed_version}); // ... /
+        res.render('feedIndividualCentric', { script: new_feed_version}); // ++
       }
 
       
@@ -1412,3 +1390,4 @@ exports.postUpdateUserPostFeedAction = (req, res, next) => {
     });
   });
 }
+

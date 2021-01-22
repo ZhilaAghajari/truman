@@ -285,6 +285,7 @@ block content
                         //- Else this is a normal comment from the script
                         else
                           .comment(commentID=comment.id)
+                            -console.log('what actor posted this comment?: ', comment)
                             a.avatar(href='/user/'+comment.actor.username)
                               //-img(src=cdn+'/profile_pictures/'+comment.actor.profile.picture)                       
                               img.lazyload(src="/profile_pictures/"+comment.actor.profile.picture)

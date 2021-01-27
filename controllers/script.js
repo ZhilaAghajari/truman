@@ -218,10 +218,6 @@ exports.getScript = (req, res, next) => {
                     if (user.feedAction[feedIndex].comments[i].new_comment)
                     {
                       //comment.new_comment
-                      //console.log("adding User Made Comment into feed: "+user.feedAction[feedIndex].comments[i].new_comment_id);
-                      //console.log(JSON.stringify(user.feedAction[feedIndex].comments[i]))
-                      //script_feed[0].comments.push(user.feedAction[feedIndex].comments[i]);
-
                       var cat = new Object();
                       cat.body = user.feedAction[feedIndex].comments[i].comment_body;
                       cat.new_comment = user.feedAction[feedIndex].comments[i].new_comment;
@@ -340,11 +336,8 @@ exports.getScript = (req, res, next) => {
                 bully_count = 1;
                 script_feed.splice(0,1);
               }
-
-
               else
-              {
-                
+              {                
                 finalfeed.push(script_feed[0]);
                 final_actors_feed.push(script_feed[0]);
                 script_feed.splice(0,1);
@@ -366,15 +359,12 @@ exports.getScript = (req, res, next) => {
       finalfeed = shuffle(finalfeed); // it includes all the user's and actors' posts .. 
 
       // Control Condition:
-      // feed_version = JSON.parse(JSON.stringify(finalfeed));   
-      //put the user's post on the top in case he/she has just posted
       var control_feed = JSON.parse(JSON.stringify(finalfeed));
       if(typeof last_user_post!== 'undefined')
       {
         if(last_user_post.relativeTime>control_feed[0].time)
         {
           // find the user's last post in the feed, and move it on the top of the feed:
-          // var user_last_post = feed_version.filter(obj => { return obj. == unique_authors[i]})
           for(var i=0; i<control_feed.length; i++)
           {
             if(last_user_post._id == control_feed[i]._id)
@@ -392,9 +382,7 @@ exports.getScript = (req, res, next) => {
         var bully_index = Math.floor(Math.random() * 4) + 1 
         control_feed.splice(bully_index, 0, bully_post);
 
-      }
-
-      
+      }    
 
       // for the stories-individual centric, group the stories by their authors: 
       unique_authors = [...new Set(final_actors_feed.map(item => item.actor.username))];
@@ -402,9 +390,9 @@ exports.getScript = (req, res, next) => {
       {
         unique_authors.push(user.username); 
       }    
+      
       unique_authors = shuffle(unique_authors);
 
-      
       var bullied_actor_stories = []
       var stories_person_feed = []
       for( var i=0; i<unique_authors.length; i++)
@@ -472,20 +460,10 @@ exports.getScript = (req, res, next) => {
           }
         }
         // add the posts created by the bullied actor ..
-
         for(var i=2; i<=bullied_actor_stories.length; i++)
         {
           for(var j=1; j<stories_person_feed.length; j++)
-          { 
-            console.log('checking something: ', bullied_actor_stories[i-1].actor.username)
-            console.log('checking something ELSE: ', stories_person_feed[j])
-            if(stories_person_feed[j].hasOwnProperty('actor'))
-            {
-              console.log('if it has actor ',stories_person_feed[j])
-            }
-
-            // console.log('checking something ELSE ELSEE: ', stories_person_feed[j].actor.username)
-            
+          {            
             if( (typeof stories_person_feed[j]['type']=='undefined') && bullied_actor_stories[i-1].actor.username ===stories_person_feed[j].actor.username)
             {
               var a = stories_person_feed.splice(j, 1);
@@ -494,9 +472,6 @@ exports.getScript = (req, res, next) => {
           }
           
         }
-
-
-
       }
 
       // feed Individual-Centric: group the posts based on their authors
@@ -512,17 +487,7 @@ exports.getScript = (req, res, next) => {
             picture: user.profile.picture
           }
           new_feed_version.push(middle);
-
-
-
           Array.prototype.push.apply(new_feed_version, final_user_posts);
-
-
-          // let temp = final_user_posts;
-          // for (var j = 0; j<final_user_posts.length; j++) //why didn't I push all the posts without for loop.. what was the reason?          {
-          // {
-          //   new_feed_version.push(temp[j]);
-          // } 
 
         }
         else // if the author is an actor
@@ -541,25 +506,11 @@ exports.getScript = (req, res, next) => {
           new_feed_version.push(middle_post);
           
           Array.prototype.push.apply(new_feed_version, temp_record);
-          var temp_bullied = []
-          // for( var a=0; a<final_actors_feed.length; a++)
-          // {
-          //   if(final_actors_feed[a].actor.username == unique_authors[i])
-          //   {
-          //     new_feed_version.push(final_actors_feed[a]);
-              
-          //     temp_record = final_actors_feed[a];
-          //   }
-          //   if(final_actors_feed[a].actor.username== bully_post.actor.username)
-          //   {
-          //     temp_bullied.push(final_actors_feed[a])
-          //   }
-          // }
+        
           if(unique_authors[i] == bully_post.actor.username)
           { 
             // store all this actor's posts in a temporary array to shift these posts within the first four posts...
             bullied_actor.push(middle_post)
-            // bullied_actor.push.apply(bullied_actor, temp_record)
             Array.prototype.push.apply(bullied_actor, temp_record)
 
           }
@@ -599,11 +550,8 @@ exports.getScript = (req, res, next) => {
           for(var j=1; j<new_feed_version.length; j++)
           { 
             
-            console.log('property type: ',new_feed_version[j]['type'])  
-            console.log('does this user has a property? 3',typeof new_feed_version[j]['type']=='undefined')
             if((typeof new_feed_version[j]['type']=='undefined') && bullied_actor[i-1].actor.username ===new_feed_version[j].actor.username)
             {
-              console.log('Does it ever add these posts?? '); 
               var a = new_feed_version.splice(j, 1);
               new_feed_version.splice(bully_index+i-1, 0, bullied_actor[i-1]);
             }
@@ -619,7 +567,6 @@ exports.getScript = (req, res, next) => {
       // var stry_prsn = JSON.parse(JSON.stringify(stories_person_feed));    
       if(typeof last_user_post!== 'undefined')
       {
-
         if(last_user_post.relativeTime>stories_person_feed[1].time)
         {
           // stry_prsn.splice(0, 0, last_user_post);
@@ -661,7 +608,6 @@ exports.getScript = (req, res, next) => {
           {
             if(last_user_post._id == stories_message[i]._id)
             {
-
               var a = stories_message.splice(i, 1);
               stories_message.splice(0,0, a[0]);
               break;
@@ -687,12 +633,6 @@ exports.getScript = (req, res, next) => {
         stry_msg[i].id = tmp;
       }
 
-
-
-
- 
-      
-
       // Current problems:  One of the modal_id is missing and that's why I cannot see the rest of the posts.. 
       // and I get this is the last post of the day (which is wrong!)
       if(scriptFilter == 'var1'){
@@ -717,8 +657,6 @@ exports.getScript = (req, res, next) => {
       else if(scriptFilter == 'var4'){
         res.render('feedIndividualCentric', { script: new_feed_version}); // ... /
       }
-
-      
 
       });//end of Script.find()
 

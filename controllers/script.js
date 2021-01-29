@@ -159,14 +159,11 @@ exports.getScript = (req, res, next) => {
       //Actor's posts!!!
       .exec(function (err, script_feed) {
         if (err) { return next(err); }
-        //Successful, so render
         var modal_id = 1;
-        //update script feed to see if reading and posts has already happened
         var finalfeed = [];
-        // var feed_version = [];
         var unique_actors=[];
-        var final_user_posts =[];
         var user_posts = [];
+        var final_user_posts =[];
         var final_actors_feed = [];
         
 
@@ -309,8 +306,6 @@ exports.getScript = (req, res, next) => {
                 bully_count = 1;
                 script_feed.splice(0,1);
               }
-
-
               else
               {
                 
@@ -358,7 +353,7 @@ exports.getScript = (req, res, next) => {
 
       finalfeed = shuffle(finalfeed); // it includes all the user's and actors' posts .. 
 
-      // Control Condition:
+      // Control Condition: (feed, message centric)
       var control_feed = JSON.parse(JSON.stringify(finalfeed));
       if(typeof last_user_post!== 'undefined')
       {
@@ -444,7 +439,7 @@ exports.getScript = (req, res, next) => {
           bully_index = bully_index+1;
         }
 
-        while(!stories_person_feed[bully_index].hasOwnProperty('type'))//means these are posts and not the middle post to show the profile picture 
+        while(!stories_person_feed[bully_index].hasOwnProperty('type'))//passing the posts till we get to a intro (profile picture) post
         { 
           bully_index = bully_index+1;
         }
@@ -459,7 +454,7 @@ exports.getScript = (req, res, next) => {
             break;
           }
         }
-        // add the posts created by the bullied actor ..
+        // add the posts created by the bullied actor .. [is there a better way to do it? I had to use a 2 for loop because I wanted to remove the posts, then add them to the front]
         for(var i=2; i<=bullied_actor_stories.length; i++)
         {
           for(var j=1; j<stories_person_feed.length; j++)
@@ -476,18 +471,18 @@ exports.getScript = (req, res, next) => {
 
       // feed Individual-Centric: group the posts based on their authors
       var bullied_actor = []
-      var new_feed_version = []
+      var individual_feed_version = []
       for( var i=0; i<unique_authors.length; i++)
       {
         if(unique_authors[i] == user.username)
         {
-          // sam says we don't need to say these are th
+          // sam says we don't need to say these are the post YOU created. 
           var middle = {
             type:'user',
             picture: user.profile.picture
           }
-          new_feed_version.push(middle);
-          Array.prototype.push.apply(new_feed_version, final_user_posts);
+          individual_feed_version.push(middle);
+          Array.prototype.push.apply(individual_feed_version, final_user_posts);
 
         }
         else // if the author is an actor
@@ -503,9 +498,9 @@ exports.getScript = (req, res, next) => {
             name: temp_record[0].actor.profile.name,
             username: temp_record[0].actor.username
           }
-          new_feed_version.push(middle_post);
+          individual_feed_version.push(middle_post);
           
-          Array.prototype.push.apply(new_feed_version, temp_record);
+          Array.prototype.push.apply(individual_feed_version, temp_record);
         
           if(unique_authors[i] == bully_post.actor.username)
           { 
@@ -522,24 +517,24 @@ exports.getScript = (req, res, next) => {
       {
         var bully_index = Math.floor(Math.random() * 4) + 1 
       
-        if(new_feed_version[bully_index].type)
+        if(individual_feed_version[bully_index].type)
         {
          bully_index = bully_index+1; 
         }
 
-        // while(new_feed_version[bully_index].type ==='undefined')//passing over the posts pf previous author
-        while(!new_feed_version[bully_index].hasOwnProperty('type'))
+        // passing the posts pf previous author -- untill we get to the an intro (profile) post 
+        while(!individual_feed_version[bully_index].hasOwnProperty('type'))
         {
           bully_index = bully_index+1;
         }                
 
 
-        for(var i=0; i<new_feed_version.length; i++)
+        for(var i=0; i<individual_feed_version.length; i++)
         {
-          if(new_feed_version[i].hasOwnProperty('type') && new_feed_version[i].type ==='actor' && new_feed_version[i].username === bully_post.actor.username)
+          if(individual_feed_version[i].hasOwnProperty('type') && individual_feed_version[i].type ==='actor' && individual_feed_version[i].username === bully_post.actor.username)
           {
-            var a = new_feed_version.splice(i, 1);
-            new_feed_version.splice(bully_index, 0, bullied_actor[0]);
+            var a = individual_feed_version.splice(i, 1);
+            individual_feed_version.splice(bully_index, 0, bullied_actor[0]);
             break;
           }
         }
@@ -547,19 +542,38 @@ exports.getScript = (req, res, next) => {
         // add the posts of the bullied actor
         for(var i=2; i<=bullied_actor.length; i++)
         {
-          for(var j=1; j<new_feed_version.length; j++)
+          for(var j=1; j<individual_feed_version.length; j++)
           { 
             
-            if((typeof new_feed_version[j]['type']=='undefined') && bullied_actor[i-1].actor.username ===new_feed_version[j].actor.username)
+            if((typeof individual_feed_version[j]['type']=='undefined') && bullied_actor[i-1].actor.username ===individual_feed_version[j].actor.username)
             {
-              var a = new_feed_version.splice(j, 1);
-              new_feed_version.splice(bully_index+i-1, 0, bullied_actor[i-1]);
+              var a = individual_feed_version.splice(j, 1);
+              individual_feed_version.splice(bully_index+i-1, 0, bullied_actor[i-1]);
             }
           }
           
         }
 
-       console.log("@@@@@@@@@@ Pushed all the posts of the bullied actor "+new_feed_version);
+        // Add the user's recent post on the top in case he/she recently posted something
+        if(typeof last_user_post!== 'undefined')
+        {
+          if(last_user_post.relativeTime>individual_feed_version[1].time)
+          {
+            for(var i = 0; i<individual_feed_version.length; i++)
+            {
+              if(last_user_post._id == individual_feed_version[i]._id)
+              {
+                var a = individual_feed_version.splice(i, 1);
+                individual_feed_version.splice(0,0, a[0]);
+                break;
+              }
+
+            }
+          }
+        }
+
+
+       console.log("@@@@@@@@@@ Pushed all the posts of the bullied actor "+individual_feed_version);
       }
 
 
@@ -602,7 +616,6 @@ exports.getScript = (req, res, next) => {
         // if user posted recently, put the user's post on the top!
         if(last_user_post.relativeTime>stories_message[1].time)
         {
-
           // stry_msg.push(last_user_post);
           for(var i = 0; i<stories_message.length; i++)
           {
@@ -655,7 +668,7 @@ exports.getScript = (req, res, next) => {
 
       }
       else if(scriptFilter == 'var4'){
-        res.render('feedIndividualCentric', { script: new_feed_version}); // ... /
+        res.render('feedIndividualCentric', { script: individual_feed_version}); // ... /
       }
 
       });//end of Script.find()

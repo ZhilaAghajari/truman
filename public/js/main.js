@@ -913,6 +913,78 @@ $("i.big.send.link.icon").click(function() {
 
   });
 
+
+// ZH: adding the stuff from the human moderation project!
+//////TESTING
+$('.ui.fluid.card .img.post')
+.visibility({
+  once       : false,
+  continuous : false,
+  observeChanges: true,
+  //throttle:100,
+  initialCheck : true,
+
+//handling scrolling down like normal
+  onBottomVisible:function(calculations){
+    var startTime = Date.now();
+    $(this).siblings(".content").children(".myTimer").text(startTime);
+    if(calculations.topVisible){ //then we are scrolling DOWN normally and this is the START time
+      $(this).siblings(".content").children(".myTimer").text(startTime);
+    } else { //then we are scrolling UP and this event does not matter!
+    }
+  },
+
+  onTopPassed:function(calculations){
+    var endTime = Date.now();
+    var startTime = parseInt($(this).siblings(".content").children(".myTimer").text());
+    var totalViewTime = endTime - startTime; //TOTAL TIME HERE
+    //POST HERE
+    var parent = $(this).parents(".ui.fluid.card");
+    var postID = parent.attr( "postID" );
+    //console.log(postID);
+    //Don't record it if it's longer than 24 hours, do this check because refresh causes all posts to be marked as "viewed" for 49 years.(???)
+    if(totalViewTime < 86400000){
+      $.post( "/feed", { postID: postID, viewed: totalViewTime, _csrf : $('meta[name="csrf-token"]').attr('content') } );
+      consolelog('checking whether it gets here or not!');
+    }
+    //console.log("Total time: " + totalViewTime);
+    //console.log($(this).siblings(".content").children(".description").text());
+  },
+//end handling downward scrolling
+
+//handling scrolling back upwards
+  onTopPassedReverse:function(calculations){
+    var startTime = Date.now();
+    $(this).siblings(".content").children(".myTimer").text(startTime);
+  },
+
+  onBottomVisibleReverse:function(calculations){
+    if(calculations.bottomPassed){
+
+    } else {
+      //eND TIME FOR SCROLLING UP
+      var endTime = Date.now();
+      var startTime = parseInt($(this).siblings(".content").children(".myTimer").text());
+      var totalViewTime = endTime - startTime; //TOTAL TIME HERE
+      //POST HERE
+      var parent = $(this).parents(".ui.fluid.card");
+      var postID = parent.attr( "postID" );
+      //console.log("PostID: " + postID);
+      //console.log(postID);
+      //Don't record it if it's longer than 24 hours, do this check because refresh causes all posts to be marked as "viewed" for 49 years. (???)
+      if(totalViewTime < 86400000){
+        $.post( "/feed", { postID: postID, viewed: totalViewTime, _csrf : $('meta[name="csrf-token"]').attr('content') } );
+      }
+      //console.log("Total time: " + totalViewTime);
+      //console.log($(this).siblings(".content").children(".description").text());
+    }
+//end handling scrolling back updwards
+
+  }
+
+});
+
+
 //@@@@@@@ Gathering the survey results @@@@@@@
 //  Modify it to work for both versions.
 j='321';

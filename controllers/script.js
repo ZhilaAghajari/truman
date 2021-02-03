@@ -166,6 +166,8 @@ exports.getScript = (req, res, next) => {
         var final_user_posts =[];
         var final_actors_feed = [];
         
+        console.log('THIS IS MY SCRIPT!!!!');
+        console.log(script_feed);
 
         user_posts = user.getPostInPeriod(time_limit, time_diff);
 
@@ -259,15 +261,16 @@ exports.getScript = (req, res, next) => {
               
               
               
-              if (user.feedAction[feedIndex].readTime[0])
+              if (user.feedAction[feedIndex].viewedTime[0]) //I changed it from readTime to viewedTime
               { 
                 script_feed[0].read = true;
                 script_feed[0].state = 'read';
-                //console.log("Post: %o has been READ", script_feed[0].id);
+                console.log("Post: %o has been READ?", script_feed[0].id);
               }
               else 
               {
                 script_feed[0].read = false;
+                
                 //script_feed[0].state = 'read';
               }
 
@@ -308,6 +311,7 @@ exports.getScript = (req, res, next) => {
               }
               else
               {
+
                 
                 finalfeed.push(script_feed[0]);
                 final_actors_feed.push(script_feed[0]);
@@ -318,21 +322,29 @@ exports.getScript = (req, res, next) => {
 
             else
             {
+
               if (user.blocked.includes(script_feed[0].actor.username))
               {
                 script_feed.splice(0,1);
               }
+              // check the script_feed here to see if view exsit at
 
-              //if bully post && firt viewing of the day
+
+              //if bully post && firt viewing of the day -- we cannot check && .read attribute here anymore because we don't have access to ViewedTime here
+              // how do we know whether the post is read or. not here??
               else if ( script_feed[0].class == "bullying" && user.study_days[current_day] > 0 && bully_count == 0)
               {
+                // script_feed[0].read = true;
+                // script_feed[0].state = 'read';
                 console.log("%$%$%$%$%$%$%$Found a bully post and will push it ^2");
                 bully_post = script_feed[0];
                 bully_count = 1;
                 script_feed.splice(0,1);
               }
               else
-              {                
+              { 
+                // script_feed[0].read = true;
+                // script_feed[0].state = 'read';               
                 finalfeed.push(script_feed[0]);
                 final_actors_feed.push(script_feed[0]);
                 script_feed.splice(0,1);
@@ -420,7 +432,7 @@ exports.getScript = (req, res, next) => {
           Array.prototype.push.apply(stories_person_feed, temp_record);
 
 
-          if(unique_authors[i] == bully_post.actor.username)
+          if(bully_post && unique_authors[i] == bully_post.actor.username)
           {
             bullied_actor_stories.push(middle_post);
             Array.prototype.push.apply(bullied_actor_stories, temp_record)
@@ -502,7 +514,7 @@ exports.getScript = (req, res, next) => {
           
           Array.prototype.push.apply(individual_feed_version, temp_record);
         
-          if(unique_authors[i] == bully_post.actor.username)
+          if(bully_post && unique_authors[i] == bully_post.actor.username)
           { 
             // store all this actor's posts in a temporary array to shift these posts within the first four posts...
             bullied_actor.push(middle_post)
@@ -1087,6 +1099,25 @@ exports.postUpdateFeedAction = (req, res, next) => {
 
       }
 
+//NEW VIEW TIME APPROACH POSTS
+      //array of viewedTimes is empty and we have a new VIEW event
+      else if ((!user.feedAction[feedIndex].viewedTime) && req.body.viewed)
+      {
+        let viewedTime = req.body.viewed;
+        user.feedAction[feedIndex].viewedTime = [viewedTime];
+        console.log('add the viewedTime: ', viewedTime)
+
+      }
+
+      //Already have a viewedTime Array, New VIEW event, need to add this to readTime array
+      else if ((user.feedAction[feedIndex].viewedTime)&&req.body.viewed)
+      {
+        let viewedTime = req.body.viewed;
+        //console.log("%%%%%Add new Read Time: ", read);
+        user.feedAction[feedIndex].viewedTime.push(viewedTime);
+        console.log('add the viewedTime^2 ', viewedTime)
+      }
+
       else
       {
         console.log("Got a POST that did not fit anything. Possible Error.")
@@ -1166,6 +1197,10 @@ exports.postUpdateProFeedAction = (req, res, next) => {
 
       }
 
+      //OLD READ TIME APPROACH
+/*
+
+
       //array of readTimes is empty and we have a new READ event
       else if ((!user.profile_feed[feedIndex].readTime)&&req.body.read && (req.body.read > user.profile_feed[feedIndex].startTime))
       { 
@@ -1191,6 +1226,7 @@ exports.postUpdateProFeedAction = (req, res, next) => {
         user.profile_feed[feedIndex].picture_clicks = [picture];
         console.log("!!!!!adding FIRST picture time [0] now which is  ", user.profile_feed[feedIndex].picture_clicks[0]);
       }
+*/
 
       //Already have a picture_clicks Array, New PICTURE event, need to add this to picture_clicks array
       else if ((user.profile_feed[feedIndex].picture_clicks)&&req.body.picture && (req.body.picture > user.profile_feed[feedIndex].startTime))

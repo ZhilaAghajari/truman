@@ -50,9 +50,9 @@ block content
       //- -console.log("iiiss VAL@@@");
       script.
         var i=0;
-      -console.log(i);
-      -console.log('feed VAL.id: ', val._id)
-      -console.log('postID in feed version: ', val.postID)
+      // -console.log(i);
+      // -console.log('feed VAL.id: ', val._id)
+      // -console.log('postID in feed version: ', val.postID)
       if val.relativeTime
         -console.log('FRONT END USER POSTS: ', val.postID)
         -var u_class;
@@ -214,6 +214,7 @@ block content
             img.lazyload(data-src=cdn+"/post_pictures/"+val.picture, style="max-width:100%;width:100%;")
           .content
             .description=val.body
+            .myTimer.hidden 0
           //- FLAG and like options...
           .content
             #flgComment.span.right.floated

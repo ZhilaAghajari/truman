@@ -132,6 +132,8 @@ const userSchema = new mongoose.Schema({
     flags:Array
   },
 
+// check the feed action .. 
+// 
   feedAction: [new Schema({
         post: {type: Schema.ObjectId, ref: 'Script'},
         //add in object to see which comments were linked and flagged
@@ -143,6 +145,8 @@ const userSchema = new mongoose.Schema({
         flagTime  : [Number],
         likeTime  : [Number],
         replyTime  : [Number],
+        viewedTime : [Number], //how long the user spent looking at the post (does not record times less than 1.5 seconds)
+
         
         comments: [new Schema({
           comment: {type: Schema.ObjectId},//ID Reference for Script post comment

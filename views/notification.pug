@@ -13,9 +13,12 @@ block content
         .meta="@"+user.username
         .description=user.profile.bio
         .description
+        // Zh: if the user doesn't have a profile picture, have an avator for them .. similar to what we do in the script.pug 
           if user.profile.location
             i.marker.icon
             span=user.profile.location
+          else
+            img(src=user.gravatar(60))
       .one.ui.bottom.attached.icon.buttons
           button.ui.editprofile.button(data-tooltip='Update Your Profile', data-position='bottom left')
             i.write.icon
@@ -27,44 +30,7 @@ block content
       .ui.feed
         each val in notification_feed
           case val.action
-            when 'read'
-              - var best = val.actors.splice(0, 5);
-              .event
-                .label
-                  i.large.unhide.icon
-                .content
-                  img.ui.tiny.right.floated.image(src='/user_post/'+val.picture)
-                  .extra.images
-                    each actor in best
-                      if actor.username != "generic-joe"
-                        a.ui.avatar.image(href='/user/'+actor.username, data-tooltip=actor.profile.name, data-position='top center')
-                          if actor[profileFilter] == "yes"
-                            img.ui.avatar.image(src='/profile_pictures/'+actor.profile.picture)
-                          else
-                            img.ui.avatar.image(src=actor.profile.fakepic)
-                  if best.length == 1
-                    .summary
-                      a(href='/user/'+best[0].username)=best[0].profile.name
-                      |   has read your post. 
-                      .date=val.time
-                  else 
-                    .summary
-                      a(href='/user/'+best[0].username)=best[0].profile.name
-                      |  and 
-                      //-a.others(key=val.key)=(best.length+val.actors.length-1)+" others "
-                      a(key=val.key)=(best.length+val.actors.length-1)+" others "
-                      | have read your post.  
-                      .date=val.time
-              .ui.small.long.extrausers.modal(id=val.key)
-                .image.centered.content
-                  .ui.extra.centered.divided.items
-                    each extra in val.actors
-                      .item
-                        a.ui.tiny.image(href='/user/'+extra.username)
-                          img(src='/avatar-icon.svg', data-original=extra.profile.picture)
-                        .middle.aligned.content
-                          .header
-                            a(href='/user/'+extra.username)=extra.profile.name
+
             when 'like'
              - var best = val.actors.splice(0, 5);
               .event

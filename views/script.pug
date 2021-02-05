@@ -42,12 +42,7 @@ block content
     script.
       var i=0;
     each val in script
-      //- -console.log('Modal ID: ', val.modal_id);
-      //- -console.log('the post group is: ', val.experiment_group)
-      //- -console.log('postID: ', val.postID)
-      //- create a card for each post in val (if by user make the card a little different)
-      //- if val.relativeTime - then post came from user_post (so user post, user reply to actor reply to user post)
-      //- -console.log("iiiss VAL@@@");
+      -console.log('What do we have in val? ',val)
       script.
         var i=0;
       // -console.log(i);
@@ -96,19 +91,7 @@ block content
             span.right.floated
               #falgebutton.ui.basic.button
                i.large.flag.icon
-            //- | Flag
-          // .two.ui.bottom.attached.icon.buttons
-          //   .ui.reply.button(tabindex='0')
-          //     i.reply.icon
-          //     |  Reply
-          //   if val.liked
-          //     .ui.red.like.button
-          //       i.heart.icon
-          //       |  Like
-          //   else
-          //     .ui.like.button
-          //       i.heart.icon
-          //       |  Like
+
           if val.comments.length > 0
             .content
               .ui.comments
@@ -234,32 +217,14 @@ block content
             span.right.floated
               #falgebutton.ui.basic.button
                i.large.flag.icon
-            //- | Flag
-          //- .three.ui.bottom.attached.icon.buttons
-          //-   .ui.reply.button(tabindex='0')
-          //-     i.reply.icon
-          //-     |  Reply
-          //-   .ui.flag.button(tabindex='0')
-          //-     i.flag.icon
-          //-     |  Flag
-          //-   if val.like
-          //-     .ui.labeled.button(tabindex='0')
-          //-       .ui.red.like.button
-          //-         i.heart.icon
-          //-         |  Like
-          //-       a.ui.basic.red.left.pointing.label=val.likes
-          //-   else
-          //-     .ui.labeled.button(tabindex='0')
-          //-       .ui.like.button
-          //-         i.heart.icon
-          //-         |  Like
-          //-       a.ui.basic.red.left.pointing.label.count=val.likes
+
           if val.comments.length > 0
             .content
               .ui.comments
                 each comment in val.comments
                   //-IF this comment is USER made, do this
-                  if (user.createdAt.getTime() + comment.time) < Date.now()
+                   //- Zhila: timing should. be based on the post times... so something like val.times ... these should be relative to the POSTs not the user!!!!
+                  if (val.time + comment.time) < Date.now()
                     if comment.new_comment
                       -console.log("New COMMENT AREA");
                       .comment(commentID=comment.new_comment_id)

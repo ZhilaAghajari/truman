@@ -311,7 +311,6 @@ exports.getScript = (req, res, next) => {
               }
               else
               {
-
                 
                 finalfeed.push(script_feed[0]);
                 final_actors_feed.push(script_feed[0]);
@@ -324,13 +323,13 @@ exports.getScript = (req, res, next) => {
             {
 
               if (user.blocked.includes(script_feed[0].actor.username))
-              {
+              {s
                 script_feed.splice(0,1);
               }
               // check the script_feed here to see if view exsit at
 
 
-              //if bully post && firt viewing of the day -- we cannot check && .read attribute here anymore because we don't have access to ViewedTime here
+              //if bully post && first viewing of the day -- we cannot check && .read attribute here anymore because we don't have access to ViewedTime here
               // how do we know whether the post is read or. not here??
               else if ( script_feed[0].class == "bullying" && user.study_days[current_day] > 0 && bully_count == 0)
               {
@@ -341,6 +340,7 @@ exports.getScript = (req, res, next) => {
                 bully_count = 1;
                 script_feed.splice(0,1);
               }
+
               else
               { 
                 // script_feed[0].read = true;
@@ -1079,23 +1079,12 @@ exports.postUpdateFeedAction = (req, res, next) => {
       // Zhila
       else if(req.body.session_survey)
       {
-        console.log('SESSION SURVEY is 111 ',req.body.session_survey);
         user.session_survey.answers.push(req.body.session_survey);
-        // user.session_survey.time.push(req.body.survey_time);
-        console.log('likes numbers in this session : ', req.body.session_likes);
         user.session_survey.likes.push(req.body.session_likes);
         user.session_survey.flags.push(req.body.session_flags);
         user.session_survey.posts.push(req.body.session_posts);
         user.session_survey.time.push(req.body.time);
-        console.log('post modal ID is ', req.body.modalID);
-        console.log('session time is', req.body.session_time)
-        // where do I add it now ??
         // add more information about session level, things like number of likes, comments, flag, etc.
-        console.log('@@@ Session Record added: @@@');
-        console.log('Answers: ', user.session_survey.answers);
-        console.log('Session Likes : ', user.session_survey.likes);
-        console.log('Session Posts: ', user.session_survey.posts);
-        console.log('Session Flags: ', user.session_survey.flags);
 
       }
 
@@ -1120,6 +1109,7 @@ exports.postUpdateFeedAction = (req, res, next) => {
 
       else
       {
+        // I get this one as well! what happened? 
         console.log("Got a POST that did not fit anything. Possible Error.")
       }
     }//else ALL POST ACTIONS IF/ELSES

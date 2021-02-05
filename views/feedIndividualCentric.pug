@@ -42,7 +42,6 @@ block content
     script.
       var i=0;
     each val in script
-      //- -console.log('Modal ID: ', val.modal_id);
       //- -console.log('the post group is: ', val.experiment_group)
       //- -console.log('postID: ', val.postID)
       //- create a card for each post in val (if by user make the card a little different)
@@ -154,7 +153,7 @@ block content
                 each comment in val.comments
                   -console.log('comment is: ', val.comments)
                   //-IF this comment is USER made, do this
-                  if (user.createdAt.getTime() + comment.time) < Date.now()
+                  if (val.time+ comment.time) < Date.now()
                     if !comment.flagged
                       if comment.new_comment
                         -console.log("New COMMENT AREA");

@@ -945,7 +945,6 @@ $('.ui.fluid.card .img.post')
     //Don't record it if it's longer than 24 hours, do this check because refresh causes all posts to be marked as "viewed" for 49 years.(???)
     if(totalViewTime < 86400000){
       $.post( "/feed", { postID: postID, viewed: totalViewTime, _csrf : $('meta[name="csrf-token"]').attr('content') } );
-      consolelog('checking whether it gets here or not!');
     }
     //console.log("Total time: " + totalViewTime);
     //console.log($(this).siblings(".content").children(".description").text());

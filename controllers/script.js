@@ -64,6 +64,8 @@ exports.getScript = (req, res, next) => {
   var bullied_actor = []
   var bully_count = 0;
   var bullied_actor_count =0;
+  var bully_story_count=0;
+  var bully_story; 
 
   var scriptFilter;
 
@@ -140,8 +142,6 @@ exports.getScript = (req, res, next) => {
     console.log("@@@@@@@@@@_NO_DAY");
   }
 
-  
-  
     //Get the newsfeed
     Script.find()
       // .where("experiment_group").equals(scriptFilter)
@@ -295,14 +295,19 @@ exports.getScript = (req, res, next) => {
                 script_feed.splice(0,1);
               }
 
-              //if bully post && firt viewing of the day
-              //&& ((req.user.createdAt + script_feed[0].comments[0].time) < time_now))
+              //if bully post && first viewing of the day
               else if (script_feed[0].class == "bullying" && user.study_days[current_day] > 0 && bully_count == 0 && !script_feed[0].read)
               {
                 bully_post = script_feed[0];
                 bully_count = 1;
-                console.log("%$%$%$%$%$%$%$Found a bully post and will push it");
+                console.log("%$%$%$%$%$%$%$Found a bully post and will push it :", bully_post._id);
                 script_feed.splice(0,1);
+                // if(scriptFilter=='var5' && bully_count_stry==0)
+                // {
+                //   bully_post_story = bully_post
+                //   bully_count_stry = 1
+                //   console.log('we are in the story version and this is the current bully post: ', bully_post_story)
+                // }
               }
               else
               {
@@ -320,19 +325,34 @@ exports.getScript = (req, res, next) => {
               {
                 script_feed.splice(0,1);
               }
-              // check the script_feed here to see if view exsit at
 
+              // else if (scriptFilter =="var5" && script_feed[0].class == "bullying" && user.study_days[current_day] > 0 && bully_story_count == 0)
+              // { 
+              //   console.log('Will it ever get here??', script_feed[0])
+              //   bully_story = script_feed[0];
+              //   bully_story_count = 1;
+              //   script_feed.splice(0,1);
+              // }
 
-              //if bully post && first viewing of the day -- we cannot check && .read attribute here anymore because we don't have access to ViewedTime here
-              // how do we know whether the post is read or. not here??
-              
               else if (script_feed[0].class == "bullying" && user.study_days[current_day] > 0 && bully_count == 0)
               { 
                 bully_post = script_feed[0];
-                console.log("%$%$%$%$%$%$%$Found a bully post and will push it ^2 ",bully_post._id );
+                console.log("%$%$%$%$%$%$%$Found a bully post and will push it^2 :",bully_post._id );
                 bully_count = 1;
                 script_feed.splice(0,1);
+                if ( scriptFilter =="var5" && bully_story_count == 0)
+                {
+                  bully_story_count == 1
+                  bully_story = bully_post
+                }
+                // if(scriptFilter=='var5' && bully_count_stry==0)
+                // {
+                //   bully_post_story = bully_post
+                //   bully_count_stry = 1
+                //   console.log('we are in the story version and this is the current bully post: ', bully_post_story)
+                // }
               }
+
 
               else
               { 
@@ -381,7 +401,52 @@ exports.getScript = (req, res, next) => {
         control_feed.splice(bully_index, 0, bully_post);
         console.log('bullying post added-control');
 
-      }    
+      }
+
+      console.log('print the damn feed: ',finalfeed)
+
+      // Condition: stories message centric
+      var stry_msg =JSON.parse(JSON.stringify(finalfeed));
+      if(typeof last_user_post!== 'undefined'){
+        // var stry_msg = []
+        // if user posted recently, put the user's post on the top!
+        if(last_user_post.relativeTime>finalfeed[0].time)
+        {
+          // stry_msg.push(last_user_post);
+          for(var i = 0; i<stry_msg.length; i++)
+          {
+            if(last_user_post._id == stry_msg[i]._id)
+            {
+              var a = stry_msg.splice(i, 1);
+              stry_msg.splice(0,0, a[0]);
+              break;
+            }
+          }
+        }
+      }
+      // add the bully post to stories message centric.
+      if (user.study_days[current_day] > 0 && bully_post && bully_story)
+      {
+        var bully_index = Math.floor(Math.random() * 4) + 1 
+        // if it duplicates the bullied post, first remove the bullied post from the str_msg, then add it to the bully_index!!!!
+        stry_msg.splice(bully_index, 0, bully_post);
+        console.log('bullying post added-story-message-centric ', bully_story);
+
+      }
+      console.log('STORY message centric :', stry_msg)
+
+      // need to restore the ids for some reason they will be lost if I don't do it manually 
+      for(var i=0; i<stry_msg.length; i++){
+        var temp = new Object();
+        temp.modal_id = i+1
+        tmp = stry_msg[i]._id;        
+        const temp_stories_feed = JSON.parse(JSON.stringify(stry_msg[i]));
+        stry_msg[i] = Object.assign(temp_stories_feed,temp);
+        stry_msg[i].id = tmp;
+      }
+      // final_actors_feed.splice(0, 0, bully_post);
+
+      console.log('print the feed for final_actors_feed :', final_actors_feed)
 
       // for the stories-individual centric, group the stories by their authors: 
       unique_authors = [...new Set(final_actors_feed.map(item => item.actor.username))];
@@ -420,16 +485,23 @@ exports.getScript = (req, res, next) => {
             name: temp_record[0].actor.profile.name,
             username: temp_record[0].actor.username
           }
-          individual_feed_version.push(middle_post);
           
-          Array.prototype.push.apply(individual_feed_version, temp_record);
+          //  I now only store the bullied actor posts in bullied_actor and then add them to the individual_feed_version
           if(user.study_days[current_day] > 0 && bully_post && unique_authors[i] == bully_post.actor.username && bullied_actor.length==0)
           { 
             // store all this actor's posts in a temporary array to shift these posts within the first four posts...
             bullied_actor.push(middle_post)
+            console.log('whats bully post: ', bully_post)
+            bullied_actor.push(bully_post);
+            
             Array.prototype.push.apply(bullied_actor, temp_record)
+            console.log('show the bullied actor array :' , bullied_actor)
             console.log('Found a bullied actor', bully_post)
 
+          }
+          else{
+            individual_feed_version.push(middle_post);
+            Array.prototype.push.apply(individual_feed_version, temp_record);
           }
         }
       }
@@ -452,28 +524,29 @@ exports.getScript = (req, res, next) => {
         }                
 
 
-        for(var i=0; i<individual_feed_version.length; i++)
-        {
-          if(individual_feed_version[i].hasOwnProperty('type') && individual_feed_version[i].type ==='actor' && individual_feed_version[i].username === bully_post.actor.username)
-          {
-            var a = individual_feed_version.splice(i, 1);
-            individual_feed_version.splice(bully_index, 0, bullied_actor[0]);
-            break;
-          }
-        }
+        // for(var i=0; i<individual_feed_version.length; i++)
+        // {
+        //   if(individual_feed_version[i].hasOwnProperty('type') && individual_feed_version[i].type ==='actor' && individual_feed_version[i].username === bully_post.actor.username)
+        //   {
+        //     var a = individual_feed_version.splice(i, 1);
+        //     individual_feed_version.splice(bully_index, 0, bullied_actor[0]);
+        //     break;
+        //   }
+        // }
 
         // add the posts of the bullied actor
-        for(var i=2; i<=bullied_actor.length; i++)
+        for(var i=1; i<=bullied_actor.length; i++)
         {
-          for(var j=1; j<individual_feed_version.length; j++)
-          { 
+          individual_feed_version.splice(bully_index+i-1, 0, bullied_actor[i-1]);
+          // for(var j=1; j<individual_feed_version.length; j++)
+          // { 
             
-            if((typeof individual_feed_version[j]['type']=='undefined') && bullied_actor[i-1].actor.username ===individual_feed_version[j].actor.username)
-            {
-              var a = individual_feed_version.splice(j, 1);
-              individual_feed_version.splice(bully_index+i-1, 0, bullied_actor[i-1]);
-            }
-          }
+          //   if((typeof individual_feed_version[j]['type']=='undefined') && bullied_actor[i-1].actor.username ===individual_feed_version[j].actor.username)
+          //   {
+          //     var a = individual_feed_version.splice(j, 1);
+          //     individual_feed_version.splice(bully_index+i-1, 0, bullied_actor[i-1]);
+          //   }
+          // }
           
         }
 
@@ -612,43 +685,7 @@ exports.getScript = (req, res, next) => {
 
 
 
-      // Condition: stories message centric
-      var stories_message =JSON.parse(JSON.stringify(finalfeed));
-      var stry_msg = JSON.parse(JSON.stringify(stories_message));
-      if(typeof last_user_post!== 'undefined'){
-        // var stry_msg = []
-        // if user posted recently, put the user's post on the top!
-        if(last_user_post.relativeTime>stories_message[1].time)
-        {
-          // stry_msg.push(last_user_post);
-          for(var i = 0; i<stories_message.length; i++)
-          {
-            if(last_user_post._id == stories_message[i]._id)
-            {
-              var a = stories_message.splice(i, 1);
-              stories_message.splice(0,0, a[0]);
-              break;
-            }
-          }
-        }
-      }
-      // add the bully post to stories message centric.
-      if (user.study_days[current_day] > 0 && bully_post)
-      {
-        var bully_index = Math.floor(Math.random() * 4) + 1 
-        // if it duplicates the bullied post, first remove the bullied post from the str_msg, then add it to the bully_index!!!!
-        stry_msg.splice(bully_index, 0, bully_post);
-      }
 
-      // need to restore the ids for some reason they will be lost if I don't do it manually 
-      for(var i=0; i<stry_msg.length; i++){
-        var temp = new Object();
-        temp.modal_id = i+1
-        tmp = stry_msg[i]._id;        
-        const temp_stories_feed = JSON.parse(JSON.stringify(stry_msg[i]));
-        stry_msg[i] = Object.assign(temp_stories_feed,temp);
-        stry_msg[i].id = tmp;
-      }
 
       // Current problems:  One of the modal_id is missing and that's why I cannot see the rest of the posts.. 
       // and I get this is the last post of the day (which is wrong!)
@@ -1085,10 +1122,15 @@ exports.postUpdateFeedAction = (req, res, next) => {
       //array of viewedTimes is empty and we have a new VIEW event
       else if ((!user.feedAction[feedIndex].viewedTime) && req.body.viewed)
       {
+        console.log('will it get here for stories??')
         let viewedTime = req.body.viewed;
         user.feedAction[feedIndex].viewedTime = [viewedTime];
         console.log('add the viewedTime: ', viewedTime)
         console.log('ID of the viewed post: ??: ', req.body.postID)
+        if(req.body.postID == "601ecb990906e672093e021b")
+        {
+          console.log('Find the spageti post!!!')
+        }
         if(req.body.postID=='601f5fb28b2eb408858f88cd' || req.body.postID == "601ecbbd0906e672093e0eaa" || req.body.postID =="601ecbbc0906e672093e0e7f")
         {
           console.log('the user read a bully post !!')
@@ -1099,6 +1141,7 @@ exports.postUpdateFeedAction = (req, res, next) => {
       //Already have a viewedTime Array, New VIEW event, need to add this to readTime array
       else if ((user.feedAction[feedIndex].viewedTime)&&req.body.viewed)
       {
+        console.log('will it get here for stories??')
         let viewedTime = req.body.viewed;
         //console.log("%%%%%Add new Read Time: ", read);
         user.feedAction[feedIndex].viewedTime.push(viewedTime);

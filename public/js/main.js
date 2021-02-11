@@ -321,7 +321,18 @@ if(typeof total_logedin_time != 'undefined')
   $('.ui.right.button').on('click', function(){ 
       // $(".ui.right.button[next_id='"+'3'+"']").on("click",{
       // },handler);
-       
+      var postID = $(this).closest( ".ui.fluid.card" ).attr( "postID" );
+      var startTime = parseInt($(this).parents('.two.fluid.ui.buttons').children(".myTimer").text());
+      var endTime = Date.now();
+      var totalViewTime = endTime - startTime; //TOTAL TIME HERE
+      //POST HERE
+      //console.log(postID);
+      //Don't record it if it's longer than 24 hours, do this check because refresh causes all posts to be marked as "viewed" for 49 years.(???)
+      $.post( "/feed", { postID: postID, viewed: totalViewTime, _csrf : $('meta[name="csrf-token"]').attr('content') } );
+      // if(totalViewTime < 86400000){
+      //   console.log('did it happened?')
+      //   $.post( "/feed", { postID: postID, viewed: totalViewTime, _csrf : $('meta[name="csrf-token"]').attr('content') } );
+      // }
       active_flag = 1;
       temp = parseInt(localStorage.getItem("session_posts"))+1;
       window.localStorage.setItem("session_posts",temp);
@@ -941,6 +952,7 @@ $('.ui.fluid.card .img.post')
     //POST HERE
     var parent = $(this).parents(".ui.fluid.card");
     var postID = parent.attr( "postID" );
+
     //console.log(postID);
     //Don't record it if it's longer than 24 hours, do this check because refresh causes all posts to be marked as "viewed" for 49 years.(???)
     if(totalViewTime < 86400000){

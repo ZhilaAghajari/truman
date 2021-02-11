@@ -114,8 +114,8 @@ block content
    
     //Read from script and put in the stories format ..
     each val in script
-      -console.log('Modal ID: ', val.modal_id);
-      -console.log('the post group is: ', val.experiment_group)
+      // -console.log('Modal ID: ', val.modal_id);
+      // -console.log('the post group is: ', val.experiment_group)
       //  this is a modal to seperate the post by the author ...
       if val.type
         if val.type =='actor'
@@ -349,8 +349,8 @@ block content
           //- .ui.tiny.post.modal(modal_id=val.modal_id)
           .ui.tiny.post.modal(modal_id=val.modal_id)
             //- .header val.modal_id
-            -console.log('@@ACTOR VAL.ID :@@', val.id)
-            -console.log('@@ACTOR POST ID:@@', val.postID)
+            //- -console.log('@@ACTOR VAL.ID :@@', val.id)
+            //- -console.log('@@ACTOR POST ID:@@', val.postID)
               //- need to change modal_id to postID
             .ui.fluid.card.dim( postID=val.id, state=val.state || 'unread', type='actor', actor_un = val.actor.username, actor_name = val.actor.profile.name, actor_pic = val.actor.profile.picture) 
               .content
@@ -445,6 +445,7 @@ block content
 
               .content
                 .description=val.body
+                .myTimer.hidden 0
                 //- i.icon.checkmark
 
               //- FLAG and like options...
@@ -551,183 +552,13 @@ block content
                   input.newcomment(type='text', placeholder='Write a Comment')
                   i.big.send.link.icon
 
-
+              
               .two.fluid.ui.buttons(postID=val.postID)
+                .myTimer.hidden 0
                 .ui.left.button(pre_id=val.modal_id, postID=val.postID, study_group ='clickThrough') Previous
                 .ui.right.button(next_id=val.modal_id , postID=val.postID, study_group ='clickThrough')  Next
                 
-              //- .ui.tiny.gray.progress(progressing_id=val.modal_id, progressing_type = 'post')
-              //-   .bar
-              //-   .label ... 
-
-              //- .fluid.ui.button
-              //-   #sessionSurvey.ui.left.disabled.button(survey_button='survey_button') Session Survey
-    //- .ui.container
-    //-   #surveyModal.ui.small.post.modal(modal_id='321')
-    //-     .ui.fluid.card.test
-    //-       .content
-    //-         .fields
-    //-           .wrap
-    //-             h2.likert-header During this visit to EatSnap.Love, we would like to know the extent to which you felt the following emotions towards other people using this site.
-    //-             form(action='')
-    //-               h2.label.statement Softhearted
-    //-               ul.likert
-    //-                 .inline.fields
-    //-                   h3.field
-    //-                     label
-    //-                       input(type='radio' name='Softhearted' value='strong_disagree')
-    //-                       | Strong Disgree
-    //-                     br
-    //-                   h3.field
-    //-                     label
-    //-                       input(type='radio' name='Softhearted' value="disagree")
-    //-                       | Disagree
-    //-                     br
-    //-                   h3.field
-    //-                     label
-    //-                       input(type='radio' name='Softhearted' value='somewhat_disagree')
-    //-                       | Somewhat Disagree
-    //-                     br
-    //-                   h3.field
-    //-                     label
-    //-                       input(type='radio' name='Softhearted' value='neither_agree_nor_disagree')
-    //-                       | neither agree nor disagree
-    //-                     br
-    //-                   h3.field
-    //-                     label
-    //-                       input(type='radio' name='Softhearted' value='somewhat_agree')
-    //-                       | Somewhat Agree
-    //-                     br
-    //-                   h3.field
-    //-                     label
-    //-                       input(type='radio' name='Softhearted' value='agree')
-    //-                       | agree
-    //-                     br
-    //-                   h3.field
-    //-                     label
-    //-                       input(type='radio' name='Softhearted' value='strong_agree')
-    //-                       | Strong Agree
-    //-                     br
-    //-               h3.label.statement Touched
-    //-               ul.likert
-    //-                 .inline.fields
-    //-                   h3.field
-    //-                     label
-    //-                       input(type='radio' name='Touched' value='strong_disagree')
-    //-                       | Strong Disagree
-    //-                     br
-    //-                   h3.field
-    //-                     label
-    //-                       input(type='radio' name='Touched' value='disagree')
-    //-                       | Disagree
-    //-                     br
-    //-                   h3.field
-    //-                     label
-    //-                       input(type='radio' name='Touched' value='somewhat_disagree')
-    //-                       | Somewhat Disagree
-    //-                     br
-    //-                   h3.field
-    //-                     label
-    //-                       input(type='radio' name='Touched' value='neither_agree_nor_disagree')
-    //-                       | Neither agree nor disagree
-    //-                     br
-    //-                   h3.field
-    //-                     label
-    //-                       input(type='radio' name='Touched' value='somewhat_agree')
-    //-                       | Somwhat Agree
-    //-                     br
-    //-                   h3.field
-    //-                     label
-    //-                       input(type='radio' name='Touched' value='agree')
-    //-                       | Agree
-    //-                     br
-    //-                   h3.field
-    //-                     label
-    //-                       input(type='radio' name='Touched' value='strong_agree')
-    //-                       | Strong Agree
-    //-                     br
-    //-               h3.label.statement Sympathetic
-    //-               ul.likert
-    //-                 .inline.fields
-    //-                   h3.field
-    //-                     label
-    //-                       input(type='radio' name='Sympathetic' value='strong_disagree')
-    //-                       | Strong Disagree
-    //-                     br
-    //-                   h3.field
-    //-                     label
-    //-                       input(type='radio' name='Sympathetic' value='disagree')
-    //-                       | Disagree
-    //-                     br
-    //-                   h3.field
-    //-                     label
-    //-                       input(type='radio' name='Sympathetic' value='somewhat_disagree')
-    //-                       | Somewhat Disagree
-    //-                     br
-    //-                   h3.field
-    //-                     label
-    //-                       input(type='radio' name='Sympathetic' value='neither_agree_nor_disagree')
-    //-                       | Neither agree nor disagree
-    //-                     br
-    //-                   h3.field
-    //-                     label
-    //-                       input(type='radio' name='Sympathetic' value='somewhat_agree')
-    //-                       | Somwhat Agree
-    //-                     br
-    //-                   h3.field
-    //-                     label
-    //-                       input(type='radio' name='Sympathetic' value='agree')
-    //-                       | Agree
-    //-                     br
-    //-                   h3.field
-    //-                     label
-    //-                       input(type='radio' name='Sympathetic' value='strong_agree')
-    //-                       | Strong Agree
-    //-                     br
-    //-               h3.label.statement Moved
-    //-               ul.likert
-    //-                 .inline.fields
-    //-                   h3.field
-    //-                     label
-    //-                       input(type='radio' name='Moved' value='strong_disagree')
-    //-                       | Strong Disagree
-    //-                   h3.field
-    //-                     label
-    //-                       input(type='radio' name='Moved' value='disagree')
-    //-                       | Disagree
-    //-                     br
-    //-                   h3.field
-    //-                     label
-    //-                       input(type='radio' name='Moved' value='somewhat_disagree')
-    //-                       | Somewhat Disagree
-    //-                     br
-    //-                   h3.field
-    //-                     label
-    //-                       input(type='radio' name='Moved' value='neither_agree_nor_disagree')
-    //-                       | Neither agree nor disagree
-    //-                     br
-    //-                   h3.field
-    //-                     label
-    //-                       input(type='radio' name='Moved' value='somewhat_agree')
-    //-                       | Somwhat Agree
-    //-                     br
-    //-                   h3.field
-    //-                     label
-    //-                       input(type='radio' name='Moved' value='agree')
-    //-                       | Agree
-    //-                     br
-    //-                   h3.field
-    //-                     label
-    //-                       input(type='radio' name='Moved' value='strong_agree')
-    //-                       | Strong Agree
-    //-                     br
-    //-               // h3.buttons
-    //-               //   button.clear Clear
-    //-               //   button.submit Submit
-    //-     .content
-    //-       // .ui.blue.right.floated.button(disabled='true') Submit
-    //-       // #submitSession.ui.blue.right.disabled.fluid.button(survey_id='1') Submit
-    //-       #submitSession.ui.blue.fluid.button(study_group='stories') Submit
+  
   .ui.container
     #surveyModal.ui.gray.large.post.modal(modal_id='321')
       .ui.fluid.inverted.red.card.test

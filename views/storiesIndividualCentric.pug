@@ -114,8 +114,8 @@ block content
    
     //Read from script and put in the stories format ..
     each val in script
-      -console.log('Modal ID: ', val.modal_id);
-      -console.log('the post group is: ', val.experiment_group)
+      // -console.log('Modal ID: ', val.modal_id);
+      // -console.log('the post group is: ', val.experiment_group)
       //  this is a modal to seperate the post by the author ...
       if val.type
         if val.type =='actor'
@@ -377,8 +377,8 @@ block content
           //- .ui.tiny.post.modal(modal_id=val.modal_id)
           .ui.tiny.post.modal(modal_id=val.modal_id)
             //- .header val.modal_id
-            -console.log('@@ACTOR VAL.ID :@@', val.id)
-            -console.log('@@ACTOR POST ID:@@', val.postID)
+            //- -console.log('@@ACTOR VAL.ID :@@', val.id)
+            //- -console.log('@@ACTOR POST ID:@@', val.postID)
               //- need to change modal_id to postID
             .ui.fluid.card.dim( postID=val.id, state=val.state || 'unread', type='actor', actor_un = val.actor.username, actor_name = val.actor.profile.name, actor_pic = val.actor.profile.picture) 
               .content

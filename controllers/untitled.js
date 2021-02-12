@@ -62,7 +62,6 @@ exports.getScript = (req, res, next) => {
 
   var bully_post;
   var bullied_actor = []
-  var bullied_actor_stories =[]
   var bully_count = 0;
   var bullied_actor_count =0;
   var bully_story_count=0;
@@ -341,11 +340,10 @@ exports.getScript = (req, res, next) => {
                 console.log("%$%$%$%$%$%$%$Found a bully post and will push it^2 :",bully_post._id );
                 bully_count = 1;
                 script_feed.splice(0,1);
-                if ( (scriptFilter =="var5" || scriptFilter == "var6" || scriptFilter == 'var3' || scriptFilter == 'var4') && bully_story_count == 0)
+                if ( scriptFilter =="var5" && bully_story_count == 0)
                 {
                   bully_story_count == 1
                   bully_story = bully_post
-                  console.log('we have a bully story: ', bully_story)
                 }
                 // if(scriptFilter=='var5' && bully_count_stry==0)
                 // {
@@ -401,10 +399,11 @@ exports.getScript = (req, res, next) => {
       {
         var bully_index = Math.floor(Math.random() * 4) + 1 
         control_feed.splice(bully_index, 0, bully_post);
-        console.log('bullying post added ***control condition*** ');
+        console.log('bullying post added-control');
 
       }
 
+      console.log('print the damn feed: ',finalfeed)
 
       // Condition: stories message centric
       var stry_msg =JSON.parse(JSON.stringify(finalfeed));
@@ -431,7 +430,7 @@ exports.getScript = (req, res, next) => {
         var bully_index = Math.floor(Math.random() * 4) + 1 
         // if it duplicates the bullied post, first remove the bullied post from the str_msg, then add it to the bully_index!!!!
         stry_msg.splice(bully_index, 0, bully_post);
-        console.log('bullying post added **story-message-centric*** ', bully_story);
+        console.log('bullying post added-story-message-centric ', bully_story);
 
       }
       console.log('STORY message centric :', stry_msg)
@@ -447,6 +446,7 @@ exports.getScript = (req, res, next) => {
       }
       // final_actors_feed.splice(0, 0, bully_post);
 
+      console.log('print the feed for final_actors_feed :', final_actors_feed)
 
       // for the stories-individual centric, group the stories by their authors: 
       unique_authors = [...new Set(final_actors_feed.map(item => item.actor.username))];
@@ -491,9 +491,11 @@ exports.getScript = (req, res, next) => {
           { 
             // store all this actor's posts in a temporary array to shift these posts within the first four posts...
             bullied_actor.push(middle_post)
+            console.log('whats bully post: ', bully_post)
             bullied_actor.push(bully_post);
             
             Array.prototype.push.apply(bullied_actor, temp_record)
+            console.log('show the bullied actor array :' , bullied_actor)
             console.log('Found a bullied actor', bully_post)
 
           }
@@ -569,6 +571,7 @@ exports.getScript = (req, res, next) => {
 
 
 
+      var bullied_actor_stories = []
       var stories_person_feed = []
       for( var i=0; i<unique_authors.length; i++)
       {
@@ -596,19 +599,14 @@ exports.getScript = (req, res, next) => {
             name: temp_record[0].actor.profile.name,
             username: temp_record[0].actor.username
           }
-          
+          stories_person_feed.push(middle_post);
+          Array.prototype.push.apply(stories_person_feed, temp_record);
 
 
-          if(user.study_days[current_day] > 0 && bully_story&& unique_authors[i] == bully_post.actor.username && bullied_actor_stories.length==0)
+          if(bully_post && unique_authors[i] == bully_post.actor.username)
           {
             bullied_actor_stories.push(middle_post);
-            bullied_actor_stories.push(bully_post);
             Array.prototype.push.apply(bullied_actor_stories, temp_record)
-          }
-          else{
-            stories_person_feed.push(middle_post);
-            Array.prototype.push.apply(stories_person_feed, temp_record);
-
           }
           
         }
@@ -616,7 +614,7 @@ exports.getScript = (req, res, next) => {
       } // end of adding the author's related info (to be shown between posts of each authors) 
 
        // adding bully post to individual-centric stories: 
-      if (user.study_days[current_day] > 0 && bully_story)
+      if (user.study_days[current_day] > 0 && bully_post)
       {
         var bully_index = Math.floor(Math.random() * 4) + 1 
         if(stories_person_feed[bully_index].type)
@@ -630,28 +628,26 @@ exports.getScript = (req, res, next) => {
         }
         
         // add the profile of the bullied actor at the index "bully_index"
-        // for(var i=0; i<stories_person_feed.length; i++)
-        // {
-        //   if(stories_person_feed[i].hasOwnProperty('type') && stories_person_feed[i].type ==='actor' && stories_person_feed[i].username === bully_post.actor.username)
-        //   {
-        //     var a = stories_person_feed.splice(i, 1);
-        //     stories_person_feed.splice(bully_index, 0, bullied_actor_stories[0]);
-        //     break;
-        //   }
-        // }
-        // add the posts created by the bullied actor .. [is there a better way to do it? I had to use a 2 for loop because I wanted to remove the posts, then add them to the front]
-        for(var i=1; i<=bullied_actor_stories.length; i++)
+        for(var i=0; i<stories_person_feed.length; i++)
         {
-          console.log('adding the bullied stories to the stories feed?!')
-          stories_person_feed.splice(bully_index+i-1, 0, bullied_actor_stories[i-1]);
-          // for(var j=1; j<stories_person_feed.length; j++)
-          // {            
-          //   if( (typeof stories_person_feed[j]['type']=='undefined') && bullied_actor_stories[i-1].actor.username ===stories_person_feed[j].actor.username)
-          //   {
-          //     var a = stories_person_feed.splice(j, 1);
-          //     stories_person_feed.splice(bully_index+i-1, 0, bullied_actor_stories[i-1]);
-          //   }
-          // }
+          if(stories_person_feed[i].hasOwnProperty('type') && stories_person_feed[i].type ==='actor' && stories_person_feed[i].username === bully_post.actor.username)
+          {
+            var a = stories_person_feed.splice(i, 1);
+            stories_person_feed.splice(bully_index, 0, bullied_actor_stories[0]);
+            break;
+          }
+        }
+        // add the posts created by the bullied actor .. [is there a better way to do it? I had to use a 2 for loop because I wanted to remove the posts, then add them to the front]
+        for(var i=2; i<=bullied_actor_stories.length; i++)
+        {
+          for(var j=1; j<stories_person_feed.length; j++)
+          {            
+            if( (typeof stories_person_feed[j]['type']=='undefined') && bullied_actor_stories[i-1].actor.username ===stories_person_feed[j].actor.username)
+            {
+              var a = stories_person_feed.splice(j, 1);
+              stories_person_feed.splice(bully_index+i-1, 0, bullied_actor_stories[i-1]);
+            }
+          }
           
         }
       }

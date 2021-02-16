@@ -223,6 +223,7 @@ block content
                 each comment in val.comments
                   //-IF this comment is USER made, do this
                    //- Zhila: timing should. be based on the post times... so something like val.times ... these should be relative to the POSTs not the user!!!!
+                   //-  add the time the user created an account here and test it
                   if (val.time + comment.time) < Date.now()
                     if comment.new_comment
                       -console.log("New COMMENT AREA");
@@ -235,6 +236,7 @@ block content
                         .content
                           a.author(href='/me')=user.profile.name || user.username || user.id
                           .metadata
+                            //- check this part as well.. 
                             span.date=(user.createdAt.getTime() + comment.time)
                             .rating
                               i.heart.icon

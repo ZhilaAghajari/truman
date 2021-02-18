@@ -155,7 +155,8 @@ block content
                 each comment in val.comments
                   -console.log('comment is: ', val.comments)
                   //-IF this comment is USER made, do this
-                  if (val.time+ comment.time) < Date.now()
+                  // if (val.time+ comment.time) < Date.now()
+                  if (user.createdAt.getTime() + comment.time) < Date.now()
                     if !comment.flagged
                       if comment.new_comment
                         -console.log("New COMMENT AREA");

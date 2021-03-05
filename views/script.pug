@@ -97,7 +97,8 @@ block content
                 each comment in val.comments
                   -console.log('comment is: ', val.comments)
                   //-IF this comment is USER made, do this
-                  if (user.createdAt.getTime() + comment.time) < Date.now()
+                  // if (user.createdAt.getTime() + comment.time) < Date.now()
+                  if (val.time + comment.time) < Date.now()
                     if !comment.flagged
                       if comment.new_comment
                         -console.log("New COMMENT AREA");
@@ -225,7 +226,8 @@ block content
                    //- Zhila: timing should. be based on the post times... so something like val.times ... these should be relative to the POSTs not the user!!!!
                    //-  add the time the user created an account here and test it
                   //- if (val.time + comment.time) < Date.now()
-                  if (user.createdAt.getTime() + comment.time) < Date.now()
+                  -console.log('print the val :', val)
+                  if (val.time + comment.time) < Date.now()
                     if comment.new_comment
                       -console.log("New COMMENT AREA");
                       .comment(commentID=comment.new_comment_id)

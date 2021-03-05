@@ -156,7 +156,7 @@ block content
                   -console.log('comment is: ', val.comments)
                   //-IF this comment is USER made, do this
                   // if (val.time+ comment.time) < Date.now()
-                  if (user.createdAt.getTime() + comment.time) < Date.now()
+                  if (val.time + comment.time) < Date.now()
                     if !comment.flagged
                       if comment.new_comment
                         -console.log("New COMMENT AREA");
@@ -300,7 +300,7 @@ block content
               .ui.comments
                 each comment in val.comments
                   //-IF this comment is USER made, do this
-                  if (user.createdAt.getTime() + comment.time) < Date.now()
+                  if (val.time + comment.time) < Date.now()
                     if comment.new_comment
                       -console.log("New COMMENT AREA");
                       .comment(commentID=comment.new_comment_id)

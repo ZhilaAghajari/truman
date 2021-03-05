@@ -276,7 +276,7 @@ block content
                   .ui.comments
                     each comment in val.comments
                       //-IF this comment is USER made, do this //Zh: now it could be from any other user not the only subject user that we used to have!!!!
-                      if (user.createdAt.getTime() + comment.time) < Date.now()
+                      if (val.time + comment.time) < Date.now()
                         if comment.new_comment
                           -console.log("New COMMENT AREA");
                           .comment(commentID=comment.new_comment_id)
@@ -493,7 +493,7 @@ block content
                   .ui.comments
                     each comment in val.comments
                       //-IF this comment is USER made, do this
-                      if (user.createdAt.getTime() + comment.time) < Date.now()
+                      if (val.time + comment.time) < Date.now()
                         if comment.new_comment
                           -console.log("New COMMENT AREA");
                           .comment(commentID=comment.new_comment_id)

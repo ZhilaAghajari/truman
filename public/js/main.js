@@ -1030,16 +1030,22 @@ $("#newpost.ui.tiny.post.modal")
   $('#submitSession.ui.blue.fluid.button').on('click', function(){
     var post = $(this).closest( ".ui.fluid.card.dim");
     var session_time = Date.now();
-    var sympathetic = $('input:radio[name=Sympathetic]:checked').val();
-    var softhearted = $('input:radio[name=softhearted]:checked').val();
-    var warm = $('input:radio[name=Warm]:checked').val();
-    var touched = $('input:radio[name=touched]:checked').val();
-    
-    var feel = $('input:radio[name=feel]:checked').val();
+
+    var emotion_sharing_sadness = $('input:radio[name=emotion-sharing-1]:checked').val();
+    var emotion_sharing_pain = $('input:radio[name=emotion-sharing-2]:checked').val();
+    var mentalizing = $('input:radio[name=Mentalizing-1]:checked').val();
+    var mentalizing_effort = $('input:radio[name=Mentalizing-2]:checked').val();
+    var compassionate = $('input:radio[name=compassionate]:checked').val();
+    var sympathy = $('input:radio[name=sympathy]:checked').val();
     var effort = $('input:radio[name=Effort]:checked').val();
     var efficacy = $('input:radio[name=Efficacy]:checked').val();
-    $.post("/userPost_feed", { time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_unique_posts: check_id, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[sympathetic,softhearted, warm, touched, feel, effort, efficacy], _csrf : $('meta[name="csrf-token"]').attr('content')});
-    $.post("/feed", { time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_unique_posts: check_id, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[ sympathetic,softhearted, warm, touched, feel, effort, efficacy], _csrf : $('meta[name="csrf-token"]').attr('content')});
+    var closeness = $('input:radio[name=closeness]:checked').val();
+    
+
+    
+    
+    $.post("/userPost_feed", { time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_unique_posts: check_id, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[emotion_sharing_sadness,emotion_sharing_pain, mentalizing, mentalizing_effort, compassionate, sympathy,effort, efficacy, closeness], _csrf : $('meta[name="csrf-token"]').attr('content')});
+    $.post("/feed", { time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_unique_posts: check_id, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[emotion_sharing_sadness,emotion_sharing_pain, mentalizing, mentalizing_effort, compassionate, sympathy,effort, efficacy, closeness], _csrf : $('meta[name="csrf-token"]').attr('content')});
     // reset the session variables .. 
     console.log('session likes stored : ', localStorage.getItem("session_likes"));
     window.localStorage.setItem("session_likes",0);

@@ -463,10 +463,10 @@ Once all done, stop the program (Be sure to close the mongoose connection)
 async function loadDatabase() {
     try {
         await readData(); //read data from csv files and convert it to json for loading
-        await promisify(dropCollections); //drop existing collecions before loading data
-        await promisify(createActorInstances);
-        await promisify(createNotificationInstances);
-        await promisify(createPostInstances);
+        // await promisify(dropCollections); //drop existing collecions before loading data
+        // await promisify(createActorInstances);
+        // await promisify(createNotificationInstances);
+        // await promisify(createPostInstances);
         await promisify(createPostRepliesInstances);
         await promisify(actorNotifyInstances);
     } catch (err) {

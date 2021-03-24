@@ -111,7 +111,10 @@ block content
                           .content
                             a.author(href='/me')=user.profile.name || user.username || user.id
                             .metadata
+                              
+                              -console.log('what is this span date : ', (val.time + comment.time))
                               span.date=(user.createdAt.getTime() + comment.time)
+                              //- span.date=(val.time + comment.time)
                               .rating
                                 if comment.liked
                                   i.red.heart.icon
@@ -140,6 +143,8 @@ block content
                               a.author(href='/user/'+comment.actor.username)=comment.actor.profile.name
                             .metadata
                               span.date=(user.createdAt.getTime() + comment.time)
+                              //- span.date= (val.time + comment.time)
+                              -console.log('what is this span date2 : ', (val.time + comment.time))
                               .rating
                                 if comment.liked
                                   i.red.heart.icon
@@ -226,7 +231,7 @@ block content
                    //- Zhila: timing should. be based on the post times... so something like val.times ... these should be relative to the POSTs not the user!!!!
                    //-  add the time the user created an account here and test it
                   //- if (val.time + comment.time) < Date.now()
-                  -console.log('print the val :', val)
+                  
                   if (val.time + comment.time) < Date.now()
                     if comment.new_comment
                       -console.log("New COMMENT AREA");
@@ -241,6 +246,8 @@ block content
                           .metadata
                             //- check this part as well.. 
                             span.date=(user.createdAt.getTime() + comment.time)
+                            //- span.date=(val.time + comment.time)
+                            -console.log('what is this span date : ', (val.time + comment.time))
                             .rating
                               i.heart.icon
                               span.num=0
@@ -259,6 +266,10 @@ block content
                           a.author(href='/user/'+comment.actor.username)=comment.actor.profile.name
                           .metadata
                             span.date=(user.createdAt.getTime() + comment.time)
+                            //- span.date=(val.time + comment.time)
+                            -console.log('print the comment time  :', val.time + comment.time)
+                            -console.log('what is the comment timing now? : ', Date(comment.time))
+                            -console.log('and what was this before: ', (user.createdAt.getTime() + comment.time))
                             .rating
                               if comment.liked
                                 i.red.heart.icon

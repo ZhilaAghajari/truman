@@ -7,18 +7,23 @@ block content
   .computer.only.tablet.only.four.wide.column 
     .ui.card
       .image
-        img(src='/user_post/'+user.profile.picture)
+        if user.profile.picture
+            img(src='/user_post/'+user.profile.picture)
+        else
+          img(src=user.gravatar(60))
+
+        //- img(src='/user_post/'+user.profile.picture)
       .content
         a.header(href='/me')= user.profile.name || user.email || user.id
         .meta="@"+user.username
         .description=user.profile.bio
         .description
         // Zh: if the user doesn't have a profile picture, have an avator for them .. similar to what we do in the script.pug 
-          if user.profile.location
-            i.marker.icon
-            span=user.profile.location
-          else
-            img(src=user.gravatar(40))
+        if user.profile.location
+          i.marker.icon
+          span=user.profile.location
+        //- else
+        //-   img(src=user.gravatar(40))
       .one.ui.bottom.attached.icon.buttons
           button.ui.editprofile.button(data-tooltip='Update Your Profile', data-position='bottom left')
             i.write.icon

@@ -113,8 +113,8 @@ block content
                             .metadata
                               
                               -console.log('what is this span date : ', (val.time + comment.time))
-                              span.date=(user.createdAt.getTime() + comment.time)
-                              //- span.date=(val.time + comment.time)
+                              //- span.date=(user.createdAt.getTime() + comment.time)
+                              span.date=(val.time + comment.time+user.createdAt.getTime())
                               .rating
                                 if comment.liked
                                   i.red.heart.icon
@@ -142,8 +142,8 @@ block content
                             if comment.actor.profile
                               a.author(href='/user/'+comment.actor.username)=comment.actor.profile.name
                             .metadata
-                              span.date=(user.createdAt.getTime() + comment.time)
-                              //- span.date= (val.time + comment.time)
+                              //- span.date=(user.createdAt.getTime() + comment.time)
+                              span.date= (val.time + comment.time +user.createdAt.getTime())
                               -console.log('what is this span date2 : ', (val.time + comment.time))
                               .rating
                                 if comment.liked
@@ -245,9 +245,9 @@ block content
                           a.author(href='/me')=user.profile.name || user.username || user.id
                           .metadata
                             //- check this part as well.. 
-                            span.date=(user.createdAt.getTime() + comment.time)
-                            //- span.date=(val.time + comment.time)
-                            -console.log('what is this span date : ', (val.time + comment.time))
+                            //- span.date=(user.createdAt.getTime() + comment.time)
+                            span.date=(val.time + comment.time +user.createdAt.getTime())
+                            -console.log('what is this span date????? : ', (val.time + comment.time))
                             .rating
                               i.heart.icon
                               span.num=0
@@ -265,8 +265,8 @@ block content
                         .content
                           a.author(href='/user/'+comment.actor.username)=comment.actor.profile.name
                           .metadata
-                            span.date=(user.createdAt.getTime() + comment.time)
-                            //- span.date=(val.time + comment.time)
+                            //- span.date=(user.createdAt.getTime() + comment.time)
+                            span.date=(val.time + comment.time+user.createdAt.getTime())
                             -console.log('print the comment time  :', val.time + comment.time)
                             -console.log('what is the comment timing now? : ', Date(comment.time))
                             -console.log('and what was this before: ', (user.createdAt.getTime() + comment.time))

@@ -467,7 +467,7 @@ async function loadDatabase() {
         // await promisify(createActorInstances);
         // await promisify(createNotificationInstances);
         // await promisify(createPostInstances);
-        await promisify(createPostRepliesInstances);
+        // await promisify(createPostRepliesInstances);
         await promisify(actorNotifyInstances);
     } catch (err) {
         console.log('Error occurred in Loading', err);

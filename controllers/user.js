@@ -124,7 +124,7 @@ exports.postLogin = (req, res, next) => {
     if (!(user.active)) { //? how can it access attributes of user object.. it has something to do with session from 'express-session' in app.js?
       console.log("FINAL");
       //Need to capture this in a var
-      var post_url = process.env.POST_SURVEY+user.mturkID;
+      var post_url = process.env.POST_SURVEY+“?id=“+user.mturkID;
       console.log("last url is "+post_url)
       req.flash('final', { msg: post_url });
       return res.redirect('/login');

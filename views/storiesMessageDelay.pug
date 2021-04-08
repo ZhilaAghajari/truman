@@ -1137,29 +1137,27 @@ block content
                                 h3.label 7
 
               
-              .content
-                // .ui.blue.right.floated.button(disabled='true') Submit
-                // #submitSession.ui.blue.right.disabled.fluid.button(survey_id='1') Submit
-                #submitSession.ui.blue.fluid.button(study_group='stories', style = "font-size:25px") Submit
-              
-    #newpost.ui.tiny.post.modal(study_group='stories')
-      i.close.icon
-      .header Add a New Post
-      .content
-        form#postform.ui.feed.form(action='/post/new', method='POST', enctype='multipart/form-data', study_group='stories')
-          input(type='hidden', name='_csrf', value=_csrf)
-          .field
-            textarea(rows='2', placeholder='Share your meal', name='body')
-          .field.image-upload
-            label(for='picinput')
-              .image.content
-                img#imgInp.ui.fluid.image(src='/public/photo-camera.svg')
-            //-input#picinput(type='file', accept='image/*', capture='camera', name='picinput')
-            input#picinput(type='file', accept='image/*', name='picinput')
-          .ui.error.message
-      //- change this action to a simple button and attach to it
-      //- #submitnewpost.ui.blue.fluid.button(study_group='stories') Submit
-      //- .content
-      //-   #submit.ui.blue.fluid.button(study_group='stories') Submit
-      .actions
-        input.ui.blue.button(type='submit', name="foo", value='Submit', form='postform', study_group='stories')
+          .content
+              #submitSession.ui.blue.fluid.button(study_group='stories', style = "font-size:25px") Submit
+  
+  #newpost.ui.tiny.post.modal(study_group='stories')
+    i.close.icon
+    .header Add a New Post
+    .content
+      form#postform.ui.feed.form(action='/post/new', method='POST', enctype='multipart/form-data', study_group='stories')
+        input(type='hidden', name='_csrf', value=_csrf)
+        .field
+          textarea(rows='2', placeholder='Share your meal', name='body')
+        .field.image-upload
+          label(for='picinput')
+            .image.content
+              img#imgInp.ui.fluid.image(src='/public/photo-camera.svg')
+          //-input#picinput(type='file', accept='image/*', capture='camera', name='picinput')
+          input#picinput(type='file', accept='image/*', name='picinput')
+        .ui.error.message
+    //- change this action to a simple button and attach to it
+    //- #submitnewpost.ui.blue.fluid.button(study_group='stories') Submit
+    //- .content
+    //-   #submit.ui.blue.fluid.button(study_group='stories') Submit
+    .actions
+      input.ui.blue.button(type='submit', name="foo", value='Submit', form='postform', study_group='stories')

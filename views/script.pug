@@ -246,7 +246,8 @@ block content
                           .metadata
                             //- check this part as well.. 
                             //- span.date=(user.createdAt.getTime() + comment.time)
-                            span.date=(val.time + comment.time +user.createdAt.getTime())
+                            span.date=(user.createdAt.getTime() +comment.time)
+                            //- span.date=(val.time + comment.time +user.createdAt.getTime())
                             -console.log('what is this span date????? : ', (val.time + comment.time))
                             .rating
                               i.heart.icon

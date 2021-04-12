@@ -550,7 +550,7 @@ block content
                             .content
                               a.author(href='/user/'+comment.actor.username)=comment.actor.profile.name
                               .metadata
-                                span.date=(user.createdAt.getTime() + comment.time)
+                                span.date=(val.time + comment.time +user.createdAt.getTime())
                                 .rating
                                   if comment.liked
                                     i.red.heart.icon

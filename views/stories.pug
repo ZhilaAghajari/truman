@@ -109,38 +109,67 @@ block content
       // -console.log('val.id is : ', val.id)
       //  this is a modal to seperate the post by the author ...
       if val.type
-
         if val.type =='actor'
           .ui.container.center.aligned
             .ui.tiny.post.modal(modal_id=val.modal_id)
               .ui.fluid.centered.card.dim(modal_id = val.modal_id)
+                ui.container.center.aligned(style=" color: #000000")                   
+                  ui.container.center.aligned()
+                    .content
+                      .ui.right.aligned.grid
+                        .centered.row
+                          .left.floated.right.aligned.ten.wide.column
+                            .content(alt="image")
+                              .ui.medium.circular.image(alt="centered image")
+                                img(src='/profile_pictures/'+val.picture, alt="right image", style="max-width:50%;width:50%;text-align='right'" )
+                          .right.floated.center.aligned.ten.wide.column
+                            //- p(style='font-style: bold;font-size:30px; color:black') Snaps from
+                            - var nm = val.name
+                                  h3(style=" color: #000000; font-style:italic;", text-align='left') Snaps from 
+                            h2(style=" color: #000000; font-style:italic;", text-align='left')
+                              a(href='/user/'+val.username)     
+                                span(style="font-size:120%;font-weight: bold;color: #000000;text-align='left';")=val.name
+                      .extra.content
+                        .two.fluid.ui.buttons(postID=val.id)
+                          .ui.left.disabled.button(pre_id=val.modal_id, postID=val.id, study_group ='stories') Previous
+                          .ui.right.disabled.button(next_id=val.modal_id, postID=val.id, study_group ='stories')  Next
+                             
+                        .ui.tiny.red.progress(progressing_id=val.modal_id, progressing_type = 'profile')
+                          .bar
+                          .label ...
+      // if val.type
 
-              .ui.container.center.aligned
-                .content(alt="centered image")
-                  .image(alt="centered image")
-                    img(src='/profile_pictures/'+val.picture, alt="centered image", style="max-width:50%;width:50%;" )
+      //   if val.type =='actor'
+      //     .ui.container.center.aligned
+      //       .ui.tiny.post.modal(modal_id=val.modal_id)
+      //         .ui.fluid.centered.card.dim(modal_id = val.modal_id)
+
+      //         .ui.container.center.aligned
+      //           .content(alt="centered image")
+      //             .image(alt="centered image")
+      //               img(src='/profile_pictures/'+val.picture, alt="centered image", style="max-width:50%;width:50%;" )
                 
 
-              .ui.container.center.aligned
-                .content(text-align='center')
-                  // h2(style='color:red;font-size:40px;')
-                  // .description='You have looked at all the stories by ' +val.name
-                  .description
-                    - var nm = val.name
-                    // h2(style=" color: #000000", text-align='center') Stories posted by  #{nm}
-                    h2(style=" color: #000000", text-align='center') Stories posted by 
-                    a(href='/user/'+val.username)     
-                      span(style="font-size:150%;font-weight: bold;")=val.name
+      //         .ui.container.center.aligned
+      //           .content(text-align='center')
+      //             // h2(style='color:red;font-size:40px;')
+      //             // .description='You have looked at all the stories by ' +val.name
+      //             .description
+      //               - var nm = val.name
+      //               // h2(style=" color: #000000", text-align='center') Stories posted by  #{nm}
+      //               h2(style=" color: #000000", text-align='center') Stories posted by 
+      //               a(href='/user/'+val.username)     
+      //                 span(style="font-size:150%;font-weight: bold;")=val.name
                   
 
-              .extra.content
-              .two.fluid.ui.buttons(postID=val.id)
-                .ui.left.disabled.button(pre_id=val.modal_id, postID=val.id, study_group ='stories') Previous
-                .ui.right.disabled.button(next_id=val.modal_id, postID=val.id, study_group ='stories')  Next
+              // .extra.content
+              // .two.fluid.ui.buttons(postID=val.id)
+              //   .ui.left.disabled.button(pre_id=val.modal_id, postID=val.id, study_group ='stories') Previous
+              //   .ui.right.disabled.button(next_id=val.modal_id, postID=val.id, study_group ='stories')  Next
                    
-              .ui.tiny.red.progress(progressing_id=val.modal_id, progressing_type = 'profile')
-                .bar
-                .label ... 
+              // .ui.tiny.red.progress(progressing_id=val.modal_id, progressing_type = 'profile')
+              //   .bar
+              //   .label ... 
 
       //- this is a user post ..
       if val.relativeTime 

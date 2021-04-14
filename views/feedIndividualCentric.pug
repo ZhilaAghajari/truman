@@ -73,15 +73,7 @@ block content
 
         else if val.type =='actor'
           .ui.fluid.cardProfile
-            ui.container.center.aligned(style=" color: #000000")
-              //- .ui.container.center.aligned
-              //-   .content
-              //-     .description
-              //-       .content(alt="centered image")
-              //-           .image(alt="centered image")
-              //-             img(src='/public/logo.png', class='ui.medium.circular.image', alt="centered image", style="max-width:20%;width:20%;" )
-                        
-                      
+            ui.container.center.aligned(style=" color: #000000")                   
               ui.container.center.aligned()
                 .content
                   .ui.right.aligned.grid
@@ -97,52 +89,6 @@ block content
                         h2(style=" color: #000000; font-style:italic;", text-align='left')
                           a(href='/user/'+val.username)     
                             span(style="font-size:120%;font-weight: bold;color: #000000;text-align='left';")=val.name
-              //- .content
-              //-     .description
-              //-       .content(alt="centered image")
-              //-           .image(alt="centered image")
-              //-             img(src='/public/logo.png', alt="centered image", style="max-width:15%;width:15%;" )
-              //-           - var nm = val.name
-
-                    //- .three.wide.column
-                    //-   //- p(style='font-style: bold;font-size:30px; color:black') Snaps from
-                    //-   h2(style=" color: #000000", text-align='center')
-                    //-     a(href='/user/'+val.username)     
-                    //-       span(style="font-size:100%;font-weight: bold;")=val.name
-                      //- //- .content(text-align='center', style=" color: #0E6EB8")
-                      //- // h2(style='color:red;font-size:40px;')
-                      //- // .description='You have looked at all the stories by ' +val.name
-                      //-   //- .description
-                      //-   - var nm = val.name
-                      //-   // h2(style=" color: #000000", text-align='center') Stories posted by  #{nm}
-                      //-   h2(style=" color: #000000", text-align='center') Snaps from 
-                      //-   a(href='/user/'+val.username)     
-                      //-     span(style="font-size:150%;font-weight: bold;")=val.name
-              //- .ui.container.center.aligned
-              //-   .content
-              //-     .description
-              //-       - var nm = val.name
-              //-           h2(style=" color: #000000", text-align='center') Snaps from 
-              //-           a(href='/user/'+val.username)     
-              //-             span(style="font-size:150%;font-weight: bold;")=val.name
-                  
-            //- ui.container.center.aligned(style=" color: #0E6EB8")
-            //-     .content(alt="centered image")
-            //-       .image(alt="centered image")
-            //-         img(src='/profile_pictures/'+val.picture, alt="centered image", style="max-width:50%;width:50%;" )
-                
-
-              
-            //-     .ui.container.center.aligned
-            //-       .content(text-align='center', style=" color: #0E6EB8")
-            //-         // h2(style='color:red;font-size:40px;')
-            //-         // .description='You have looked at all the stories by ' +val.name
-            //-         .description
-            //-           - var nm = val.name
-            //-           // h2(style=" color: #000000", text-align='center') Stories posted by  #{nm}
-            //-           h2(style=" color: #000000", text-align='center') Snaps from 
-            //-           a(href='/user/'+val.username)     
-            //-             span(style="font-size:150%;font-weight: bold;")=val.name
 
 
 

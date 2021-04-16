@@ -1,17 +1,17 @@
-extends ui_layout
+extends ui_layout_stories
 
 block content
 
   -var cdn = "";
 
 
-  .computer.only.tablet.only.four.wide.column 
+  .computer.only.tablet.only.five.wide.column 
   #content.eight.wide.computer.ten.wide.tablet.sixteen.wide.mobile.column
 
 
 
 
-    .ui.raised.fluid.inverted.card.profile_card
+    .ui.raised.fluid.inverted.cardProfile.profile_card
       //- h3.ui.center.aligned.header(style="background:#42c8f4;") 
         //- checkered5.png bluecheckered contain cover
 
@@ -22,40 +22,17 @@ block content
       //-       .heart()
             //- img.ui.centered.small.circular.image.pro_name_image(src="/post_pictures/"+'IMG_20170415_095155.jpg')
       .content(style="white-space:nowrap;")
-        span(style="font-size:150%;font-weight: bold;")="Welcome to EatSnap.Love"
-        // span(style="font-size:150%;font-weight: bold;")=""
-        
-      //   a.pro_name_link(href='/user/NoahM1121')
-      //     span(style="font-size:150%;font-weight: bold;").pro_name="Mary's"
-      //   span(style="font-size:150%;font-weight: bold;")=" plate? "
-      //   br
-      //   span(style="white-space:normal;")="Kate, we care about helping you connect with others. Browse through Tom's posts. Imagine how Tom feels and what is going on in his life."
+        span(style="font-size:150%;font-weight: bold; font-style:italic;")="Welcome to EatSnap.Love"
 
-      // //-.content(style="text-align:center;")
-      //   span="Here are some of Noah's recents posts"
-      
-
-
-      // .content()
-      //   .ui.three.column.grid.pro
-      //     .column.profile(body="this is a test!!!", time=9000)
-      //       img.ui.fluid.image(src="/post_pictures/"+'IMG_20160625_113114.jpg')
-      //     .column.profile(body="OK I see this now!!!")
-      //       img.ui.fluid.image(src="/post_pictures/"+'IMG_20170415_095155.jpg')
-      //     .column.profile(body="WHAT WHAT!!!")
-      //       img.ui.fluid.image(src="/post_pictures/"+'IMG_4266.JPG')
-      //     .column.profile(body="OMG ()()()()()()()()(!!!")
-      //       img.ui.fluid.image(src="/post_pictures/"+'IMG_20170305_133410.jpg')
-      //     .column.profile(body="HAHAHA but really WTF!!!")
-      //       img.ui.fluid.image(src="/post_pictures/"+'IMG_20170519_184216.jpg')
-      //     .column.profile(body="Last one")
-      //       img.ui.fluid.image(src="/post_pictures/"+'vegan6.jpg')
-
-      .ui.container.center.aligned
+      .ui.container.aligned
+          // .content(alt="centered image")
+          //   img.ui.centered.small.image(src='/public/homepage00.jpg')
           .content(alt="centered image")
           #loading.eight.wide.computer.ten.wide.tablet.sixteen.wide.mobile.column
-            img.ui.centered.small.image(src='/public/heart.svg')
-      #stratButton.large.button.fluid.ui.button(style="font-size:200%;font-weight: bold;") Click here to see todays stories
+            img.ui.centered.small.image(src='/public/heart.svg') 
+            // img.ui.centered.small.image(src='/public/homepage.jpg')
+
+      #stratButton.large.button.fluid.ui.button(style=" background-color:#000000 ;font-size:300%;font-weight: bold; font-style:italic;color:#FFFFFF") Click to see today&#39s Snaps
 
       // #survey-time-left
 
@@ -271,13 +248,13 @@ block content
                       //- i.big.red.heart.outline.like.icon
                       i.red.large.heart.icon
                       | Like
-                    a.ui.basic.red.left.pointing.label=val.likes
+                    //- a.ui.basic.red.left.pointing.label=val.likes
                   else
                     #likeButton.ui.basic.button
                       //- i.big.heart.outline.like.icon
                       i.heart.large.icon
                       | Like
-                    a.ui.basic.red.left.pointing.label.count=val.likes
+                    //- a.ui.basic.red.left.pointing.label.count=val.likes
                 //- i.flag.icon
                 span.right.floated
                   #falgebutton.ui.basic.button

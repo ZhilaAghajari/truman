@@ -55,40 +55,46 @@ block content
       //-  here I need to add the two conditions of val.type =='user' and val.type =='actor'
       if val.type
         if val.type =='user'
-          .ui.fluid.card()
-            .ui.container.center.aligned
+          .ui.fluid.cardProfile
+            .ui.container.center.aligned(style=" color: #000000")  
               .content
-                .image
-                  if user.profile.picture
-                    img(src='/user_post/'+user.profile.picture, style="max-width:50%;width:50%;",  alt="centered image")
-                  else
-                    img.ui.avatar.image(src=user.gravatar(60))
+                .ui.center.aligned.grid
+                  //- .centered.row
+                  //-     .centered.floated.centered.aligned.ten.wide.column
+                  //-       .content(alt="image")
+                  //-         .ui.medium.circular.borderG.image(alt="centered image")
+                  //-           if user.profile.picture
+                  //-             img(src='/user_post/'+user.profile.picture, style="max-width:50%;width:50%;",  alt="centered image")
+                  //-           else
+                  //-             img.ui.avatar.image(src=user.gravatar(60))
+                  .centered.row
+                      .centered.floated.centered.aligned.ten.wide.column
+                        - var nm = val.name
+                        h2(style=" color: #FFFFFF; font-style:italic;font-size:200%;font-weight: bold;", text-align='center') Your snaps
+                        //- h2(style=" color: #FFFFFF; font-style:italic;", text-align='center')
+                        //-   a(href='/me') 
+                        //-     span(style="font-size:150%;font-weight: bold;color: #FFFFFF;text-align='center';")=user.username || user.id ||user.profile.name
 
-              .ui.container.center.aligned
-                .content
-                  .description
-                    //- h3(style=" color: #000000") Posts by you
-                    a(href='/me')
-                      span=user.username || user.id ||user.profile.name
 
         else if val.type =='actor'
           .ui.fluid.cardProfile
             ui.container.center.aligned(style=" color: #000000")                   
               ui.container.center.aligned()
                 .content
-                  .ui.right.aligned.grid
+                  .ui.center.aligned.grid
                     .centered.row
-                      .left.floated.right.aligned.ten.wide.column
+                      .centered.floated.centered.aligned.ten.wide.column
                         .content(alt="image")
-                          .ui.medium.circular.image(alt="centered image")
-                            img(src='/profile_pictures/'+val.picture, alt="right image", style="max-width:50%;width:50%;text-align='right'" )
-                      .right.floated.center.aligned.ten.wide.column
+                          .ui.medium.circular.borderG.image(alt="centered image")
+                            img(src='/profile_pictures/'+val.picture, alt="centered image", style="max-width:60%;width:60%;" )
+                    .centered.row
+                      .centered.floated.centered.aligned.five.wide.column
                         //- p(style='font-style: bold;font-size:30px; color:black') Snaps from
                         - var nm = val.name
-                              h3(style=" color: #000000; font-style:italic;font-size:140%;", text-align='left') Snaps from 
-                        h2(style=" color: #000000; font-style:italic;", text-align='left')
+                        h2(style=" color: #FFFFFF; font-style:italic;font-size:150%;font-weight: bold;", text-align='center') Snaps from 
+                        h2(style=" color: #FFFFFF; font-style:italic;", text-align='center')
                           a(href='/user/'+val.username)     
-                            span(style="font-size:150%;font-weight: bold;color: #000000;text-align='left';")=val.name
+                            span(style="font-size:150%;font-weight: bold;color: #FFFFFF;text-align='center';")=val.name
 
 
 

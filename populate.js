@@ -108,7 +108,7 @@ function timeStringToNum(v) {
 //create a radom number (for likes) with a weighted distrubution
 //this is for posts
 function getLikes() {
-    var notRandomNumbers = [1, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 6];
+    var notRandomNumbers = [1, 1, 1, 2, 2, 2,3, 3, 3, 4, 4, 5,5,5, 6,6,6,6,6,6, 7,7,7,7,7,7,7, 8,8,8,8,8,8,8,8,8,9,9,9,9,9,9,9,9, 9, 10, 10,10, 10,10, 10,10, 10,10, 10,11,11,11,11,11,11,11,11,11,11,11,11,12,12,12,12,12,12,12,12,12,12,12,12,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15];
     var idx = Math.floor(Math.random() * notRandomNumbers.length);
     return notRandomNumbers[idx];
 }

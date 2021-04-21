@@ -16,10 +16,6 @@ block content
         a.header(href='/me')= user.profile.name || user.username || user.id
         .meta="@"+user.username
         .description=user.profile.bio
-        .description
-          if user.profile.location
-            i.marker.icon
-            span=user.profile.location
       .one.ui.bottom.attached.icon.buttons
           button.ui.editprofile.button(data-tooltip='Update Your Profile', data-position='bottom left')
             i.write.icon

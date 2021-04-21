@@ -16,12 +16,6 @@ block content
         a.header(href='/me')= user.profile.name || user.username || user.id
         .meta="@"+user.username
         .description=user.profile.bio
-        .description
-          if user.profile.location
-            i.marker.icon
-            span=user.profile.location
-          else
-            img(src=user.gravatar(60))
       .one.ui.bottom.attached.icon.buttons
           button.ui.editprofile.button(data-tooltip='Update Your Profile', data-position='bottom left')
             i.write.icon
@@ -83,15 +77,15 @@ block content
                 .content
                   .ui.center.aligned.grid
                     .centered.row
-                      .centered.floated.centered.aligned.ten.wide.column
+                      .left.floated.centered.aligned.ten.wide.column
                         .content(alt="image")
-                          .ui.medium.circular.borderG.image(alt="centered image")
-                            img(src='/profile_pictures/'+val.picture, alt="centered image", style="max-width:80%;width:80%;" )
+                          .ui.small.circular.borderG.image(alt="centered image")
+                            img(src='/profile_pictures/'+val.picture, alt="centered image", style="max-width:100%;width:100%;" )
                     .centered.row
-                      .centered.floated.centered.aligned.five.wide.column
+                      .left.floated.centered.aligned.ten.wide.column
                         //- p(style='font-style: bold;font-size:30px; color:black') Snaps from
                         - var nm = val.name
-                        h2(style=" color: #FFFFFF; font-style:italic;font-size:150%;font-weight: bold;", text-align='center') Snaps from 
+                        p.small.h2(style=" color: #FFFFFF; font-style:italic;font-size:200%;font-weight: bold;", text-align='center') Snaps from 
                         h2(style=" color: #FFFFFF; font-style:italic;", text-align='center')
                           a(href='/user/'+val.username)     
                             span(style="font-size:150%;font-weight: bold;color: #FFFFFF;text-align='center';")=val.name

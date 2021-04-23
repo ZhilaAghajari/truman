@@ -11,16 +11,7 @@ block content
 
 
 
-    .ui.raised.fluid.inverted.cardProfile.profile_card
-      //- h3.ui.center.aligned.header(style="background:#42c8f4;") 
-        //- checkered5.png bluecheckered contain cover
-
-      //- .content(style="background-image: url('/public/checkered6.png');background-size: cover;")
-      //-   h3.ui.center.aligned.header(style="background-image: url('/public/checkered6.png');background-size: cover;")
-      //-   .center.aligned
-      //-     a.pro_name_link(href='/user/NoahM1121')
-      //-       .heart()
-            //- img.ui.centered.small.circular.image.pro_name_image(src="/post_pictures/"+'IMG_20170415_095155.jpg')
+    .ui.raised.fluid.inverted.cardProfile
       .content(style="white-space:nowrap;")
         span(style="font-size:150%;font-weight: bold; font-style:italic;")="Welcome to EatSnap.Love"
 
@@ -33,11 +24,7 @@ block content
             // img.ui.centered.small.image(src='/public/homepage.jpg')
 
       #stratButton.large.button.fluid.ui.button(style=" background-color:#000000 ;font-size:300%;font-weight: bold; font-style:italic;color:#FFFFFF") Click to see today&#39s Snaps
-
-      // #survey-time-left
-
       
-
         //-.ui.small.images
           img(src='IMG_20160625_113114.jpg')
           img(src='IMG_4266.JPG')
@@ -1105,6 +1092,269 @@ block content
                               .ui.radio.checkbox
                                 input(type='radio' name='closeness' value='7', style="margin-right: 10" )
                                 h3.label 7
+                  
+                  table.ui.large.eleven.column.table
+                    p(style='font-style: italic;font-size:50px; color:gray') 
+                    thead
+                      tr
+                          th(colspan='11')
+                            | 10.  How do you feel right now?
+                      
+                    tbody
+                      tr
+                        th Very Negative
+                        th 
+                        th
+                        th
+                        th
+                        th
+                        th 
+                        th
+                        th
+                        th
+                        th Very Positive
+                      tr
+                        .inline.fields
+                          //- label(for='gender') First question.
+                          //- h3 Not at all
+                          td
+                            //- p(style='font-style: italic;font-size:20px; color:gray') Not at all
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='feel' value='1', style="margin-right: 10" )
+                                h3.label 0
+
+
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input.hidden(type='radio' name='feel' value='2', style="margin-right: 10" )
+                                h3.label 10
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input.hidden(type='radio' name='feel' value='2', style="margin-right: 10" )
+                                h3.label 20
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input.hidden(type='radio' name='feel' value='3', style="margin-right: 10" )
+                                h3.label 30
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input.hidden(type='radio' name='feel' value='4', style="margin-right: 10" )
+                                h3.label 40
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input.hidden(type='radio' name='feel' value='5', style="margin-right: 10" )
+                                h3.label 50
+                            //- h3 Very much
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='feel' value='6', style="margin-right: 10" )
+                                h3.label 60
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='feel' value='7', style="margin-right: 10" )
+                                h3.label 70
+
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='feel' value='8', style="margin-right: 10" )
+                                h3.label 80
+
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='feel' value='9', style="margin-right: 10" )
+                                h3.label 90
+
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='feel' value='7', style="margin-right: 10" )
+                                h3.label 100
+              
+
+
+              table.ui.large.eleven.column.table
+                    p(style='font-style: italic;font-size:50px; color:gray') 
+                    thead
+                      tr
+                          th(colspan='11')
+                            | 11.  How lonely do you feel right now?
+                      
+                    tbody
+                      tr
+                        th Not at all
+                        th 
+                        th
+                        th
+                        th
+                        th
+                        th 
+                        th
+                        th
+                        th
+                        th A lot
+                      tr
+                        .inline.fields
+                          //- label(for='gender') First question.
+                          //- h3 Not at all
+                          td
+                            //- p(style='font-style: italic;font-size:20px; color:gray') Not at all
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='lonely' value='1', style="margin-right: 10" )
+                                h3.label 0
+                          td
+                            //- p(style='font-style: italic;font-size:20px; color:gray') Not at all
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='lonely' value='1', style="margin-right: 10" )
+                                h3.label 10
+
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input.hidden(type='radio' name='lonely' value='2', style="margin-right: 10" )
+                                h3.label 20
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input.hidden(type='radio' name='lonely' value='3', style="margin-right: 10" )
+                                h3.label 30
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input.hidden(type='radio' name='lonely' value='4', style="margin-right: 10" )
+                                h3.label 40
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input.hidden(type='radio' name='lonely' value='5', style="margin-right: 10" )
+                                h3.label 50
+                            //- h3 Very much
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='lonely' value='6', style="margin-right: 10" )
+                                h3.label 60
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='lonely' value='7', style="margin-right: 10" )
+                                h3.label 70
+
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='lonely' value='8', style="margin-right: 10" )
+                                h3.label 80
+
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='lonely' value='9', style="margin-right: 10" )
+                                h3.label 90
+
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='lonely' value='7', style="margin-right: 10" )
+                                h3.label 100
+
+
+
+              table.ui.large.eleven.column.table
+                    p(style='font-style: italic;font-size:50px; color:gray') 
+                    thead
+                      tr
+                          th(colspan='11')
+                            | 12.  How inferior do you feel compared to others right now?
+                      
+                    tbody
+                      tr
+                        th Not at all
+                        th 
+                        th
+                        th
+                        th
+                        th
+                        th 
+                        th
+                        th
+                        th
+                        th A lot
+                      tr
+                        .inline.fields
+                          //- label(for='gender') First question.
+                          //- h3 Not at all
+                          td
+                            //- p(style='font-style: italic;font-size:20px; color:gray') Not at all
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='inferior' value='1', style="margin-right: 10" )
+                                h3.label 0
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input.hidden(type='radio' name='inferior' value='2', style="margin-right: 10" )
+                                h3.label 10
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input.hidden(type='radio' name='inferior' value='2', style="margin-right: 10" )
+                                h3.label 20
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input.hidden(type='radio' name='inferior' value='3', style="margin-right: 10" )
+                                h3.label 30
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input.hidden(type='radio' name='inferior' value='4', style="margin-right: 10" )
+                                h3.label 40
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input.hidden(type='radio' name='inferior' value='5', style="margin-right: 10" )
+                                h3.label 50
+                            //- h3 Very much
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='inferior' value='6', style="margin-right: 10" )
+                                h3.label 60
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='inferior' value='7', style="margin-right: 10" )
+                                h3.label 70
+
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='inferior' value='8', style="margin-right: 10" )
+                                h3.label 80
+
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='inferior' value='9', style="margin-right: 10" )
+                                h3.label 90
+
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='inferior' value='7', style="margin-right: 10" )
+                                h3.label 100
 
               
           .content

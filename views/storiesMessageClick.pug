@@ -1132,6 +1132,36 @@ block content
                                 input(type='radio' name='closeness' value='7', style="margin-right: 10" )
                                 h3.label 7
 
+                  
+                  p(style='font-style: bold; font-style : italic ;font-size:25px; color:black') 10.  How do you feel right now?
+                  table.ui.large.eleven.column.table
+                        //- p(style='font-style: italic;font-size:20px; color:black') 
+                        //- thead
+                        //-   tr
+                        //-       th(colspan='11')
+                        //-         | 10.  How do you feel right now?
+                          
+                        tbody
+                          .range-wrap
+                            input.range(type='range')
+                            output.bubble
+
+
+                  p(style='font-style: bold; font-style : italic ;font-size:25px; color:black') 11.  How lonely do you feel right now?
+                  table.ui.large.eleven.column.table          
+                        tbody
+                          .range-wrap-2
+                            input.range(type='range')
+                            output.bubble
+
+
+                  p(style='font-style: bold; font-style : italic ;font-size:25px; color:black') 12.  How inferior do you feel compared to others right now?
+                  table.ui.large.eleven.column.table          
+                        tbody
+                          .range-wrap-3
+                            input.range(type='range')
+                            output.bubble
+
               
           .content
               #submitSession.ui.blue.fluid.button(study_group='stories', style = "font-size:25px") Submit

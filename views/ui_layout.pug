@@ -119,14 +119,20 @@ html
     console.log("No it didn't. This happened: ", err)
     });
     }
+
+
+
   script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js')
   //script(src='/public/js/lib/jquery-3.1.1.min.js')
   script(src='/public/js/lib/humanized_time_span.js')
   //script(src='/js/lib/lazyload.transpiled.min.js')
   //script(src='/js/lib/bootstrap.min.js') humanized_time_span.js
+  //<script src="lazysizes.min.js" async=""></script>
+  script(src='/public/js/lib/lazysizes.min.js')
   script(src='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.js')
   script(src='/public/js/main.js')
-  script(type='text/javascript' src='https://code.jquery.com/mobile/1.0rc2/jquery.mobile-1.0rc2.min.js')
+  block scripts
+
 
   body
     .ui.vertically.padded.grid.container

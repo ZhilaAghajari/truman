@@ -690,7 +690,6 @@ exports.getScript = (req, res, next) => {
 
 
 
-
       // Current problems:  One of the modal_id is missing and that's why I cannot see the rest of the posts.. 
       // and I get this is the last post of the day (which is wrong!)
       if(scriptFilter == 'var1'){

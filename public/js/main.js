@@ -73,6 +73,17 @@ $(window).on("load", function() {
     setBubble(range, bubble);
   });
 
+  const new_inferior = document.querySelectorAll(".range-wrap-4");
+  new_inferior.forEach(wrap => {
+    const range = wrap.querySelector(".range");
+    const bubble = wrap.querySelector(".bubble");
+
+    range.addEventListener("input", () => {
+      setBubble(range, bubble);
+    });
+    setBubble(range, bubble);
+  });
+
   function setBubble(range, bubble) {
     const val = range.value;
     const min = range.min ? range.min : 0;
@@ -487,7 +498,7 @@ if(typeof total_logedin_time != 'undefined')
   // ZH: Set local variables after loging. ( do I need to set session id here as well?)
   $('button.ui.button').on('click', function(){
     active_flag = 1;
-    var t = 270; //ZHILA: change it back to 270
+    var t = 30; //ZHILA: change it back to 270
     var f =1;
     var logged_time = 15*60;
     window.localStorage.setItem("logged",f);

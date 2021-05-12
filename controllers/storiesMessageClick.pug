@@ -1286,91 +1286,172 @@ block content
                                 h3.label 100
 
 
-
+              --
+              p(style='font-style: bold; font-style : italic ;font-size:25px; color:black') 10.  How do you feel right now?
               table.ui.large.eleven.column.table
-                    p(style='font-style: italic;font-size:50px; color:gray') 
                     thead
                       tr
-                          th(colspan='11')
-                            | 12.  How inferior do you feel compared to others right now?
-                      
-                    tbody
+                        th Very Negative
+                        th
+                        th
+                        th 
+                        th
+                        th
+                        th
+                        th
+                        th
+                        th
+                        th
+                        th
+                        th
+                        th
+                        th
+                        th Very Positive 
+                    
+
+
+              .range-wrap
+                        input.range(type='range')
+                        output.bubble
+
+
+              
+
+              p(style='font-style: bold; font-style : italic ;font-size:25px; color:black') 11.  How lonely do you feel right now?
+              table.ui.large.eleven.column.table
+                    thead
                       tr
                         th Not at all
-                        th 
-                        th
-                        th
                         th
                         th
                         th 
                         th
                         th
                         th
-                        th A lot
+                        th
+                        th
+                        th
+                        th
+                        th
+                        th
+                        th
+                        th
+                        th A lot    
+                    
+              .range-wrap-2
+                input.range(type='range')
+                output.bubble
+
+
+              p(style='font-style: bold; font-style : italic ;font-size:25px; color:black') 12.  How inferior do you feel compared to others right now?
+              table.ui.large.eleven.column.table
+                    thead
                       tr
-                        .inline.fields
-                          //- label(for='gender') First question.
-                          //- h3 Not at all
-                          td
-                            //- p(style='font-style: italic;font-size:20px; color:gray') Not at all
-                            .h3.field
-                              .ui.radio.checkbox
-                                input(type='radio' name='inferior' value='1', style="margin-right: 10" )
-                                h3.label 0
-                          td
-                            .h3.field
-                              .ui.radio.checkbox
-                                input.hidden(type='radio' name='inferior' value='2', style="margin-right: 10" )
-                                h3.label 10
-                          td
-                            .h3.field
-                              .ui.radio.checkbox
-                                input.hidden(type='radio' name='inferior' value='2', style="margin-right: 10" )
-                                h3.label 20
-                          td
-                            .h3.field
-                              .ui.radio.checkbox
-                                input.hidden(type='radio' name='inferior' value='3', style="margin-right: 10" )
-                                h3.label 30
-                          td
-                            .h3.field
-                              .ui.radio.checkbox
-                                input.hidden(type='radio' name='inferior' value='4', style="margin-right: 10" )
-                                h3.label 40
-                          td
-                            .h3.field
-                              .ui.radio.checkbox
-                                input.hidden(type='radio' name='inferior' value='5', style="margin-right: 10" )
-                                h3.label 50
-                            //- h3 Very much
-                          td
-                            .h3.field
-                              .ui.radio.checkbox
-                                input(type='radio' name='inferior' value='6', style="margin-right: 10" )
-                                h3.label 60
-                          td
-                            .h3.field
-                              .ui.radio.checkbox
-                                input(type='radio' name='inferior' value='7', style="margin-right: 10" )
-                                h3.label 70
+                        th Very Negative
+                        th
+                        th
+                        th 
+                        th
+                        th
+                        th
+                        th
+                        th
+                        th
+                        th
+                        th
+                        th
+                        th
+                        th
+                        th Very close          
+                    
 
-                          td
-                            .h3.field
-                              .ui.radio.checkbox
-                                input(type='radio' name='inferior' value='8', style="margin-right: 10" )
-                                h3.label 80
+              .range-wrap-3
+                        input.range(type='range')
+                        output.bubble
+              //- table.ui.large.eleven.column.table
+              //-       p(style='font-style: italic;font-size:50px; color:gray') 
+              //-       thead
+              //-         tr
+              //-             th(colspan='11')
+              //-               | 12.  How inferior do you feel compared to others right now?
+                      
+              //-       tbody
+              //-         tr
+              //-           th Not at all
+              //-           th 
+              //-           th
+              //-           th
+              //-           th
+              //-           th
+              //-           th 
+              //-           th
+              //-           th
+              //-           th
+              //-           th A lot
+              //-         tr
+              //-           .inline.fields
+              //-             //- label(for='gender') First question.
+              //-             //- h3 Not at all
+              //-             td
+              //-               //- p(style='font-style: italic;font-size:20px; color:gray') Not at all
+              //-               .h3.field
+              //-                 .ui.radio.checkbox
+              //-                   input(type='radio' name='inferior' value='1', style="margin-right: 10" )
+              //-                   h3.label 0
+              //-             td
+              //-               .h3.field
+              //-                 .ui.radio.checkbox
+              //-                   input.hidden(type='radio' name='inferior' value='2', style="margin-right: 10" )
+              //-                   h3.label 10
+              //-             td
+              //-               .h3.field
+              //-                 .ui.radio.checkbox
+              //-                   input.hidden(type='radio' name='inferior' value='2', style="margin-right: 10" )
+              //-                   h3.label 20
+              //-             td
+              //-               .h3.field
+              //-                 .ui.radio.checkbox
+              //-                   input.hidden(type='radio' name='inferior' value='3', style="margin-right: 10" )
+              //-                   h3.label 30
+              //-             td
+              //-               .h3.field
+              //-                 .ui.radio.checkbox
+              //-                   input.hidden(type='radio' name='inferior' value='4', style="margin-right: 10" )
+              //-                   h3.label 40
+              //-             td
+              //-               .h3.field
+              //-                 .ui.radio.checkbox
+              //-                   input.hidden(type='radio' name='inferior' value='5', style="margin-right: 10" )
+              //-                   h3.label 50
+              //-               //- h3 Very much
+              //-             td
+              //-               .h3.field
+              //-                 .ui.radio.checkbox
+              //-                   input(type='radio' name='inferior' value='6', style="margin-right: 10" )
+              //-                   h3.label 60
+              //-             td
+              //-               .h3.field
+              //-                 .ui.radio.checkbox
+              //-                   input(type='radio' name='inferior' value='7', style="margin-right: 10" )
+              //-                   h3.label 70
 
-                          td
-                            .h3.field
-                              .ui.radio.checkbox
-                                input(type='radio' name='inferior' value='9', style="margin-right: 10" )
-                                h3.label 90
+              //-             td
+              //-               .h3.field
+              //-                 .ui.radio.checkbox
+              //-                   input(type='radio' name='inferior' value='8', style="margin-right: 10" )
+              //-                   h3.label 80
 
-                          td
-                            .h3.field
-                              .ui.radio.checkbox
-                                input(type='radio' name='inferior' value='7', style="margin-right: 10" )
-                                h3.label 100
+              //-             td
+              //-               .h3.field
+              //-                 .ui.radio.checkbox
+              //-                   input(type='radio' name='inferior' value='9', style="margin-right: 10" )
+              //-                   h3.label 90
+
+              //-             td
+              //-               .h3.field
+              //-                 .ui.radio.checkbox
+              //-                   input(type='radio' name='inferior' value='7', style="margin-right: 10" )
+              //-                   h3.label 100
 
               
           .content

@@ -5,17 +5,55 @@ block content
   .ui.text.container
     br
     h1 Welcome to EatSnap.Love!
-        h3 Here's what you can do on the site.
+        h3 What can you do on EatSnap.Love? 
     ul
         li Create new posts! Upload existing photos or take new photos with your phone.
         li Reply to others' posts to get a conversation going.
         li Like others' posts to show you love their snaps!
         li Fill out your profile. You can add as much or as little info as you want.
-        li When the Notification Bell is red, that means you have new Notifications, be sure to check them out!
-    img.ui.centered.image(src='/public/esl-howto.png')
+        li When the Notification Bell is red, that means you have new Notifications, be sure to check them out.
+
+
+        
     br
-    h3 See who else is around.
-    p We'll notify you if someone replies to or likes your post.
+    
+    h3 What will you see on EatSnap.Love? 
+
+    if user.group=='var1' || user.group=='var5' || user.group=='var6' 
+        ul
+            li Our algorithm will display you the latest posts on the site that it thinks you will find most engaging. 
+            li You will see the most recent updates on the site. 
+            li We will notify you when someone comments or likes on your posts. 
+
+    if user.group=='var2' || user.group=='var3' || user.group=='var4' 
+        ul
+            li Our algorithm will display you posts grouped by user that it thinks you will find most engaging.
+            li You will see several posts from a single user before moving onto the next user.  
+            li We will notify you when someone comments or likes on your posts. 
+
+    if user.group =='var1'
+        img.ui.centered.image(src='/public/esl-howto_welcome.png')
+
+    if user.group =='var2'
+        img.ui.centered.image(src='/public/esl-howto_person.png')
+        img.ui.centered.image(src='/public/esl-howto_welcome.png')
+
+    if user.group =='var3'
+        img.ui.centered.image(src='/public/esl-howto_clickperson.png')
+        img.ui.centered.image(src='/public/esl-howto_click.png')
+    
+    if user.group =='var4'
+        img.ui.centered.image(src='/public/esl-howto_clickperson.png')
+        img.ui.centered.image(src='/public/esl-howto_greenclick.png')
+    
+    if user.group =='var5'
+        img.ui.centered.image(src='/public/esl-howto_click.png')   
+    if user.group =='var6'
+        img.ui.centered.image(src='/public/esl-howto_greenclick.png')
+
+
+    //- h3 See who else is around.
+    //- p We'll notify you if someone replies to or likes your post.
     if user.transparency == "yes"
         p We'll also keep track of which posts you've viewed. To keep things social, we'll let others know when you view their posts, and notify you when they view yours.
         img.ui.centered.image(src='/public/UI-read.png')

@@ -123,14 +123,14 @@ const userSchema = new mongoose.Schema({
     picture_clicks : [Number],
     })],
 
-  session_survey: 
-  {
-    answers: Array,
-    time: Array,
-    likes: Array,
-    posts: Array,
-    flags:Array
-  },
+  session_survey: Array,
+  // {
+    // answers: Array,
+    // time: Array,
+    // likes: Array,
+    // posts: Array,
+    // flags:Array
+  // },
 
 // check the feed action .. 
 // 

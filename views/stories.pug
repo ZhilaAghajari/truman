@@ -1093,7 +1093,7 @@ block content
                                 input(type='radio' name='closeness' value='7', style="margin-right: 10" )
                                 h3.label 7
                   
-                  --
+                  
                   p(style='font-style: bold; font-style : italic ;font-size:25px; color:black') 10.  How do you feel right now?
                   table.ui.large.eleven.column.table
                         thead
@@ -1118,8 +1118,12 @@ block content
 
 
                   .range-wrap
-                            input.range(type='range')
+                            input.scroll.range(type='range')
                             output.bubble
+                  .range-slider
+                    // range input
+                    input(type='range' min='0' max='100' step='1' value='10')
+
 
 
                   

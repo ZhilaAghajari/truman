@@ -1112,12 +1112,34 @@ exports.postUpdateFeedAction = (req, res, next) => {
       // Zhila
       else if(req.body.session_survey)
       {
-        user.session_survey.answers.push(req.body.session_survey);
-        user.session_survey.likes.push(req.body.session_likes);
-        user.session_survey.flags.push(req.body.session_flags);
-        user.session_survey.posts.push(req.body.session_posts);
-        user.session_survey.time.push(req.body.time);
+        var cat = new Object(); 
+        // user.session_survey.answers.push(req.body.session_survey); 
+        // user.session_survey.likes.push(req.body.session_likes);
+        // user.session_survey.flags.push(req.body.session_flags);
+        // user.session_survey.posts.push(req.body.session_posts);
+        // user.session_survey.time.push(req.body.time);
+
+
+        cat.emotion_sharing_sadness =req.body.session_survey[0];
+        cat.emotion_sharing_pain=req.body.session_survey[1];
+        cat.mentalizing = req.body.session_survey[2];
+        cat.mentalizing_effort = req.body.session_survey[3];
+        cat.compassionate =req.body.session_survey[4];
+        cat.sympathy = req.body.session_survey[5];
+        cat.effort = req.body.session_survey[6];
+        cat.efficacy = req.body.session_survey[7];
+        cat.closeness = req.body.session_survey[8];
+        cat.feel = req.body.session_survey[9];
+        cat.lonely = req.body.session_survey[10];
+        cat.feel_inferior = req.body.session_survey[11];
         // add more information about session level, things like number of likes, comments, flag, etc.
+        cat.likes = req.body.session_likes;
+        cat.flags = req.body.session_flags;
+        cat.posts = req.body.session_posts;
+        cat.time =req.body.time;
+
+        // user.session_survey.answers.push(cat);
+        user.session_survey.push(cat);
 
       }
 

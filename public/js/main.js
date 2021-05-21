@@ -2,6 +2,7 @@
 //2- welcome message ..
 //3- person centric design
 $('#content').hide();
+
 $('#loading').show();
 var modal_id;
 var next_id ='1';
@@ -14,6 +15,16 @@ var active_flag;
 var timer_flg='0';
 // @@@@@@@@@
 $(window).on("load", function() {
+  // change the message here ... ...
+  // Zhila :check if it is the story version
+  if($("[pre_id='"+1+"']").attr('study_group') =="stories" || $("[pre_id='"+1+"']").attr('study_group') =="clickThrough")
+  {
+    document.getElementById("stratButton").childNodes[0].nodeValue="Click to see today's Snaps";
+    document.getElementById("stratButton").style.backgroundColor="#2D3436";
+    // document.getElementById("stratButton").style.backgroundColor="#EC5B64";
+    
+  }
+  // 
 
   $('.modal').modal({
     // this parameter will enable/disable the closing for the previous .united modals when the next modal is opened :)
@@ -37,6 +48,14 @@ $(window).on("load", function() {
    //    arrowLeftText: ''
    //  });
 
+
+
+// $('#smooth').range({
+//     min: 0,
+//     max: 10,
+//     start: 5,
+//     smooth: true,
+//   });
 
   const allRanges = document.querySelectorAll(".range-wrap");
   allRanges.forEach(wrap => {
@@ -128,21 +147,7 @@ if(typeof total_seconds != 'undefined')
       if(total_seconds == 0){
           if(localStorage.getItem("survey_flag")==1)
           {
-            // if($('.ui.blue.fluid.button')[0].attributes[2].value!="stories")
-            // {
-            //   show_survey(); // For the feed version ... 
-            // }
             show_survey();
-            // else if(next_id>3)
-            // {
-            //   show_survey();
-            // }
-            // else{
-            //   n=1;
-            //   timer_flg = 1;
-            //   localStorage.setItem("timer_flag",n);
-            //   setTimeout(countDownTimer,1000000000);
-            // }
             
           }
       } else if(total_seconds>0) {
@@ -305,92 +310,16 @@ if(typeof total_logedin_time != 'undefined')
     $(" .ui.tiny.post.modal[modal_id='"+j+"']").modal('attach events',".ui.right.button[next_id='"+i+"']");
   } 
 
-// var event = document.querySelector('.ui.right.button');
-// event.dispatchEvent(new Event('change', { 
-//   if($(this)[0].attributes[1].value>=3)
-//   {
-//     if(localStorage.getItem("timer_flag")==1 && localStorage.getItem("survey_flag")==1)
-//     {
-//       show_survey();
-//     }
-//   }}));
-
-
-
-// $(function() {  
-//   // Here you register for the event and do whatever you need to do.
-//   $(document).on('changeEvent', function() {
-//     if(localStorage.getItem("timer_flag")==1)
-//     {
-//       show_survey();
-//     }
-//   });
-
-//   $('.ui.right.button').click(function() {
-//     if($(this)[0].attributes[1].value >=3)
-//     {
-//       $(document).trigger('changeEvent'); 
-//     }
-//   });
-
-//   //  $('#getbutton').click(function() {
-//   //   var data = $('#contains-data').data('mydata');
-//   //   alert('Data is: ' + data);
-//   // });
-// });
-
-
-
-
- // $('.ui.right.button').change(function(){ 
- //  if($(this)[0].attributes[1].value>=3 && localStorage.getItem("timer_flag")==1)
- //  {
- //    show_survey();
- //  }
- // });
-
-// $(this).addEventListener('trigger_survey', function(e){
-//   if(localStorage.getItem("timer_flag")==1 && localStorage.getItem("survey_flag")==1){
-//     show_survey();
-//   }   
-// });
-
-// $("[next_id='"+'3'+"']").on('click', function(){
-//     if(localStorage.getItem("timer_flag")==1 && localStorage.getItem("survey_flag")==1)
-//     {
-//       show_survey();
-//     }
-
-// });
-
-
-// function handler(){
-//   // if(localStorage.getItem("timer_flag")==1 && localStorage.getItem("survey_flag")==1)
-//   if(timer_flg==1 && localStorage.getItem("survey_flag")==1)
-//   {
-//       show_survey();
-
-//   }
-// }
-
-// $(".ui.right.button[next_id='"+'3'+"']").on("click",{
-
-// },handler);
-
-
-// var el = document.querySelector(" .ui.right.button[next_id'"+'3'+"']");
-// el.addEventListener('DOMSubtreeModified', function(){
-//   if(localStorage.getItem("timer_flag")==1)
-//   {
-//     show_survey()
-//   }
-// });
 
 
   $('.ui.right.button').on('click', function(){ 
       // $(".ui.right.button[next_id='"+'3'+"']").on("click",{
       // },handler);
       var postID = $(this).closest( ".ui.fluid.card" ).attr( "postID" );
+      // var current_post = postID;
+      // current_posts.push(JSON.parse(current_post));
+      // localStorage.setItem('session_seen_posts', JSON.stringify(current_post));
+
       // var startTime = parseInt($(this).parents('.two.fluid.ui.buttons').children(".myTimer").text()); // this is always zero for modal!!!
       var startTime = localStorage.getItem("startTime")
       var endTime = Date.now();
@@ -407,6 +336,7 @@ if(typeof total_logedin_time != 'undefined')
       active_flag = 1;
       temp = parseInt(localStorage.getItem("session_posts"))+1;
       window.localStorage.setItem("session_posts",temp);
+
       // console.log('Posts seen in this session : ', localStorage.getItem("session_posts"));
       console.log('Time Left: ', total_seconds);
       next_id = $(this)[0].attributes[1].value;
@@ -1082,7 +1012,10 @@ $(".ui.tiny.post.modal[modal_id='"+check_id+"']")
 .modal({
   selector: { 
     close: ".ui.large.post.modal[modal_id='"+j+"']"
-  } 
+  }, 
+    onApprove: function () {
+    return true;
+  }
 })
 ;
 
@@ -1116,6 +1049,11 @@ $("#newpost.ui.tiny.post.modal")
     var lonely = parseInt($(".bubble")[1].outerText);
     var feel_inferior= parseInt($(".bubble")[2].outerText);
 
+    // ZHila -- for the feed version I need to do it differently
+    // check if it is feed
+    console.log("NUMEBR of seen post in this session is :",localStorage.getItem("session_posts"));
+
+    // can we store all the posts' id that the user observed in this session...
     $.post("/userPost_feed", { time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_unique_posts: check_id, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[emotion_sharing_sadness,emotion_sharing_pain, mentalizing, mentalizing_effort, compassionate, sympathy,effort, efficacy, closeness, feel, lonely, feel_inferior], _csrf : $('meta[name="csrf-token"]').attr('content')});
     $.post("/feed", { time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_unique_posts: check_id, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[emotion_sharing_sadness,emotion_sharing_pain, mentalizing, mentalizing_effort, compassionate, sympathy,effort, efficacy, closeness, feel, lonely, feel_inferior], _csrf : $('meta[name="csrf-token"]').attr('content')});
     // reset the session variables .. 

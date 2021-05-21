@@ -259,9 +259,9 @@ block content
                           .metadata
                             //- span.date=(user.createdAt.getTime() + comment.time)
                             span.date=(val.time + comment.time+user.createdAt.getTime())
-                            -console.log('print the comment time  :', val.time + comment.time)
-                            -console.log('what is the comment timing now? : ', Date(comment.time))
-                            -console.log('and what was this before: ', (user.createdAt.getTime() + comment.time))
+                            //- -console.log('print the comment time  :', val.time + comment.time)
+                            //- -console.log('what is the comment timing now? : ', Date(comment.time))
+                            //- -console.log('and what was this before: ', (user.createdAt.getTime() + comment.time))
                             .rating
                               if comment.liked
                                 i.red.heart.icon
@@ -554,38 +554,38 @@ block content
                             //- p(style='font-style: italic;font-size:15px; color:gray') Not at all
                             .h3.field
                               .ui.radio.checkbox
-                                input(type='radio' name='emotion-sharing-1' value='strong_disagree', style="margin-right: 10" )
+                                input(type='radio' name='emotion-sharing-1' value='1', style="margin-right: 10" )
                                 h3.label 1
                           td
                             .h3.field
                               .ui.radio.checkbox
-                                input.hidden(type='radio' name='emotion-sharing-1' value='disagree', style="margin-right: 10" )
+                                input.hidden(type='radio' name='emotion-sharing-1' value='2', style="margin-right: 10" )
                                 h3.label 2
                           td
                             .h3.field
                               .ui.radio.checkbox
-                                input.hidden(type='radio' name='emotion-sharing-1' value='somewhat_disagree', style="margin-right: 10" )
+                                input.hidden(type='radio' name='emotion-sharing-1' value='3', style="margin-right: 10" )
                                 h3.label 3
                           td
                             .h3.field
                               .ui.radio.checkbox
-                                input.hidden(type='radio' name='emotion-sharing-1' value='neither_agree_nor_disagree', style="margin-right: 10" )
+                                input.hidden(type='radio' name='emotion-sharing-1' value='4', style="margin-right: 10" )
                                 h3.label 4
                           td
                             .h3.field
                               .ui.radio.checkbox
-                                input.hidden(type='radio' name='emotion-sharing-1' value='somewhat_agree', style="margin-right: 10" )
+                                input.hidden(type='radio' name='emotion-sharing-1' value='5', style="margin-right: 10" )
                                 h3.label 5
                             //- h3 Very much
                           td
                             .h3.field
                               .ui.radio.checkbox
-                                input(type='radio' name='emotion-sharing-1' value='agree', style="margin-right: 10" )
+                                input(type='radio' name='emotion-sharing-1' value='6', style="margin-right: 10" )
                                 h3.label 6
                           td
                             .h3.field
                               .ui.radio.checkbox
-                                input(type='radio' name='emotion-sharing-1' value='strong_agree', style="margin-right: 10" )
+                                input(type='radio' name='emotion-sharing-1' value='7', style="margin-right: 10" )
                                 h3.label 7
                             //- p(style='font-style: italic;font-size:20px; color:gray') Very much
 

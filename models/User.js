@@ -5,6 +5,9 @@ const Schema = mongoose.Schema;
 
 const userSchema = new mongoose.Schema({
   email: { type: String, unique: true },
+  last_bullyPost_viewed_Time: {type: Number},
+  seen_bully_time:{type: [Number]},
+  seen_bullyPost_readTime:{type: [Number]},
   password: String,
   passwordResetToken: String,
   passwordResetExpires: Date,
@@ -134,6 +137,7 @@ const userSchema = new mongoose.Schema({
 
 // check the feed action .. 
 // 
+
   feedAction: [new Schema({
         post: {type: Schema.ObjectId, ref: 'Script'},
         //add in object to see which comments were linked and flagged
@@ -163,6 +167,8 @@ const userSchema = new mongoose.Schema({
           time: {type: Number}
           },{_id: true, versionKey: false })]
     }, {_id: true, versionKey: false })],
+
+
 
   profile: {
     name: String,

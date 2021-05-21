@@ -112,6 +112,7 @@ User.find()
         mlm.email = users[i].email;
         ss.email = users[i].email;
         //sur.email = users[i].email;
+        ss.experimental_condition = users[i].group;
         sums.email = users[i].email;
 
         mlm.StartDate = users[i].createdAt;
@@ -122,41 +123,34 @@ User.find()
         console.log("In User "+ users[i].email);
         //console.log("In User Number "+ i);
 
-        //UI - transparency
-        // if (users[i].transparency == 'yes')
-        // {
-        //   mlm.transparency = 1;
-        //   sums.transparency = 1;
-        // }
-        // else
-        // {
-        //   mlm.transparency = 0;
-        //   sums.transparency = 0;
-        // }
+        // collect the user's session survey:
+        for (var n = 0; n < users[i].session_survey.length; n++) 
+        {  
+          let indx=n;
+          ss["session_survey_emotion_sharing_sadness"] = users[i].session_survey[indx].emotion_sharing_sadness;
+          ss["session_survey_emotion_sharing_pain"] = users[i].session_survey[indx].emotion_sharing_pain;
+          ss["session_survey_mentalizing"] = users[i].session_survey[indx].mentalizing;
+          ss["session_survey_mentalizing_effort"] = users[i].session_survey[indx].mentalizing_effort;
+          ss["session_survey_compassionate"] = users[i].session_survey[indx].compassionate;
+          ss["session_survey_sympathy"] = users[i].session_survey[indx].sympathy;
+          ss["session_survey_effort"] = users[i].session_survey[indx].effort;
+          ss["session_survey_efficacy"] = users[i].session_survey[indx].efficacy;
+          ss["session_survey_closeness"] = users[i].session_survey[indx].closeness;
+          ss["session_survey_slonely"] = users[i].session_survey[indx].lonely;
+          ss["session_survey_feel"] = users[i].session_survey[indx].feel;
+          ss["session_survey_feel_inferior"] = users[i].session_survey[indx].feel_inferior;
+          ss["session_survey_likes"] = users[i].session_survey[indx].likes;
+          ss["session_survey_flags"] = users[i].session_survey[indx].flags;
+          // ss["session_survey_numPosts"] = users[i].session_survey[indx].posts;
+          // ss["session_survey_time"] = users[i].session_survey[indx].time;
+          ss["Bully_count"] = users[i].session_survey[indx].seen_bully_count;
+          // // Zhila: next, work on this!!!
+          ss["session_survey_seen_bullyPosts"] = users[i].session_survey[indx].seen_bully_post;
+          // ss["session_survey_timeSpentOnBullyPost"] =  users[i].session_survey[indx].bully_post_viewedTime;
+          
+          ss_writer.write(ss);
+      }
 
-        //profile_perspective
-        // if (users[i].profile_perspective == 'yes')
-        // {
-        //   mlm.profile_perspective = 1;
-        //   sums.profile_perspective = 1;
-        // }
-        // else
-        // {
-        //   mlm.profile_perspective = 0;
-        //   sums.profile_perspective = 0;
-        // }
-
-        //comment_prompt
-        // if (users[i].comment_prompt == 'yes')
-        // {
-        //   mlm.comment_prompt = 1;
-        //   sums.comment_prompt = 1;
-        // }
-        // else
-        // {
-        //   mlm.comment_prompt = 0;
-        //   sums.comment_prompt = 0;
-        // }
 
         if (users[i].profile.name)
         {
@@ -510,31 +504,31 @@ User.find()
         // cat.time =req.body.time;
 
 
-        // Add rhw session survey:
-        for (var n = 0; n < users[i].session_survey.length; n++) 
-        {  
+        // Add rhw session survey to the user's record:
+        // for (var n = 0; n < users[i].session_survey.length; n++) 
+        // {  
 
-          // console.log('what is in users: ', users[i].session_survey[0].emotion_sharing_sadness)
-          let indx=n;
-          // console.log('emotion: ', users[i].session_survey[0].emotion_sharing_sadness)   
+        //   // console.log('what is in users: ', users[i].session_survey[0].emotion_sharing_sadness)
+        //   let indx=n;
+        //   // console.log('emotion: ', users[i].session_survey[0].emotion_sharing_sadness)   
           
-          mlm["session_survey_"+indx+"/emotion_sharing_sadness"] = users[i].session_survey[indx].emotion_sharing_sadness;
-          mlm["session_survey_"+indx+"/emotion_sharing_pain"] = users[i].session_survey[indx].emotion_sharing_pain;
-          mlm["session_survey_"+indx+"/mentalizing"] = users[i].session_survey[indx].mentalizing;
-          mlm["session_survey_"+indx+"/mentalizing_effort"] = users[i].session_survey[indx].mentalizing_effort;
-          mlm["session_survey_"+indx+"/compassionate"] = users[i].session_survey[indx].compassionate;
-          mlm["session_survey_"+indx+"/sympathy"] = users[i].session_survey[indx].sympathy;
-          mlm["session_survey_"+indx+"/effort"] = users[i].session_survey[indx].effort;
-          mlm["session_survey_"+indx+"/efficacy"] = users[i].session_survey[indx].efficacy;
-          mlm["session_survey_"+indx+"/closeness"] = users[i].session_survey[indx].closeness;
-          mlm["session_survey"+indx+"/lonely"] = users[i].session_survey[indx].lonely;
-          mlm["session_survey_"+indx+"/feel"] = users[i].session_survey[indx].feel;
-          mlm["session_survey_"+indx+"/feel_inferior"] = users[i].session_survey[indx].feel_inferior;
-          mlm["session_survey_"+indx+"/likes"] = users[i].session_survey[indx].session_likes;
-          mlm["session_survey_"+indx+"/flags"] = users[i].session_survey[indx].session_flags;
-          mlm["session_survey_"+indx+"/numPosts"] = users[i].session_survey[indx].session_posts;
-          mlm["session_survey_"+indx+"/time"] = users[i].session_survey[indx].session_time;
-        }
+        //   mlm["session_survey_"+indx+"/emotion_sharing_sadness"] = users[i].session_survey[indx].emotion_sharing_sadness;
+        //   mlm["session_survey_"+indx+"/emotion_sharing_pain"] = users[i].session_survey[indx].emotion_sharing_pain;
+        //   mlm["session_survey_"+indx+"/mentalizing"] = users[i].session_survey[indx].mentalizing;
+        //   mlm["session_survey_"+indx+"/mentalizing_effort"] = users[i].session_survey[indx].mentalizing_effort;
+        //   mlm["session_survey_"+indx+"/compassionate"] = users[i].session_survey[indx].compassionate;
+        //   mlm["session_survey_"+indx+"/sympathy"] = users[i].session_survey[indx].sympathy;
+        //   mlm["session_survey_"+indx+"/effort"] = users[i].session_survey[indx].effort;
+        //   mlm["session_survey_"+indx+"/efficacy"] = users[i].session_survey[indx].efficacy;
+        //   mlm["session_survey_"+indx+"/closeness"] = users[i].session_survey[indx].closeness;
+        //   mlm["session_survey"+indx+"/lonely"] = users[i].session_survey[indx].lonely;
+        //   mlm["session_survey_"+indx+"/feel"] = users[i].session_survey[indx].feel;
+        //   mlm["session_survey_"+indx+"/feel_inferior"] = users[i].session_survey[indx].feel_inferior;
+        //   mlm["session_survey_"+indx+"/likes"] = users[i].session_survey[indx].session_likes;
+        //   mlm["session_survey_"+indx+"/flags"] = users[i].session_survey[indx].session_flags;
+        //   mlm["session_survey_"+indx+"/numPosts"] = users[i].session_survey[indx].session_posts;
+        //   mlm["session_survey_"+indx+"/time"] = users[i].session_survey[indx].session_time;
+        // }
 
         //per bully post 1-4
         for (var n = 0; n < bully_messages.length; n++) 
@@ -767,7 +761,6 @@ User.find()
 
 
       mlm_writer.write(mlm);
-
     }//for each user
 
     /*
@@ -779,6 +772,7 @@ User.find()
     */
       
     mlm_writer.end();
+    ss_writer.end();
     summary_writer.end();
     console.log('Wrote MLM!');
     mongoose.connection.close();

@@ -197,7 +197,7 @@ exports.getScript = (req, res, next) => {
  
             if(feedIndex!=-1)
             {
-              console.log("WE HAVE AN ACTION!!!!!");
+              // console.log("WE HAVE AN ACTION!!!!!");
               
               //check to see if there are comments - if so remove ones that are not in time yet.
               //Do all comment work here for feed
@@ -205,7 +205,7 @@ exports.getScript = (req, res, next) => {
               if (Array.isArray(user.feedAction[feedIndex].comments) && user.feedAction[feedIndex].comments) 
               {
 
-                console.log("WE HAVE COMMENTS!!!!!");
+                // console.log("WE HAVE COMMENTS!!!!!");
                 //iterate over all comments in post - add likes, flag, etc
                 for (var i = 0; i < user.feedAction[feedIndex].comments.length; i++) {
                   //i is now user.feedAction[feedIndex].comments index
@@ -261,7 +261,7 @@ exports.getScript = (req, res, next) => {
               { 
                 script_feed[0].read = true;
                 script_feed[0].state = 'read';
-                console.log("Post: %o has been READ?", script_feed[0].id);
+                // console.log("Post: %o has been READ?", script_feed[0].id);
               }
               else 
               {
@@ -434,7 +434,7 @@ exports.getScript = (req, res, next) => {
         console.log('bullying post added **story-message-centric*** ', bully_story);
 
       }
-      console.log('STORY message centric :', stry_msg)
+      // console.log('STORY message centric :', stry_msg)
 
       // need to restore the ids for some reason they will be lost if I don't do it manually 
       for(var i=0; i<stry_msg.length; i++){
@@ -494,7 +494,7 @@ exports.getScript = (req, res, next) => {
             bullied_actor.push(bully_post);
             
             Array.prototype.push.apply(bullied_actor, temp_record)
-            console.log('Found a bullied actor', bully_post)
+            // console.log('Found a bullied actor', bully_post)
 
           }
           else{
@@ -914,7 +914,7 @@ exports.newPost = (req, res) => {
  * Update user's profie feed posts Actions.
  */
 exports.postUpdateFeedAction = (req, res, next) => {
-
+  var n;
   User.findById(req.user.id, (err, user) => {
     //somehow user does not exist here
     if (err) { 
@@ -922,13 +922,10 @@ exports.postUpdateFeedAction = (req, res, next) => {
       return next(err);
        }
 
-    console.log('@@checking the req.body:@@ ',req.body);
-    console.log("@@@@@@@@@@@ TOP postID is  ", req.body.postID);
-
     //find the object from the right post in feed 
     var feedIndex = _.findIndex(user.feedAction, function(o) { return o.post == req.body.postID; });
 
-    console.log("@@@ USER index is  ", feedIndex);
+    // console.log("@@@ USER index is  ", feedIndex);
 
     if(feedIndex==-1)
     {
@@ -949,7 +946,7 @@ exports.postUpdateFeedAction = (req, res, next) => {
     }
 
     //we found the right post, and feedIndex is the right index for it
-    console.log("##### FOUND post "+req.body.postID+" at index "+ feedIndex);
+    // console.log("##### FOUND post "+req.body.postID+" at index "+ feedIndex);
 
     //create a new Comment
     if(req.body.new_comment)
@@ -1013,15 +1010,6 @@ exports.postUpdateFeedAction = (req, res, next) => {
         user.numCommentLikes++
         
       }
-      //ZH:
-      //SESSION SURVEY 
-      else if(req.body.session_survey)
-      { 
-        console.log('@@@@@@ SESSION SURVEY @@@@@ :')
-        console.log(req.body.session_survey);
-        //Zh: now where do I store these responses. append them to a field to the user schema ? 
-      }
-
       //FLAG A COMMENT
       else if(req.body.flag)
       {
@@ -1109,16 +1097,64 @@ exports.postUpdateFeedAction = (req, res, next) => {
         //console.log("%%%%%Add new REPLY Time: ", reply);
         user.feedAction[feedIndex].replyTime.push(reply);
       }
-      // Zhila
+
+      //array of viewedTimes is empty and we have a new VIEW event
+      else if ((!user.feedAction[feedIndex].viewedTime) && req.body.viewed)
+      {
+        let viewedTime = req.body.viewed;
+        user.feedAction[feedIndex].viewedTime = [viewedTime];
+        console.log('add the viewedTime: ', viewedTime)
+        console.log('ID of the viewed post: ??: ', req.body.postID)
+
+        var bully_messages = ["609e9de1c4608e8823f975e8",
+        "609e9de1c4608e8823f9763e",
+        "609e9de1c4608e8823f97687",
+        "609e9de1c4608e8823f97696"];
+
+        if(req.body.postID=='609e9de1c4608e8823f975e8' || req.body.postID == "609e9de1c4608e8823f9763e" || req.body.postID =="609e9de1c4608e8823f97687" || req.body.postID =="609e9de1c4608e8823f97696")
+        {
+
+          // console.log('SEEN BULLY !!!!!!!!! ', user);
+          var d = new Date();
+          n = d.getTime();
+          user.last_bullyPost_viewed_Time = n;
+          // console.log('print this for me:' , typeof n, user.last_bullyPost_viewed_Time)
+          // user.feedAction[feedIndex].bully_viewed_timePeriod = viewedTime;
+          // console.log('Check this: ', user.last_bullyPost_viewed_Time);
+          user.seen_bullyPost_readTime.push(viewedTime);
+          user.seen_bully_time.push(n);
+        }
+      }
+
+      //Already have a viewedTime Array, New VIEW event, need to add this to readTime array
+      else if ((user.feedAction[feedIndex].viewedTime)&&req.body.viewed)
+      {
+        let viewedTime = req.body.viewed;
+        user.feedAction[feedIndex].viewedTime.push(viewedTime);
+        console.log('add the viewedTime^2 ', viewedTime);
+        console.log('ID of the viewed post^2: ??: ', req.body.postID);
+        if(req.body.postID=='609e9de1c4608e8823f975e8' || req.body.postID == "609e9de1c4608e8823f9763e" || req.body.postID =="609e9de1c4608e8823f97687" || req.body.postID =="609e9de1c4608e8823f97696")
+        {
+          // console.log('SEEN BULLY !!!!!!!!! ', user);
+          var d = new Date();
+          n = d.getTime();
+          user.last_bullyPost_viewed_Time = n;
+          // console.log('print this for me:' , typeof n, user.last_bullyPost_viewed_Time)
+          // console.log('did they store it: ', user.last_bullyPost_viewed_Time);
+          user.seen_bullyPost_readTime.push(viewedTime);
+          user.seen_bully_time.push(n);
+        }
+      }
+
+
       else if(req.body.session_survey)
       {
+        // find the time of the last seen post...
         var cat = new Object(); 
-        // user.session_survey.answers.push(req.body.session_survey); 
-        // user.session_survey.likes.push(req.body.session_likes);
-        // user.session_survey.flags.push(req.body.session_flags);
-        // user.session_survey.posts.push(req.body.session_posts);
-        // user.session_survey.time.push(req.body.time);
-
+        var bully_messages = ["609e9de1c4608e8823f975e8",
+        "609e9de1c4608e8823f9763e",
+        "609e9de1c4608e8823f97687",
+        "609e9de1c4608e8823f97696"];
 
         cat.emotion_sharing_sadness =req.body.session_survey[0];
         cat.emotion_sharing_pain=req.body.session_survey[1];
@@ -1135,48 +1171,51 @@ exports.postUpdateFeedAction = (req, res, next) => {
         // add more information about session level, things like number of likes, comments, flag, etc.
         cat.likes = req.body.session_likes;
         cat.flags = req.body.session_flags;
-        cat.posts = req.body.session_posts;
+        // cat.posts = req.body.session_posts;
+        console.log("NUMEBR of seen post in this session is :",req.body.session_posts);
         cat.time =req.body.time;
 
-        // user.session_survey.answers.push(cat);
+
+
+        // var indx = _.findIndex(user.feedAction, function(o) { return o.post == script_feed[0].id; });
+ 
+        // if(feedIndex!=-1)
+        //   {
+
+        //   }
+        // else{
+        //   cat.seen_bully_post = 'False';
+        // }
+
+        // console.log('do we have log data: ', user);
+
+
+
+        // Zhila: to do next:
+
+        // check if the user have seen any bully posts ...
+        // observed_bully_posts = [...new Set(user.seen_bully_time.map(item => item.actor.username))]; 
+       // user.seen_bully_time
+    
+       
+
+        seen_bully_count = user.seen_bully_time.filter(x => x>Date.parse(user.log[user.log.length-1].time)).length; 
+        cat.seen_bully_count = seen_bully_count;
+        console.log('the user saw this many BULLY post: ', seen_bully_count);
+        console.log('WHEEEEN is the time user saw the last bully post: ', user.last_bullyPost_viewed_Time);
+        console.log('when is the last loged time: ', Date.parse(user.log[user.log.length-1].time));
+        if (user.last_bullyPost_viewed_Time> Date.parse(user.log[user.log.length-1].time))
+        {
+          console.log('The user saw the bullying post before answering the survey!!!');
+           cat.seen_bully_post = 'True';
+           cat.bully_post_viewedTime = user.seen_bullyPost_readTime[user.seen_bullyPost_readTime.length-1];
+        }
+        else{
+           cat.seen_bully_post = 'False';
+        }
+
         user.session_survey.push(cat);
 
-      }
-
-//NEW VIEW TIME APPROACH POSTS
-      //array of viewedTimes is empty and we have a new VIEW event
-      else if ((!user.feedAction[feedIndex].viewedTime) && req.body.viewed)
-      {
-        console.log('will it get here for stories??')
-        let viewedTime = req.body.viewed;
-        user.feedAction[feedIndex].viewedTime = [viewedTime];
-        console.log('add the viewedTime: ', viewedTime)
-        console.log('ID of the viewed post: ??: ', req.body.postID)
-        if(req.body.postID == "601ecb990906e672093e021b")
-        {
-          console.log('Find the spageti post!!!')
-        }
-        if(req.body.postID=='601f5fb28b2eb408858f88cd' || req.body.postID == "601ecbbd0906e672093e0eaa" || req.body.postID =="601ecbbc0906e672093e0e7f")
-        {
-          console.log('the user read a bully post !!')
-        }
-
-      }
-
-      //Already have a viewedTime Array, New VIEW event, need to add this to readTime array
-      else if ((user.feedAction[feedIndex].viewedTime)&&req.body.viewed)
-      {
-        console.log('will it get here for stories??')
-        let viewedTime = req.body.viewed;
-        //console.log("%%%%%Add new Read Time: ", read);
-        user.feedAction[feedIndex].viewedTime.push(viewedTime);
-        console.log('add the viewedTime^2 ', viewedTime);
-        console.log('ID of the viewed post^2: ??: ', req.body.postID);
-        // if(req.body.postID == '601ecbbe0906e672093e0ef1')
-        if(req.body.postID=='601f5fb28b2eb408858f88cd' || req.body.postID == "601ecbbd0906e672093e0eaa" || req.body.postID =="601ecbbc0906e672093e0e7f")
-        {
-          console.log('the user read a bully post !!')
-        }
       }
 
       else
@@ -1248,7 +1287,7 @@ exports.postUpdateProFeedAction = (req, res, next) => {
     else
     {
       //we found the right post, and feedIndex is the right index for it
-      console.log("##### FOUND post "+req.body.postID+" at index "+ feedIndex);
+      // console.log("##### FOUND post "+req.body.postID+" at index "+ feedIndex);
 
       //update to new StartTime
       if (req.body.start && (req.body.start > user.profile_feed[feedIndex].startTime))
@@ -1298,12 +1337,6 @@ exports.postUpdateProFeedAction = (req, res, next) => {
         user.profile_feed[feedIndex].picture_clicks.push(picture);
       }
 
-      // Zhila
-      if(req.body.session_survey)
-      {
-        console.log('SESSION SURVEY is 222 ',req.body.session_survey);
-      }
-
       else
       {
         console.log("Got a POST that did not fit anything. Possible Error.")
@@ -1342,7 +1375,7 @@ exports.postUpdateUserPostFeedAction = (req, res, next) => {
     //somehow user does not exist here
     if (err) { return next(err); }
 
-    console.log("@@@@@@@@@@@ TOP USER profile is  ", req.body.postID);
+    // console.log("@@@@@@@@@@@ TOP USER profile is  ", req.body.postID);
 
     //find the object from the right post in feed 
     var feedIndex = _.findIndex(user.posts, function(o) { return o.postID == req.body.postID; });
@@ -1404,7 +1437,7 @@ exports.postUpdateUserPostFeedAction = (req, res, next) => {
     else
     {
       //we found the right post, and feedIndex is the right index for it
-      console.log("##### FOUND post "+req.body.postID+" at index "+ feedIndex);
+      // console.log("##### FOUND post "+req.body.postID+" at index "+ feedIndex);
 
 
       //array of likeTime is empty and we have a new (first) LIKE event
@@ -1415,11 +1448,7 @@ exports.postUpdateUserPostFeedAction = (req, res, next) => {
         user.posts[feedIndex].liked = user.posts[feedIndex].liked ? false : true;
         console.log("!!!!!!User Post LIKE is now: ", user.posts[feedIndex].liked);
       }
-      // Zhila
-      if(req.body.session_survey)
-      {
-        console.log('SESSION SURVEY is 333 ',req.body.session_survey);
-      }
+
       else
       {
         console.log("Got a POST that did not fit anything. Possible Error.")

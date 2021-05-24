@@ -1165,9 +1165,9 @@ exports.postUpdateFeedAction = (req, res, next) => {
         cat.effort = req.body.session_survey[6];
         cat.efficacy = req.body.session_survey[7];
         cat.closeness = req.body.session_survey[8];
-        cat.feel = req.body.session_survey[9];
-        cat.lonely = req.body.session_survey[10];
-        cat.feel_inferior = req.body.session_survey[11];
+        // cat.feel = req.body.session_survey[9];
+        // cat.lonely = req.body.session_survey[10];
+        // cat.feel_inferior = req.body.session_survey[11];
         // add more information about session level, things like number of likes, comments, flag, etc.
         cat.likes = req.body.session_likes;
         cat.flags = req.body.session_flags;

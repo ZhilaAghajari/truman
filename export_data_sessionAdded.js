@@ -136,9 +136,9 @@ User.find()
           ss["session_survey_effort"] = users[i].session_survey[indx].effort;
           ss["session_survey_efficacy"] = users[i].session_survey[indx].efficacy;
           ss["session_survey_closeness"] = users[i].session_survey[indx].closeness;
-          ss["session_survey_slonely"] = users[i].session_survey[indx].lonely;
-          ss["session_survey_feel"] = users[i].session_survey[indx].feel;
-          ss["session_survey_feel_inferior"] = users[i].session_survey[indx].feel_inferior;
+          // ss["session_survey_lonely"] = users[i].session_survey[indx].lonely;
+          // ss["session_survey_feel"] = users[i].session_survey[indx].feel;
+          // ss["session_survey_feel_inferior"] = users[i].session_survey[indx].feel_inferior;
           ss["session_survey_likes"] = users[i].session_survey[indx].likes;
           ss["session_survey_flags"] = users[i].session_survey[indx].flags;
           // ss["session_survey_numPosts"] = users[i].session_survey[indx].posts;

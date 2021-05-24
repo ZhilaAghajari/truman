@@ -57,63 +57,64 @@ $(window).on("load", function() {
 //     smooth: true,
 //   });
 
-  const allRanges = document.querySelectorAll(".range-wrap");
-  allRanges.forEach(wrap => {
-    const range = wrap.querySelector(".range");
-    const bubble = wrap.querySelector(".bubble");
+// we won't collect this data anymore
+  // const allRanges = document.querySelectorAll(".range-wrap");
+  // allRanges.forEach(wrap => {
+  //   const range = wrap.querySelector(".range");
+  //   const bubble = wrap.querySelector(".bubble");
 
-    range.addEventListener("input", () => {
-      setBubble(range, bubble);
-    });
-    setBubble(range, bubble);
-  });
-
-
-  const allRanges0_lonely = document.querySelectorAll(".range-wrap-2");
-  allRanges0_lonely.forEach(wrap => {
-    const range = wrap.querySelector(".range");
-    const bubble = wrap.querySelector(".bubble");
-
-    range.addEventListener("input", () => {
-      setBubble(range, bubble);
-    });
-    setBubble(range, bubble);
-  });
+  //   range.addEventListener("input", () => {
+  //     setBubble(range, bubble);
+  //   });
+  //   setBubble(range, bubble);
+  // });
 
 
-  const allRanges_inferior = document.querySelectorAll(".range-wrap-3");
-  allRanges_inferior.forEach(wrap => {
-    const range = wrap.querySelector(".range");
-    const bubble = wrap.querySelector(".bubble");
+  // const allRanges0_lonely = document.querySelectorAll(".range-wrap-2");
+  // allRanges0_lonely.forEach(wrap => {
+  //   const range = wrap.querySelector(".range");
+  //   const bubble = wrap.querySelector(".bubble");
 
-    range.addEventListener("input", () => {
-      setBubble(range, bubble);
-    });
-    setBubble(range, bubble);
-  });
+  //   range.addEventListener("input", () => {
+  //     setBubble(range, bubble);
+  //   });
+  //   setBubble(range, bubble);
+  // });
 
-  const new_inferior = document.querySelectorAll(".range-wrap-4");
-  new_inferior.forEach(wrap => {
-    const range = wrap.querySelector(".range");
-    const bubble = wrap.querySelector(".bubble");
 
-    range.addEventListener("input", () => {
-      setBubble(range, bubble);
-    });
-    setBubble(range, bubble);
-  });
+  // const allRanges_inferior = document.querySelectorAll(".range-wrap-3");
+  // allRanges_inferior.forEach(wrap => {
+  //   const range = wrap.querySelector(".range");
+  //   const bubble = wrap.querySelector(".bubble");
 
-  function setBubble(range, bubble) {
-    const val = range.value;
-    const min = range.min ? range.min : 0;
-    const max = range.max ? range.max : 100;
-    const newVal = Number(((val - min) * 100) / (max - min));
-    bubble.innerHTML = val;
+  //   range.addEventListener("input", () => {
+  //     setBubble(range, bubble);
+  //   });
+  //   setBubble(range, bubble);
+  // });
 
-    // Sorta magic numbers based on size of the native UI thumb
-    bubble.style.left = `calc(${newVal}% + (${8 - newVal * 0.15}px))`;
+  // const new_inferior = document.querySelectorAll(".range-wrap-4");
+  // new_inferior.forEach(wrap => {
+  //   const range = wrap.querySelector(".range");
+  //   const bubble = wrap.querySelector(".bubble");
 
-  }
+  //   range.addEventListener("input", () => {
+  //     setBubble(range, bubble);
+  //   });
+  //   setBubble(range, bubble);
+  // });
+
+  // function setBubble(range, bubble) {
+  //   const val = range.value;
+  //   const min = range.min ? range.min : 0;
+  //   const max = range.max ? range.max : 100;
+  //   const newVal = Number(((val - min) * 100) / (max - min));
+  //   bubble.innerHTML = val;
+
+  //   // Sorta magic numbers based on size of the native UI thumb
+  //   bubble.style.left = `calc(${newVal}% + (${8 - newVal * 0.15}px))`;
+
+  // }
   
   var session_userComments=0;
   // var check_id ='1';
@@ -1041,22 +1042,26 @@ $("#newpost.ui.tiny.post.modal")
     var efficacy = $('input:radio[name=Efficacy]:checked').val();
     var closeness = $('input:radio[name=closeness]:checked').val();
     
-    var feel_old = $('input:radio[name=feel]:checked').val();
-    var lonely_old = $('input:radio[name=lonely]:checked').val();
-    var feel_inferior_old = $('input:radio[name=inferior]:checked').val();
+    // var feel_old = $('input:radio[name=feel]:checked').val();
+    // var lonely_old = $('input:radio[name=lonely]:checked').val();
+    // var feel_inferior_old = $('input:radio[name=inferior]:checked').val();
 
-    var feel= parseInt($(".bubble")[0].outerText); // it worked--yay
-    var lonely = parseInt($(".bubble")[1].outerText);
-    var feel_inferior= parseInt($(".bubble")[2].outerText);
+    // var feel= parseInt($(".bubble")[0].outerText); // it worked--yay
+    // var lonely = parseInt($(".bubble")[1].outerText);
+    // var feel_inferior= parseInt($(".bubble")[2].outerText);
 
     // ZHila -- for the feed version I need to do it differently
     // check if it is feed
     console.log("NUMEBR of seen post in this session is :",localStorage.getItem("session_posts"));
 
     // can we store all the posts' id that the user observed in this session...
-    $.post("/userPost_feed", { time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_unique_posts: check_id, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[emotion_sharing_sadness,emotion_sharing_pain, mentalizing, mentalizing_effort, compassionate, sympathy,effort, efficacy, closeness, feel, lonely, feel_inferior], _csrf : $('meta[name="csrf-token"]').attr('content')});
-    $.post("/feed", { time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_unique_posts: check_id, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[emotion_sharing_sadness,emotion_sharing_pain, mentalizing, mentalizing_effort, compassionate, sympathy,effort, efficacy, closeness, feel, lonely, feel_inferior], _csrf : $('meta[name="csrf-token"]').attr('content')});
-    // reset the session variables .. 
+    // $.post("/userPost_feed", { time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_unique_posts: check_id, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[emotion_sharing_sadness,emotion_sharing_pain, mentalizing, mentalizing_effort, compassionate, sympathy,effort, efficacy, closeness, feel, lonely, feel_inferior], _csrf : $('meta[name="csrf-token"]').attr('content')});
+    // $.post("/feed", { time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_unique_posts: check_id, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[emotion_sharing_sadness,emotion_sharing_pain, mentalizing, mentalizing_effort, compassionate, sympathy,effort, efficacy, closeness, feel, lonely, feel_inferior], _csrf : $('meta[name="csrf-token"]').attr('content')});
+    $.post("/userPost_feed", { time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_unique_posts: check_id, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[emotion_sharing_sadness,emotion_sharing_pain, mentalizing, mentalizing_effort, compassionate, sympathy,effort, efficacy, closeness], _csrf : $('meta[name="csrf-token"]').attr('content')});
+    $.post("/feed", { time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_unique_posts: check_id, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[emotion_sharing_sadness,emotion_sharing_pain, mentalizing, mentalizing_effort, compassionate, sympathy,effort, efficacy, closeness], _csrf : $('meta[name="csrf-token"]').attr('content')});
+    
+    // // reset the session variables .. 
+    
     console.log('session likes stored : ', localStorage.getItem("session_likes"));
     window.localStorage.setItem("session_likes",0);
     window.localStorage.setItem("session_flags",0);

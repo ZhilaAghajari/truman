@@ -37,16 +37,16 @@ exports.getNotifications = (req, res) => {
     //does not have COMMENTS in it yet - maybe have no likes or reads on USER made Comments
     var user_posts = user.getPosts();
 
-    if (user.script_type == "study3_n20")
-    {
-      scriptFilter = "study3_n20";
-      profileFilter = "study3_n20_p60";
-    }
-    else if (user.script_type == "study3_n80")
-    {
-      scriptFilter = "study3_n80";
-      profileFilter = "study_n80_p60";
-    }
+    // if (user.script_type == "study3_n20")
+    // {
+    //   scriptFilter = "study3_n20";
+    //   profileFilter = "study3_n20_p60";
+    // }
+    // else if (user.script_type == "study3_n80")
+    // {
+    //   scriptFilter = "study3_n80";
+    //   profileFilter = "study_n80_p60";
+    // }
 
     //Log our visit to Notifications
     user.logPage(Date.now(), "Notifications");

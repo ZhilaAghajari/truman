@@ -38,62 +38,13 @@ block content
     script.
       var i=0;
     each val in script
-      //- -console.log('the post group is: ', val.experiment_group)
-      //- -console.log('postID: ', val.postID)
-      //- create a card for each post in val (if by user make the card a little different)
-      //- if val.relativeTime - then post came from user_post (so user post, user reply to actor reply to user post)
-      //- -console.log("iiiss VAL@@@");
       script.
         var i=0;
       // -console.log(i);
-      //-  here I need to add the two conditions of val.type =='user' and val.type =='actor'
-      if val.type
-        if val.type =='user'
-          .ui.fluid.cardProfile
-            .ui.container.center.aligned(style=" color: #000000")  
-              .content
-                .ui.center.aligned.grid
-                  //- .centered.row
-                  //-     .centered.floated.centered.aligned.ten.wide.column
-                  //-       .content(alt="image")
-                  //-         .ui.medium.circular.borderG.image(alt="centered image")
-                  //-           if user.profile.picture
-                  //-             img(src='/user_post/'+user.profile.picture, style="max-width:50%;width:50%;",  alt="centered image")
-                  //-           else
-                  //-             img.ui.avatar.image(src=user.gravatar(60))
-                  .centered.row
-                      .centered.floated.centered.aligned.ten.wide.column
-                        - var nm = val.name
-                        h2(style=" color: #FFFFFF; font-style:italic;font-size:200%;font-weight: bold;", text-align='center') Your snaps
-                        //- h2(style=" color: #FFFFFF; font-style:italic;", text-align='center')
-                        //-   a(href='/me') 
-                        //-     span(style="font-size:150%;font-weight: bold;color: #FFFFFF;text-align='center';")=user.username || user.id ||user.profile.name
-
-
-        else if val.type =='actor'
-          .ui.fluid.cardProfile
-            ui.container.center.aligned(style=" color: #000000")                   
-              ui.container.center.aligned()
-                .content
-                  .ui.center.aligned.grid
-                    .centered.row
-                      .left.floated.centered.aligned.ten.wide.column
-                        .content(alt="image")
-                          .ui.small.circular.borderG.image(alt="centered image")
-                            img(src='/profile_pictures/'+val.picture, alt="centered image", style="max-width:100%;width:100%;" )
-                    .centered.row
-                      .left.floated.centered.aligned.ten.wide.column
-                        //- p(style='font-style: bold;font-size:30px; color:black') Snaps from
-                        - var nm = val.name
-                        p.small.h2(style=" color: #FFFFFF; font-style:italic;font-size:200%;font-weight: bold;", text-align='center') Snaps from 
-                        h2(style=" color: #FFFFFF; font-style:italic;", text-align='center')
-                          a(href='/user/'+val.username)     
-                            span(style="font-size:150%;font-weight: bold;color: #FFFFFF;text-align='center';")=val.name
-
-
-
+      // -console.log('feed VAL.id: ', val._id)
+      // -console.log('postID in feed version: ', val.postID)
       if val.relativeTime
-        -console.log('FRONT END USER POSTSs invididuals: ', val.postID)
+        -console.log('FRONT END USER POSTS: ', val.postID)
         -var u_class;
         -if (val.actorAuthor) {u_class = "actorReply"}
         -else if (val.reply) {u_class = "userReply"}
@@ -142,11 +93,11 @@ block content
                 each comment in val.comments
                   -console.log('comment is: ', val.comments)
                   //-IF this comment is USER made, do this
-                  // if (val.time+ comment.time) < Date.now()
+                  // if (user.createdAt.getTime() + comment.time) < Date.now()
                   if (user.createdAt.getTime() + comment.time) < Date.now()
                     if !comment.flagged
                       if comment.new_comment
-                        -console.log("New COMMENT AREA");
+                        -console.log("New COMMENT AREAAA: ")
                         .comment(commentID=comment.commentID)
                           a.avatar.image(href='/me')
                             if user.profile.picture
@@ -156,7 +107,8 @@ block content
                           .content
                             a.author(href='/me')=user.profile.name || user.username || user.id
                             .metadata
-                              span.date=(user.createdAt.getTime() + comment.time)
+                            //- span.date=(user.createdAt.getTime() + comment.time)
+                              span.date=(val.time + comment.time+user.createdAt.getTime())
                               .rating
                                 if comment.liked
                                   i.red.heart.icon
@@ -175,13 +127,19 @@ block content
                               a.flag.comment Flag
                       //- Else this is a normal comment from the script
                       else
+                        -console.log('this is a comment from the script yay');
                         .comment(commentID=comment.commentID)
                           a.avatar(href='/user/'+comment.actor.username)
-                            img(src='/profile_pictures/'+comment.actor.profile.picture)
+                            //-img(src=cdn+'/profile_pictures/'+comment.actor.profile.picture)
+                            if comment.actor.profile
+                              img.lazyload(data-src=cdn+"/profile_pictures/"+comment.actor.profile.picture)
                           .content
-                            a.author(href='/user/'+comment.actor.username)=comment.actor.profile.name
+                            if comment.actor.profile
+                              a.author(href='/user/'+comment.actor.username)=comment.actor.profile.name
                             .metadata
-                              span.date=(user.createdAt.getTime() + comment.time)
+                              //- span.date=(user.createdAt.getTime() + comment.time)
+                              span.date= (val.time + comment.time +user.createdAt.getTime())
+                              -console.log('what is this span date2 : ', (val.time + comment.time))
                               .rating
                                 if comment.liked
                                   i.red.heart.icon
@@ -198,9 +156,6 @@ block content
                               else
                                 a.like.comment Like
                               a.flag.comment Flag
-
-
-          
           .extra.content
             #comment.ui.fluid.left.labeled.right.icon.input
               .ui.label
@@ -212,7 +167,7 @@ block content
               i.big.send.link.icon
 
       //-THIS is for posts by Actors, not the USER
-      else if !val.relativeTime && !val.type
+      else
         .ui.fluid.card.dim(postID=val._id, state=val.state || 'unread', type='actor', actor_un = val.actor.username, actor_name = val.actor.profile.name, actor_pic = val.actor.profile.picture)
           //- dimmer DIV for flagging
           .ui.dimmer.flag
@@ -243,7 +198,7 @@ block content
           .content
             .description=val.body
             .myTimer.hidden 0
-          //- FLAG and like options... 
+          //- FLAG and like options...
           .content
             #flgComment.span.right.floated
               if val.like
@@ -262,31 +217,12 @@ block content
             span.right.floated
               #falgebutton.ui.basic.button
                i.large.flag.icon
-            //- | Flag
-          //- .three.ui.bottom.attached.icon.buttons
-          //-   .ui.reply.button(tabindex='0')
-          //-     i.reply.icon
-          //-     |  Reply
-          //-   .ui.flag.button(tabindex='0')
-          //-     i.flag.icon
-          //-     |  Flag
-          //-   if val.like
-          //-     .ui.labeled.button(tabindex='0')
-          //-       .ui.red.like.button
-          //-         i.heart.icon
-          //-         |  Like
-          //-       a.ui.basic.red.left.pointing.label=val.likes
-          //-   else
-          //-     .ui.labeled.button(tabindex='0')
-          //-       .ui.like.button
-          //-         i.heart.icon
-          //-         |  Like
-          //-       a.ui.basic.red.left.pointing.label.count=val.likes
+
           if val.comments.length > 0
             .content
               .ui.comments
                 each comment in val.comments
-                  //-IF this comment is USER made, do this
+                  //-IF this comment is USER made, do this                  
                   if (val.time + comment.time) < Date.now()
                     if comment.new_comment
                       -console.log("New COMMENT AREA");
@@ -299,10 +235,11 @@ block content
                         .content
                           a.author(href='/me')=user.profile.name || user.username || user.id
                           .metadata
-                            //- zhila
+                            //- check this part as well.. 
                             //- span.date=(user.createdAt.getTime() + comment.time)
-                            span.date=(user.createdAt.getTime() + comment.time)
-                            //- span.date=(val.time + comment.time)
+                            span.date=(user.createdAt.getTime() +comment.time)
+                            //- span.date=(val.time + comment.time +user.createdAt.getTime())
+                            -console.log('what is this span date????? : ', (val.time + comment.time))
                             .rating
                               i.heart.icon
                               span.num=0
@@ -320,9 +257,11 @@ block content
                         .content
                           a.author(href='/user/'+comment.actor.username)=comment.actor.profile.name
                           .metadata
-                            //- double check this 
-                            span.date=(val.time + comment.time +user.createdAt.getTime())
-                            //- span.date=(user.createdAt.getTime() comment.time)
+                            //- span.date=(user.createdAt.getTime() + comment.time)
+                            span.date=(val.time + comment.time+user.createdAt.getTime())
+                            //- -console.log('print the comment time  :', val.time + comment.time)
+                            //- -console.log('what is the comment timing now? : ', Date(comment.time))
+                            //- -console.log('and what was this before: ', (user.createdAt.getTime() + comment.time))
                             .rating
                               if comment.liked
                                 i.red.heart.icon
@@ -414,7 +353,174 @@ block content
 
 
 
-  .ui.container
+
+    //- .ui.container
+    //-   #surveyModal.ui.small.post.modal(modal_id='321')
+    //-     .ui.fluid.card.test
+    //-       .content
+    //-         .fields
+    //-           .wrap
+    //-             h2.likert-header During this visit to EatSnap.Love, we would like to know the extent to which you felt the following emotions towards other people using this site.
+    //-             form(action='')
+    //-               h2.label.statement Softhearted
+    //-               ul.likert
+    //-                 .inline.fields
+    //-                   h3.field
+    //-                     label
+    //-                       input(type='radio' name='Softhearted' value='strong_disagree')
+    //-                       | Strong Disgree
+    //-                     br
+    //-                   h3.field
+    //-                     label
+    //-                       input(type='radio' name='Softhearted' value="disagree")
+    //-                       | Disagree
+    //-                     br
+    //-                   h3.field
+    //-                     label
+    //-                       input(type='radio' name='Softhearted' value='somewhat_disagree')
+    //-                       | Somewhat Disagree
+    //-                     br
+    //-                   h3.field
+    //-                     label
+    //-                       input(type='radio' name='Softhearted' value='neither_agree_nor_disagree')
+    //-                       | neither agree nor disagree
+    //-                     br
+    //-                   h3.field
+    //-                     label
+    //-                       input(type='radio' name='Softhearted' value='somewhat_agree')
+    //-                       | Somewhat Agree
+    //-                     br
+    //-                   h3.field
+    //-                     label
+    //-                       input(type='radio' name='Softhearted' value='agree')
+    //-                       | agree
+    //-                     br
+    //-                   h3.field
+    //-                     label
+    //-                       input(type='radio' name='Softhearted' value='strong_agree')
+    //-                       | Strong Agree
+    //-                     br
+    //-               h2.label.statement Touched
+    //-               ul.likert
+    //-                 .inline.fields
+    //-                   h3.field
+    //-                     label
+    //-                       input(type='radio' name='Touched' value='strong_disagree')
+    //-                       | Strong Disagree
+    //-                     br
+    //-                   h3.field
+    //-                     label
+    //-                       input(type='radio' name='Touched' value='disagree')
+    //-                       | Disagree
+    //-                     br
+    //-                   h3.field
+    //-                     label
+    //-                       input(type='radio' name='Touched' value='somewhat_disagree')
+    //-                       | Somewhat Disagree
+    //-                     br
+    //-                   h3.field
+    //-                     label
+    //-                       input(type='radio' name='Touched' value='neither_agree_nor_disagree')
+    //-                       | Neither agree nor disagree
+    //-                     br
+    //-                   h3.field
+    //-                     label
+    //-                       input(type='radio' name='Touched' value='somewhat_agree')
+    //-                       | Somwhat Agree
+    //-                     br
+    //-                   h3.field
+    //-                     label
+    //-                       input(type='radio' name='Touched' value='agree')
+    //-                       | Agree
+    //-                     br
+    //-                   h3.field
+    //-                     label
+    //-                       input(type='radio' name='Touched' value='strong_agree')
+    //-                       | Strong Agree
+    //-                     br
+    //-               h2.label.statement Sympathetic
+    //-               ul.likert
+    //-                 .inline.fields
+    //-                   h3.field
+    //-                     label
+    //-                       input(type='radio' name='Sympathetic' value='strong_disagree')
+    //-                       | Strong Disagree
+    //-                     br
+    //-                   h3.field
+    //-                     label
+    //-                       input(type='radio' name='Sympathetic' value='disagree')
+    //-                       | Disagree
+    //-                     br
+    //-                   h3.field
+    //-                     label
+    //-                       input(type='radio' name='Sympathetic' value='somewhat_disagree')
+    //-                       | Somewhat Disagree
+    //-                     br
+    //-                   h3.field
+    //-                     label
+    //-                       input(type='radio' name='Sympathetic' value='neither_agree_nor_disagree')
+    //-                       | Neither agree nor disagree
+    //-                     br
+    //-                   h3.field
+    //-                     label
+    //-                       input(type='radio' name='Sympathetic' value='somewhat_agree')
+    //-                       | Somwhat Agree
+    //-                     br
+    //-                   h3.field
+    //-                     label
+    //-                       input(type='radio' name='Sympathetic' value='agree')
+    //-                       | Agree
+    //-                     br
+    //-                   h3.field
+    //-                     label
+    //-                       input(type='radio' name='Sympathetic' value='strong_agree')
+    //-                       | Strong Agree
+    //-                     br
+    //-               h2.label.statement Moved
+    //-               ul.likert
+    //-                 .inline.fields
+    //-                   h3.field
+    //-                     label
+    //-                       input(type='radio' name='Moved' value='strong_disagree')
+    //-                       | Strong Disagree
+    //-                   h3.field
+    //-                     label
+    //-                       input(type='radio' name='Moved' value='disagree')
+    //-                       | Disagree
+    //-                     br
+    //-                   h3.field
+    //-                     label
+    //-                       input(type='radio' name='Moved' value='somewhat_disagree')
+    //-                       | Somewhat Disagree
+    //-                     br
+    //-                   h3.field
+    //-                     label
+    //-                       input(type='radio' name='Moved' value='neither_agree_nor_disagree')
+    //-                       | Neither agree nor disagree
+    //-                     br
+    //-                   h3.field
+    //-                     label
+    //-                       input(type='radio' name='Moved' value='somewhat_agree')
+    //-                       | Somwhat Agree
+    //-                     br
+    //-                   h3.field
+    //-                     label
+    //-                       input(type='radio' name='Moved' value='agree')
+    //-                       | Agree
+    //-                     br
+    //-                   h3.field
+    //-                     label
+    //-                       input(type='radio' name='Moved' value='strong_agree')
+    //-                       | Strong Agree
+    //-                     br
+    //-               // h3.buttons
+    //-               //   button.clear Clear
+    //-               //   button.submit Submit
+    //-     .content
+    //-       // .ui.blue.right.floated.button(disabled='true') Submit
+    //-       // #submitSession.ui.blue.right.disabled.fluid.button(survey_id='1') Submit
+    //-       #submitSession.ui.blue.fluid.button(study_group='feed') Submit
+    .ui.container
       #surveyModal.ui.gray.large.post.modal(modal_id='321')
         .ui.fluid.inverted.red.card.test
           .content
@@ -428,17 +534,17 @@ block content
                     thead
                       tr
                           th(colspan='7')
-                            | 1.  How compassionate did you feel towards members of the community who were distressed?
+                            | 1.  When members of the EatSnap.Love community were sad, I became sad too. 
                       
                     tbody
                       tr
-                        th Not at all
+                        th Strongly Disagree
                         th
                         th
                         th Neutral
                         th
                         th
-                        th A great deal
+                        th Strongly Agree
                       tr
                         .inline.fields
                           //- label(for='gender') First question.
@@ -448,38 +554,38 @@ block content
                             //- p(style='font-style: italic;font-size:15px; color:gray') Not at all
                             .h3.field
                               .ui.radio.checkbox
-                                input(type='radio' name='compassionate' value='1', style="margin-right: 10" )
+                                input(type='radio' name='emotion-sharing-1' value='1', style="margin-right: 10" )
                                 h3.label 1
                           td
                             .h3.field
                               .ui.radio.checkbox
-                                input.hidden(type='radio' name='compassionate' value='2', style="margin-right: 10" )
+                                input.hidden(type='radio' name='emotion-sharing-1' value='2', style="margin-right: 10" )
                                 h3.label 2
                           td
                             .h3.field
                               .ui.radio.checkbox
-                                input.hidden(type='radio' name='compassionate' value='3', style="margin-right: 10" )
+                                input.hidden(type='radio' name='emotion-sharing-1' value='3', style="margin-right: 10" )
                                 h3.label 3
                           td
                             .h3.field
                               .ui.radio.checkbox
-                                input.hidden(type='radio' name='compassionate' value='3', style="margin-right: 10" )
+                                input.hidden(type='radio' name='emotion-sharing-1' value='4', style="margin-right: 10" )
                                 h3.label 4
                           td
                             .h3.field
                               .ui.radio.checkbox
-                                input.hidden(type='radio' name='compassionate' value='5', style="margin-right: 10" )
+                                input.hidden(type='radio' name='emotion-sharing-1' value='5', style="margin-right: 10" )
                                 h3.label 5
                             //- h3 Very much
                           td
                             .h3.field
                               .ui.radio.checkbox
-                                input(type='radio' name='compassionate' value='6', style="margin-right: 10" )
+                                input(type='radio' name='emotion-sharing-1' value='6', style="margin-right: 10" )
                                 h3.label 6
                           td
                             .h3.field
                               .ui.radio.checkbox
-                                input(type='radio' name='compassionate' value='7', style="margin-right: 10" )
+                                input(type='radio' name='emotion-sharing-1' value='7', style="margin-right: 10" )
                                 h3.label 7
                             //- p(style='font-style: italic;font-size:20px; color:gray') Very much
 
@@ -491,18 +597,18 @@ block content
                     thead
                       tr
                           th(colspan='7')
-                            | 2. How sympathetic did you feel for people on EatSnap.Love who were hurting? 
+                            | 2. When members of the EatSnap.Love community were distressed, I felt their pain. 
                       
                     tbody
 
                       tr
-                        th Not at all
+                        th Strongly Disagree
                         th 
                         th
                         th Neutral
                         th
                         th
-                        th A great deal
+                        th Strongly Agree
                       tr
                         .inline.fields
                           //- label(for='gender') First question.
@@ -511,38 +617,38 @@ block content
                             //- p(style='font-style: italic;font-size:20px; color:gray') Not at all
                             .h3.field
                               .ui.radio.checkbox
-                                input(type='radio' name='sympathetic' value='1', style="margin-right: 10" )
+                                input(type='radio' name='emotion-sharing-2' value='1', style="margin-right: 10" )
                                 h3.label 1
                           td
                             .h3.field
                               .ui.radio.checkbox
-                                input.hidden(type='radio' name='sympathetic' value='2', style="margin-right: 10" )
+                                input.hidden(type='radio' name='emotion-sharing-2' value='2', style="margin-right: 10" )
                                 h3.label 2
                           td
                             .h3.field
                               .ui.radio.checkbox
-                                input.hidden(type='radio' name='sympathetic' value='3', style="margin-right: 10" )
+                                input.hidden(type='radio' name='emotion-sharing-2' value='3', style="margin-right: 10" )
                                 h3.label 3
                           td
                             .h3.field
                               .ui.radio.checkbox
-                                input.hidden(type='radio' name='sympathetic' value='4', style="margin-right: 10" )
+                                input.hidden(type='radio' name='emotion-sharing-2' value='4', style="margin-right: 10" )
                                 h3.label 4
                           td
                             .h3.field
                               .ui.radio.checkbox
-                                input.hidden(type='radio' name='sympathetic' value='5', style="margin-right: 10" )
+                                input.hidden(type='radio' name='emotion-sharing-2' value='5', style="margin-right: 10" )
                                 h3.label 5
                             //- h3 Very much
                           td
                             .h3.field
                               .ui.radio.checkbox
-                                input(type='radio' name='sympathetic' value='6', style="margin-right: 10" )
+                                input(type='radio' name='emotion-sharing-2' value='6', style="margin-right: 10" )
                                 h3.label 6
                           td
                             .h3.field
                               .ui.radio.checkbox
-                                input(type='radio' name='sympathetic' value='7', style="margin-right: 10" )
+                                input(type='radio' name='emotion-sharing-2' value='7', style="margin-right: 10" )
                                 h3.label 7
                             //- p(style='font-style: italic;font-size:20px; color:gray') Very much
                   
@@ -556,17 +662,17 @@ block content
                     thead
                       tr
                           th(colspan='7')
-                            | 3.  How warm did you feel towards members of the community who were having problems? 
+                            | 3.  While on EatSnap.Love, I understood the emotions other people were experiencing.
                       
                     tbody
                       tr
-                        th Not at all
+                        th Strongly Disagree
                         th 
                         th
                         th Neutral
                         th
                         th
-                        th A great deal
+                        th Strongly Agree
                       tr
                         .inline.fields
                           //- label(for='gender') First question.
@@ -575,38 +681,38 @@ block content
                             //- p(style='font-style: italic;font-size:20px; color:gray') Not at all
                             .h3.field
                               .ui.radio.checkbox
-                                input(type='radio' name='warm' value='1', style="margin-right: 10" )
+                                input(type='radio' name='Mentalizing-1' value='1', style="margin-right: 10" )
                                 h3.label 1
                           td
                             .h3.field
                               .ui.radio.checkbox
-                                input.hidden(type='radio' name='warm' value='2', style="margin-right: 10" )
+                                input.hidden(type='radio' name='Mentalizing-1' value='2', style="margin-right: 10" )
                                 h3.label 2
                           td
                             .h3.field
                               .ui.radio.checkbox
-                                input.hidden(type='radio' name='warm' value='3', style="margin-right: 10" )
+                                input.hidden(type='radio' name='Mentalizing-1' value='3', style="margin-right: 10" )
                                 h3.label 3
                           td
                             .h3.field
                               .ui.radio.checkbox
-                                input.hidden(type='radio' name='warm' value='4', style="margin-right: 10" )
+                                input.hidden(type='radio' name='Mentalizing-1' value='4', style="margin-right: 10" )
                                 h3.label 4
                           td
                             .h3.field
                               .ui.radio.checkbox
-                                input.hidden(type='radio' name='warm' value='5', style="margin-right: 10" )
+                                input.hidden(type='radio' name='Mentalizing-1' value='5', style="margin-right: 10" )
                                 h3.label 5
                             //- h3 Very much
                           td
                             .h3.field
                               .ui.radio.checkbox
-                                input(type='radio' name='warm' value='6', style="margin-right: 10" )
+                                input(type='radio' name='Mentalizing-1' value='6', style="margin-right: 10" )
                                 h3.label 6
                           td
                             .h3.field
                               .ui.radio.checkbox
-                                input(type='radio' name='warm' value='7', style="margin-right: 10" )
+                                input(type='radio' name='Mentalizing-1' value='7', style="margin-right: 10" )
                                 h3.label 7
                             //- p(style='font-style: italic;font-size:20px; color:gray') Very much
 
@@ -618,17 +724,17 @@ block content
                     thead
                       tr
                           th(colspan='7')
-                            | 4. How touched were you by people on EatSnap.Love who were treated unfairly?
+                            | 4. I could easily tell how other members of the EatSnap.Love community were feeling. 
                       
                     tbody
                       tr
-                        th Not at all
+                        th Strongly Disagree
                         th 
                         th
                         th Neutral 
                         th
                         th
-                        th A great deal
+                        th Strongly Agree
                       tr
                         .fluid.inline.fields
                           //- label(for='gender') First question.
@@ -637,38 +743,38 @@ block content
                             //- p(style='font-style: italic;font-size:20px; color:gray') Not at all
                             .h3.field
                               .ui.radio.checkbox
-                                input(type='radio' name='touched' value='1', style="margin-right: 10" )
+                                input(type='radio' name='Mentalizing-2' value='1', style="margin-right: 10" )
                                 h3.label 1
                           td
                             .h3.field
                               .ui.radio.checkbox
-                                input.hidden(type='radio' name='touched' value='2', style="margin-right: 10" )
+                                input.hidden(type='radio' name='Mentalizing-2' value='2', style="margin-right: 10" )
                                 h3.label 2
                           td
                             .h3.field
                               .ui.radio.checkbox
-                                input.hidden(type='radio' name='touched' value='3', style="margin-right: 10" )
+                                input.hidden(type='radio' name='Mentalizing-2' value='3', style="margin-right: 10" )
                                 h3.label 3
                           td
                             .h3.field
                               .ui.radio.checkbox
-                                input.hidden(type='radio' name='touched' value='4', style="margin-right: 10" )
+                                input.hidden(type='radio' name='Mentalizing-2' value='4', style="margin-right: 10" )
                                 h3.label 4
                           td
                             .h3.field
                               .ui.radio.checkbox
-                                input.hidden(type='radio' name='touched' value='5', style="margin-right: 10" )
+                                input.hidden(type='radio' name='Mentalizing-2' value='5', style="margin-right: 10" )
                                 h3.label 5
                             //- h3 Very much
                           td
                             .h3.field
                               .ui.radio.checkbox
-                                input(type='radio' name='touched' value='6', style="margin-right: 10" )
+                                input(type='radio' name='Mentalizing-2' value='6', style="margin-right: 10" )
                                 h3.label 6
                           td
                             .h3.field
                               .ui.radio.checkbox
-                                input(type='radio' name='touched' value='7', style="margin-right: 10" )
+                                input(type='radio' name='Mentalizing-2' value='7', style="margin-right: 10" )
                                 h3.label 7
                             //- p(style='font-style: italic;font-size:20px; color:gray') Very much
 
@@ -681,13 +787,266 @@ block content
                     thead
                       tr
                           th(colspan='7')
-                            | 5. How close do you feel to the other people on EatSnap.Love? 
+                            | 5. How compassionate did you feel towards members of the EatSnap.Love community who were in distress? 
                       
+                    tbody
+                      tr
+                        th Not at all
+                        th
+                        th 
+                        th A moderate amount
+                        th
+                        th
+                        th A great deal
+                      tr
+                        .fluid.inline.fields
+                          //- label(for='gender') First question.
+                          //- h3 Not at all
+                          td
+                            //- p(style='font-style: italic;font-size:20px; color:gray') Not at all
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='compassionate' value='1', style="margin-right: 10" )
+                                h3.label 1
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='compassionate' value='2', style="margin-right: 10" )
+                                h3.label 2
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input.hidden(type='radio' name='compassionate' value='3', style="margin-right: 10" )
+                                h3.label 3
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input.hidden(type='radio' name='compassionate' value='4', style="margin-right: 10" )
+                                h3.label 4
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input.hidden(type='radio' name='compassionate' value='5', style="margin-right: 10" )
+                                h3.label 5
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input.hidden(type='radio' name='compassionate' value='6', style="margin-right: 10" )
+                                h3.label 6
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='compassionate' value='7', style="margin-right: 10" )
+                                h3.label 7
+                    
+
+                  //- span(style='font-style: bold;font-size:0px; color:black') 6. How touched do you feel toward the people who posted to EatSnap.Love? 
+                  table.ui.large.seven.column.table
+                    thead 
+                      tr
+                          th(colspan='7')
+                            | 6. How much sympathy did you feel for people on EatSnap.Love who were in a bad situation? 
+
+
+                    tbody
+                      tr
+                        th Not at all
+                        th
+                        th
+                        th A moderate amount
+                        th
+                        th
+                        th A great deal
+                      tr
+                        .fluid.inline.fields
+                          //- label(for='gender') First question.
+                          //- h3 Not at all
+                          td
+                            //- p(style='font-style: italic;font-size:20px; color:gray') Not at all
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='sympathy' value='1', style="margin-right: 10" )
+                                h3.label 1
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='sympathy' value='2', style="margin-right: 10" )
+                                h3.label 2
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input.hidden(type='radio' name='sympathy' value='3', style="margin-right: 10" )
+                                h3.label 3
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input.hidden(type='radio' name='sympathy' value='4', style="margin-right: 10" )
+                                h3.label 4
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input.hidden(type='radio' name='sympathy' value='5', style="margin-right: 10" )
+                                h3.label 5
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input.hidden(type='radio' name='sympathy' value='6', style="margin-right: 10" )
+                                h3.label 6
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='sympathy' value='7', style="margin-right: 10" )
+                                h3.label 7
+                          //- td
+                          //-   .h3.field
+                          //-     .ui.radio.checkbox
+                          //-       input.hidden(type='radio' name='Effort' value='agree', style="margin-right: 10" )
+                          //-       h3.label 7
+                          //- td
+                          //-   .h3.field
+                          //-     .ui.radio.checkbox
+                          //-       input.hidden(type='radio' name='Effort' value='somewhat_disagree', style="margin-right: 10" )
+                          //-       h3.label 8
+                          //- td
+                          //-   .h3.field
+                          //-     .ui.radio.checkbox
+                          //-       input.hidden(type='radio' name='Effort' value='totally_agree', style="margin-right: 10" )
+                          //-       h3.label 9
+                          //- td
+                          //-   .h3.field
+                          //-     .ui.radio.checkbox
+                          //-       input.hidden(type='radio' name='Effort' value='absolutely_agree', style="margin-right: 10" )
+                          //-       h3.label 10
+                            //- p(style='font-style: italic;font-size:20px; color:gray') Very much
+                  table.ui.large.seven.column.table
+                    thead 
+                      tr
+                          th(colspan='7')
+                            | 7. How much effort did it take to understand the emotional experience of the  people on EatSnap.Love?
+
+
+                    tbody
+                      tr
+                        th Not at all 
+                        th
+                        th
+                        th A moderate amount
+                        th
+                        th
+                        th A great deal
+                      tr
+                        .fluid.inline.fields
+                          //- label(for='gender') First question.
+                          //- h3 Not at all
+                          td
+                            //- p(style='font-style: italic;font-size:20px; color:gray') Not at all
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='Effort' value='1', style="margin-right: 10" )
+                                h3.label 1
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='Effort' value='2', style="margin-right: 10" )
+                                h3.label 2
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input.hidden(type='radio' name='Effort' value='3', style="margin-right: 10" )
+                                h3.label 3
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input.hidden(type='radio' name='Effort' value='4', style="margin-right: 10" )
+                                h3.label 4
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input.hidden(type='radio' name='Effort' value='5', style="margin-right: 10" )
+                                h3.label 5
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input.hidden(type='radio' name='Effort' value='6', style="margin-right: 10" )
+                                h3.label 6
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='Effort' value='7', style="margin-right: 10" )
+                                h3.label 7
+
+
+                  
+                  table.ui.large.seven.column.table
+                    thead 
+                      tr
+                          th(colspan='7')
+                            | 8. How effective would you be in helping other people on EatSnap.Love?
+
+
+                    tbody
+                      tr
+                        th Not at all 
+                        th
+                        th
+                        th A moderate amount
+                        th
+                        th
+                        th A great deal
+                      tr
+                        .fluid.inline.fields
+                          //- label(for='gender') First question.
+                          //- h3 Not at all
+                          td
+                            //- p(style='font-style: italic;font-size:20px; color:gray') Not at all
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='Efficacy' value='1', style="margin-right: 10" )
+                                h3.label 1
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='Efficacy' value='2', style="margin-right: 10" )
+                                h3.label 2
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input.hidden(type='radio' name='Efficacy' value='3', style="margin-right: 10" )
+                                h3.label 3
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input.hidden(type='radio' name='Efficacy' value='4', style="margin-right: 10" )
+                                h3.label 4
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input.hidden(type='radio' name='Efficacy' value='5', style="margin-right: 10" )
+                                h3.label 5
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input.hidden(type='radio' name='Efficacy' value='6', style="margin-right: 10" )
+                                h3.label 6
+                          td
+                            .h3.field
+                              .ui.radio.checkbox
+                                input(type='radio' name='Efficacy' value='7', style="margin-right: 10" )
+                                h3.label 7
+                        
+
+                  table.ui.large.seven.column.table
+                    thead 
+                      tr
+                          th(colspan='7')
+                            | 9. How close do you feel to the other people on EatSnap.Love? 
+
+
                     tbody
                       tr
                         th Not at all close
                         th
-                        th 
+                        th
                         th Somewhat close
                         th
                         th
@@ -732,147 +1091,11 @@ block content
                               .ui.radio.checkbox
                                 input(type='radio' name='closeness' value='7', style="margin-right: 10" )
                                 h3.label 7
-                    
-
-                  //- span(style='font-style: bold;font-size:0px; color:black') 6. How touched do you feel toward the people who posted to EatSnap.Love? 
-                  table.ui.large.seven.column.table
-                    thead 
-                      tr
-                          th(colspan='7')
-                            | 6. How much effort did it take to understand the emotional experience of the  people on EatSnap.Love?
-
-
-                    tbody
-                      tr
-                        th Very Low 
-                        th Low
-                        th Moderate
-                        th High
-                        th Very High
-                      tr
-                        .fluid.inline.fields
-                          //- label(for='gender') First question.
-                          //- h3 Not at all
-                          td
-                            //- p(style='font-style: italic;font-size:20px; color:gray') Not at all
-                            .h3.field
-                              .ui.radio.checkbox
-                                input(type='radio' name='Effort' value='1', style="margin-right: 10" )
-                                h3.label 1
-                          td
-                            .h3.field
-                              .ui.radio.checkbox
-                                input(type='radio' name='Effort' value='2', style="margin-right: 10" )
-                                h3.label 2
-                          td
-                            .h3.field
-                              .ui.radio.checkbox
-                                input.hidden(type='radio' name='Effort' value='3', style="margin-right: 10" )
-                                h3.label 3
-                          td
-                            .h3.field
-                              .ui.radio.checkbox
-                                input.hidden(type='radio' name='Effort' value='4', style="margin-right: 10" )
-                                h3.label 4
-                          td
-                            .h3.field
-                              .ui.radio.checkbox
-                                input.hidden(type='radio' name='Effort' value='5', style="margin-right: 10" )
-                                h3.label 5
-                          //- td
-                          //-   .h3.field
-                          //-     .ui.radio.checkbox
-                          //-       input.hidden(type='radio' name='sympathy' value='6', style="margin-right: 10" )
-                          //-       h3.label 6
-                          //- td
-                          //-   .h3.field
-                          //-     .ui.radio.checkbox
-                          //-       input(type='radio' name='sympathy' value='7', style="margin-right: 10" )
-                          //-       h3.label 7
-                          //- td
-                          //-   .h3.field
-                          //-     .ui.radio.checkbox
-                          //-       input.hidden(type='radio' name='Effort' value='agree', style="margin-right: 10" )
-                          //-       h3.label 7
-                          //- td
-                          //-   .h3.field
-                          //-     .ui.radio.checkbox
-                          //-       input.hidden(type='radio' name='Effort' value='somewhat_disagree', style="margin-right: 10" )
-                          //-       h3.label 8
-                          //- td
-                          //-   .h3.field
-                          //-     .ui.radio.checkbox
-                          //-       input.hidden(type='radio' name='Effort' value='totally_agree', style="margin-right: 10" )
-                          //-       h3.label 9
-                          //- td
-                          //-   .h3.field
-                          //-     .ui.radio.checkbox
-                          //-       input.hidden(type='radio' name='Effort' value='absolutely_agree', style="margin-right: 10" )
-                          //-       h3.label 10
-                            //- p(style='font-style: italic;font-size:20px; color:gray') Very much
-                  table.ui.large.seven.column.table
-                    thead 
-                      tr
-                          th(colspan='7')
-                            | 7. How effective would you be in helping other people on EatSnap.Love?
-
-
-                    tbody
-                      tr
-                        th Not at all 
-                        //- th
-                        th Slightly
-                        th Moderately
-                        th Very
-                        //- th
-                        th Extremely
-                      tr
-                        .fluid.inline.fields
-                          //- label(for='gender') First question.
-                          //- h3 Not at all
-                          td
-                            //- p(style='font-style: italic;font-size:20px; color:gray') Not at all
-                            .h3.field
-                              .ui.radio.checkbox
-                                input(type='radio' name='Efficacy' value='1', style="margin-right: 10" )
-                                h3.label 1
-                          td
-                            .h3.field
-                              .ui.radio.checkbox
-                                input(type='radio' name='Efficacy' value='2', style="margin-right: 10" )
-                                h3.label 2
-                          td
-                            .h3.field
-                              .ui.radio.checkbox
-                                input.hidden(type='radio' name='Efficacy' value='3', style="margin-right: 10" )
-                                h3.label 3
-                          td
-                            .h3.field
-                              .ui.radio.checkbox
-                                input.hidden(type='radio' name='Efficacy' value='4', style="margin-right: 10" )
-                                h3.label 4
-                          td
-                            .h3.field
-                              .ui.radio.checkbox
-                                input.hidden(type='radio' name='Efficacy' value='5', style="margin-right: 10" )
-                                h3.label 5
-                          //- td
-                          //-   .h3.field
-                          //-     .ui.radio.checkbox
-                          //-       input.hidden(type='radio' name='Efficacy' value='6', style="margin-right: 10" )
-                          //-       h3.label 6
-                          //- td
-                          //-   .h3.field
-                          //-     .ui.radio.checkbox
-                          //-       input(type='radio' name='Efficacy' value='7', style="margin-right: 10" )
-                          //-       h3.label 7
-
-
-                  
                   
 
 
-              
+
+
               //- p(style='font-style: bold; font-style : italic ;font-size:25px; color:black') 10.  How do you feel right now?
               //- table.ui.large.eleven.column.table
               //-       thead
@@ -954,272 +1177,15 @@ block content
               //- .range-wrap-3
               //-           input.range(type='range')
               //-           output.bubble
-              //- table.ui.large.eleven.column.table
-              //-       p(style='font-style: italic;font-size:50px; color:gray') 
-              //-       thead
-              //-         tr
-              //-             th(colspan='11')
-              //-               | 10.  How do you feel right now?
-                      
-              //-       tbody
-              //-         tr
-              //-           th Very Negative
-              //-           th 
-              //-           th
-              //-           th
-              //-           th
-              //-           th
-              //-           th 
-              //-           th
-              //-           th
-              //-           th
-              //-           th Very Positive
-              //-         tr
-              //-           .inline.fields
-              //-             //- label(for='gender') First question.
-              //-             //- h3 Not at all
-              //-             td
-              //-               //- p(style='font-style: italic;font-size:20px; color:gray') Not at all
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input(type='radio' name='feel' value='1', style="margin-right: 10" )
-              //-                   h3.label 0
 
 
-              //-             td
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input.hidden(type='radio' name='feel' value='2', style="margin-right: 10" )
-              //-                   h3.label 10
-              //-             td
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input.hidden(type='radio' name='feel' value='2', style="margin-right: 10" )
-              //-                   h3.label 20
-              //-             td
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input.hidden(type='radio' name='feel' value='3', style="margin-right: 10" )
-              //-                   h3.label 30
-              //-             td
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input.hidden(type='radio' name='feel' value='4', style="margin-right: 10" )
-              //-                   h3.label 40
-              //-             td
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input.hidden(type='radio' name='feel' value='5', style="margin-right: 10" )
-              //-                   h3.label 50
-              //-               //- h3 Very much
-              //-             td
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input(type='radio' name='feel' value='6', style="margin-right: 10" )
-              //-                   h3.label 60
-              //-             td
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input(type='radio' name='feel' value='7', style="margin-right: 10" )
-              //-                   h3.label 70
+           
 
-              //-             td
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input(type='radio' name='feel' value='8', style="margin-right: 10" )
-              //-                   h3.label 80
-
-              //-             td
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input(type='radio' name='feel' value='9', style="margin-right: 10" )
-              //-                   h3.label 90
-
-              //-             td
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input(type='radio' name='feel' value='7', style="margin-right: 10" )
-              //-                   h3.label 100
               
-
-
-              //- table.ui.large.eleven.column.table
-              //-       p(style='font-style: italic;font-size:50px; color:gray') 
-              //-       thead
-              //-         tr
-              //-             th(colspan='11')
-              //-               | 11.  How lonely do you feel right now?
-                      
-              //-       tbody
-              //-         tr
-              //-           th Not at all
-              //-           th 
-              //-           th
-              //-           th
-              //-           th
-              //-           th
-              //-           th 
-              //-           th
-              //-           th
-              //-           th
-              //-           th A lot
-              //-         tr
-              //-           .inline.fields
-              //-             //- label(for='gender') First question.
-              //-             //- h3 Not at all
-              //-             td
-              //-               //- p(style='font-style: italic;font-size:20px; color:gray') Not at all
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input(type='radio' name='lonely' value='1', style="margin-right: 10" )
-              //-                   h3.label 0
-              //-             td
-              //-               //- p(style='font-style: italic;font-size:20px; color:gray') Not at all
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input(type='radio' name='lonely' value='1', style="margin-right: 10" )
-              //-                   h3.label 10
-
-              //-             td
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input.hidden(type='radio' name='lonely' value='2', style="margin-right: 10" )
-              //-                   h3.label 20
-              //-             td
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input.hidden(type='radio' name='lonely' value='3', style="margin-right: 10" )
-              //-                   h3.label 30
-              //-             td
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input.hidden(type='radio' name='lonely' value='4', style="margin-right: 10" )
-              //-                   h3.label 40
-              //-             td
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input.hidden(type='radio' name='lonely' value='5', style="margin-right: 10" )
-              //-                   h3.label 50
-              //-               //- h3 Very much
-              //-             td
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input(type='radio' name='lonely' value='6', style="margin-right: 10" )
-              //-                   h3.label 60
-              //-             td
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input(type='radio' name='lonely' value='7', style="margin-right: 10" )
-              //-                   h3.label 70
-
-              //-             td
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input(type='radio' name='lonely' value='8', style="margin-right: 10" )
-              //-                   h3.label 80
-
-              //-             td
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input(type='radio' name='lonely' value='9', style="margin-right: 10" )
-              //-                   h3.label 90
-
-              //-             td
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input(type='radio' name='lonely' value='7', style="margin-right: 10" )
-              //-                   h3.label 100
-
-
-
-              //- table.ui.large.eleven.column.table
-              //-       p(style='font-style: italic;font-size:50px; color:gray') 
-              //-       thead
-              //-         tr
-              //-             th(colspan='11')
-              //-               | 12.  How inferior do you feel compared to others right now?
-                      
-              //-       tbody
-              //-         tr
-              //-           th Not at all
-              //-           th 
-              //-           th
-              //-           th
-              //-           th
-              //-           th
-              //-           th 
-              //-           th
-              //-           th
-              //-           th
-              //-           th A lot
-              //-         tr
-              //-           .inline.fields
-              //-             //- label(for='gender') First question.
-              //-             //- h3 Not at all
-              //-             td
-              //-               //- p(style='font-style: italic;font-size:20px; color:gray') Not at all
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input(type='radio' name='inferior' value='1', style="margin-right: 10" )
-              //-                   h3.label 0
-              //-             td
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input.hidden(type='radio' name='inferior' value='2', style="margin-right: 10" )
-              //-                   h3.label 10
-              //-             td
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input.hidden(type='radio' name='inferior' value='2', style="margin-right: 10" )
-              //-                   h3.label 20
-              //-             td
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input.hidden(type='radio' name='inferior' value='3', style="margin-right: 10" )
-              //-                   h3.label 30
-              //-             td
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input.hidden(type='radio' name='inferior' value='4', style="margin-right: 10" )
-              //-                   h3.label 40
-              //-             td
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input.hidden(type='radio' name='inferior' value='5', style="margin-right: 10" )
-              //-                   h3.label 50
-              //-               //- h3 Very much
-              //-             td
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input(type='radio' name='inferior' value='6', style="margin-right: 10" )
-              //-                   h3.label 60
-              //-             td
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input(type='radio' name='inferior' value='7', style="margin-right: 10" )
-              //-                   h3.label 70
-
-              //-             td
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input(type='radio' name='inferior' value='8', style="margin-right: 10" )
-              //-                   h3.label 80
-
-              //-             td
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input(type='radio' name='inferior' value='9', style="margin-right: 10" )
-              //-                   h3.label 90
-
-              //-             td
-              //-               .h3.field
-              //-                 .ui.radio.checkbox
-              //-                   input(type='radio' name='inferior' value='7', style="margin-right: 10" )
-              //-                   h3.label 100
-
               
               .content
                 // .ui.blue.right.floated.button(disabled='true') Submit
                 // #submitSession.ui.blue.right.disabled.fluid.button(survey_id='1') Submit
                 #submitSession.ui.blue.fluid.button(study_group='feed', style = "font-size:25px") Submit
+    
 

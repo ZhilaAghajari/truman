@@ -126,16 +126,22 @@ User.find()
         // collect the user's session survey:
         for (var n = 0; n < users[i].session_survey.length; n++) 
         {  
+
           let indx=n;
-          ss["session_survey_emotion_sharing_sadness"] = users[i].session_survey[indx].emotion_sharing_sadness;
-          ss["session_survey_emotion_sharing_pain"] = users[i].session_survey[indx].emotion_sharing_pain;
-          ss["session_survey_mentalizing"] = users[i].session_survey[indx].mentalizing;
-          ss["session_survey_mentalizing_effort"] = users[i].session_survey[indx].mentalizing_effort;
-          ss["session_survey_compassionate"] = users[i].session_survey[indx].compassionate;
-          ss["session_survey_sympathy"] = users[i].session_survey[indx].sympathy;
-          ss["session_survey_effort"] = users[i].session_survey[indx].effort;
-          ss["session_survey_efficacy"] = users[i].session_survey[indx].efficacy;
-          ss["session_survey_closeness"] = users[i].session_survey[indx].closeness;
+          // ss["session_survey_emotion_sharing_sadness"] = users[i].session_survey[indx].emotion_sharing_sadness;
+          // ss["session_survey_emotion_sharing_pain"] = users[i].session_survey[indx].emotion_sharing_pain;
+          // ss["session_survey_mentalizing"] = users[i].session_survey[indx].mentalizing;
+          // ss["session_survey_mentalizing_effort"] = users[i].session_survey[indx].mentalizing_effort;
+          ss["ss_compassionate"] = users[i].session_survey[indx].compassionate;
+          ss["ss_sympathy"] = users[i].session_survey[indx].sympathy;
+          ss["ss_sympathy"] = users[i].session_survey[indx].sympathy;
+          ss["ss_warm"] = users[i].session_survey[indx].warm;
+          ss["ss_touched"] = users[i].session_survey[indx].touched;
+
+          ss["ss_closeness"] = users[i].session_survey[indx].closeness;
+          ss["ss_effort"] = users[i].session_survey[indx].effort;
+          ss["ss_efficacy"] = users[i].session_survey[indx].efficacy;
+          
           // ss["session_survey_lonely"] = users[i].session_survey[indx].lonely;
           // ss["session_survey_feel"] = users[i].session_survey[indx].feel;
           // ss["session_survey_feel_inferior"] = users[i].session_survey[indx].feel_inferior;

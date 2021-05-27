@@ -689,29 +689,29 @@ exports.getScript = (req, res, next) => {
 
 
 
-
+      res.render('storiesMessageDelay', { script: individual_feed_version});
       // Current problems:  One of the modal_id is missing and that's why I cannot see the rest of the posts.. 
       // and I get this is the last post of the day (which is wrong!)
-      if(scriptFilter == 'var1'){
-        res.render('script', { script: control_feed}); //control condition ... /
+      // if(scriptFilter == 'var1'){
+      //   res.render('script', { script: control_feed}); //control condition ... /
 
-      }
-      else if(scriptFilter == 'var2'){
-        res.render('feedIndividualCentric', { script: individual_feed_version}); // ... /
-      }
-      else if(scriptFilter == 'var3'){
-        res.render('stories',{script:stories_person_feed}) 
-      }
-      else if(scriptFilter == 'var4'){
-        res.render('storiesIndividualCentric',{script:stories_person_feed})
-      }
-      else if(scriptFilter == 'var5'){
-        res.render('storiesMessageClick', { script: stry_msg});
-      }
+      // }
+      // else if(scriptFilter == 'var2'){
+      //   res.render('feedIndividualCentric', { script: individual_feed_version}); // ... /
+      // }
+      // else if(scriptFilter == 'var3'){
+      //   res.render('stories',{script:stories_person_feed}) 
+      // }
+      // else if(scriptFilter == 'var4'){
+      //   res.render('storiesIndividualCentric',{script:stories_person_feed})
+      // }
+      // else if(scriptFilter == 'var5'){
+      //   res.render('storiesMessageClick', { script: stry_msg});
+      // }
 
-      else if(scriptFilter == 'var6'){
-        res.render('storiesMessageDelay', { script: stry_msg}); // .... 
-      }
+      // else if(scriptFilter == 'var6'){
+      //   res.render('storiesMessageDelay', { script: stry_msg}); // .... 
+      // }
      
 
       
@@ -1156,15 +1156,17 @@ exports.postUpdateFeedAction = (req, res, next) => {
         "609e9de1c4608e8823f97687",
         "609e9de1c4608e8823f97696"];
 
-        cat.emotion_sharing_sadness =req.body.session_survey[0];
-        cat.emotion_sharing_pain=req.body.session_survey[1];
-        cat.mentalizing = req.body.session_survey[2];
-        cat.mentalizing_effort = req.body.session_survey[3];
-        cat.compassionate =req.body.session_survey[4];
-        cat.sympathy = req.body.session_survey[5];
-        cat.effort = req.body.session_survey[6];
-        cat.efficacy = req.body.session_survey[7];
-        cat.closeness = req.body.session_survey[8];
+        // cat.emotion_sharing_sadness =req.body.session_survey[0];
+        // cat.emotion_sharing_pain=req.body.session_survey[1];
+        // cat.mentalizing = req.body.session_survey[2];
+        // cat.mentalizing_effort = req.body.session_survey[3];
+        cat.compassionate =req.body.session_survey[0];
+        cat.sympathy = req.body.session_survey[1];
+        cat.warm =req.body.session_survey[2];
+        cat.touched = req.body.session_survey[3];
+        cat.effort = req.body.session_survey[4];
+        cat.efficacy = req.body.session_survey[5];
+        cat.closeness = req.body.session_survey[6];
         // cat.feel = req.body.session_survey[9];
         // cat.lonely = req.body.session_survey[10];
         // cat.feel_inferior = req.body.session_survey[11];

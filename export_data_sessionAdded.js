@@ -25,10 +25,12 @@ var summary_writer = csvWriter();
 //5bb3a93ad9fd14471bf39791
 //5bb3a93ad9fd14471bf39792
 //5bb3a93ad9fd14471bf397c8
-var bully_messages = ["5bb3a93ad9fd14471bf3977d",
-"5bb3a93ad9fd14471bf39791",
-"5bb3a93ad9fd14471bf39792",
-"5bb3a93ad9fd14471bf397c8"];
+var bully_messages =["60b0ed6c42961f56f9dac468","60b0ed6d42961f56f9dac4d5","60b0ed6c42961f56f9dac4ae","60b0ed6e42961f56f9dac566"];
+
+// var bully_messages = ["5bb3a93ad9fd14471bf3977d",
+// "5bb3a93ad9fd14471bf39791",
+// "5bb3a93ad9fd14471bf39792",
+// "5bb3a93ad9fd14471bf397c8"];
 var bully_stats = [];
 
 Array.prototype.sum = function() {
@@ -124,6 +126,7 @@ User.find()
         //console.log("In User Number "+ i);
 
         // collect the user's session survey:
+        console.log('number of surveys for this user: ', users[i].session_survey.length);
         for (var n = 0; n < users[i].session_survey.length; n++) 
         {  
 
@@ -133,7 +136,6 @@ User.find()
           // ss["session_survey_mentalizing"] = users[i].session_survey[indx].mentalizing;
           // ss["session_survey_mentalizing_effort"] = users[i].session_survey[indx].mentalizing_effort;
           ss["ss_compassionate"] = users[i].session_survey[indx].compassionate;
-          ss["ss_sympathy"] = users[i].session_survey[indx].sympathy;
           ss["ss_sympathy"] = users[i].session_survey[indx].sympathy;
           ss["ss_warm"] = users[i].session_survey[indx].warm;
           ss["ss_touched"] = users[i].session_survey[indx].touched;
@@ -149,6 +151,7 @@ User.find()
           ss["session_survey_flags"] = users[i].session_survey[indx].flags;
           // ss["session_survey_numPosts"] = users[i].session_survey[indx].posts;
           // ss["session_survey_time"] = users[i].session_survey[indx].time;
+          ss["unique_bully_count"]=users[i].session_survey[indx].unique_bully_count;
           ss["Bully_count"] = users[i].session_survey[indx].seen_bully_count;
           // // Zhila: next, work on this!!!
           ss["session_survey_seen_bullyPosts"] = users[i].session_survey[indx].seen_bully_post;

@@ -6,6 +6,8 @@ const Schema = mongoose.Schema;
 const userSchema = new mongoose.Schema({
   email: { type: String, unique: true },
   last_bullyPost_viewed_Time: {type: Number},
+  bully_ID:[{id: String, t: Number}],
+  last_log_time:Number,
   seen_bully_time:{type: [Number]},
   seen_bullyPost_readTime:{type: [Number]},
   password: String,

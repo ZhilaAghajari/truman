@@ -439,6 +439,10 @@ if(typeof total_logedin_time != 'undefined')
     // if($('button.ui.button').text()=="Login")
     if($('button.ui.button').text()=="Login" || $('button.ui.button').text() =="Signup")
     {
+      // send the login time at this point...
+      // $.post("/userPost_feed", {user_last_loging:logged_time, _csrf : $('meta[name="csrf-token"]').attr('content')});
+      // $.post("/feed",{user_last_loging:logged_time, _csrf : $('meta[name="csrf-token"]').attr('content')});
+
       console.log('SET TIMER');
       window.localStorage.setItem("total_seconds", t);
       window.localStorage.setItem("survey_flag", f);

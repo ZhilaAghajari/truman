@@ -917,6 +917,16 @@ exports.postUpdateFeedAction = (req, res, next) => {
       return next(err);
        }
 
+
+    // if(req.body.user_last_loging)
+    // {
+    //   var d = new Date();
+      
+    //   var nn= d.getTime();
+    //   user.last_log_time =nn;
+    //   console.log('loged in ATTTT: ', user.last_log_time);
+    // }
+
     //find the object from the right post in feed 
     var feedIndex = _.findIndex(user.feedAction, function(o) { return o.post == req.body.postID; });
 
@@ -939,6 +949,8 @@ exports.postUpdateFeedAction = (req, res, next) => {
       feedIndex = user.feedAction.length - 1;
 
     }
+    // set the loging time...
+
 
     //we found the right post, and feedIndex is the right index for it
     // console.log("##### FOUND post "+req.body.postID+" at index "+ feedIndex);
@@ -1101,12 +1113,10 @@ exports.postUpdateFeedAction = (req, res, next) => {
         console.log('add the viewedTime: ', viewedTime)
         console.log('ID of the viewed post: ??: ', req.body.postID)
 
-        var bully_messages = ["609e9de1c4608e8823f975e8",
-        "609e9de1c4608e8823f9763e",
-        "609e9de1c4608e8823f97687",
-        "609e9de1c4608e8823f97696"];
+        var bully_messages =["60b0ed6c42961f56f9dac468","60b0ed6d42961f56f9dac4d5","60b0ed6c42961f56f9dac4ae","60b0ed6e42961f56f9dac566"];
 
-        if(req.body.postID=='609e9de1c4608e8823f975e8' || req.body.postID == "609e9de1c4608e8823f9763e" || req.body.postID =="609e9de1c4608e8823f97687" || req.body.postID =="609e9de1c4608e8823f97696")
+
+        if(req.body.postID=='60b0ed6c42961f56f9dac468' || req.body.postID == "60b0ed6d42961f56f9dac4d5" || req.body.postID =="60b0ed6c42961f56f9dac4ae" || req.body.postID =="60b0ed6e42961f56f9dac566")
         {
 
           // console.log('SEEN BULLY !!!!!!!!! ', user);
@@ -1128,16 +1138,39 @@ exports.postUpdateFeedAction = (req, res, next) => {
         user.feedAction[feedIndex].viewedTime.push(viewedTime);
         console.log('add the viewedTime^2 ', viewedTime);
         console.log('ID of the viewed post^2: ??: ', req.body.postID);
-        if(req.body.postID=='609e9de1c4608e8823f975e8' || req.body.postID == "609e9de1c4608e8823f9763e" || req.body.postID =="609e9de1c4608e8823f97687" || req.body.postID =="609e9de1c4608e8823f97696")
+        if(req.body.postID=='60b0ed6c42961f56f9dac468' || req.body.postID == "60b0ed6d42961f56f9dac4d5" || req.body.postID =="60b0ed6c42961f56f9dac4ae" || req.body.postID =="60b0ed6e42961f56f9dac566")
         {
           // console.log('SEEN BULLY !!!!!!!!! ', user);
           var d = new Date();
           n = d.getTime();
+          // if the iD is not currently in bully_ID
+          console.log('what is inside the user.bully_ID ', user.bully_ID);
+          var index = user.bully_ID.findIndex(x => x.id ===req.body.postID)
           user.last_bullyPost_viewed_Time = n;
-          // console.log('print this for me:' , typeof n, user.last_bullyPost_viewed_Time)
-          // console.log('did they store it: ', user.last_bullyPost_viewed_Time);
           user.seen_bullyPost_readTime.push(viewedTime);
           user.seen_bully_time.push(n);
+          if(index === -1)
+          {
+            var temp = {
+            id:req.body.postID,
+            t : n
+            }
+            user.bully_ID.push(temp);
+            console.log('Added the bully post for the first time');
+          }
+          //just update the last seen time...
+          else
+          {
+            user.bully_ID[index].t = n;
+            console.log('Updated the bully post time');
+          }
+
+          // user.bully_ID.indexOf(req.body.postID) === -1 ? user.bully_ID.push(req.body.postID) : console.log("This item already exists");
+
+          
+          // console.log('print this for me:' , typeof n, user.last_bullyPost_viewed_Time)
+          // console.log('did they store it: ', user.last_bullyPost_viewed_Time);
+          
         }
       }
 
@@ -1145,11 +1178,10 @@ exports.postUpdateFeedAction = (req, res, next) => {
       else if(req.body.session_survey)
       {
         // find the time of the last seen post...
+        console.log('session survey values: ', req.body.session_survey);
         var cat = new Object(); 
-        var bully_messages = ["609e9de1c4608e8823f975e8",
-        "609e9de1c4608e8823f9763e",
-        "609e9de1c4608e8823f97687",
-        "609e9de1c4608e8823f97696"];
+
+        var bully_messages =["60b0ed6c42961f56f9dac468","60b0ed6d42961f56f9dac4d5","60b0ed6c42961f56f9dac4ae","60b0ed6e42961f56f9dac566"];
 
         // cat.emotion_sharing_sadness =req.body.session_survey[0];
         // cat.emotion_sharing_pain=req.body.session_survey[1];
@@ -1169,38 +1201,26 @@ exports.postUpdateFeedAction = (req, res, next) => {
         cat.likes = req.body.session_likes;
         cat.flags = req.body.session_flags;
         // cat.posts = req.body.session_posts;
-        console.log("NUMEBR of seen post in this session is :",req.body.session_posts);
+        // console.log("NUMEBR of seen post in this session is :",req.body.session_posts);
         cat.time =req.body.time;
-
-
-
-        // var indx = _.findIndex(user.feedAction, function(o) { return o.post == script_feed[0].id; });
- 
-        // if(feedIndex!=-1)
-        //   {
-
-        //   }
-        // else{
-        //   cat.seen_bully_post = 'False';
-        // }
-
-        // console.log('do we have log data: ', user);
-
-
-
-        // Zhila: to do next:
-
-        // check if the user have seen any bully posts ...
-        // observed_bully_posts = [...new Set(user.seen_bully_time.map(item => item.actor.username))]; 
-       // user.seen_bully_time
     
-       
+
+        // cat.unique_bully_count= user.bully_ID.length;
+        cat.unique_bully_count = user.bully_ID.filter(x => x.t>Date.parse(user.log[user.log.length-1].time)).length;
+
+        // cat.unique_bully_count = user.bully_ID.filter(x => x>Date.parse(user.log[user.log.length-1].time)).length; 
+
 
         seen_bully_count = user.seen_bully_time.filter(x => x>Date.parse(user.log[user.log.length-1].time)).length; 
         cat.seen_bully_count = seen_bully_count;
-        console.log('the user saw this many BULLY post: ', seen_bully_count);
-        console.log('WHEEEEN is the time user saw the last bully post: ', user.last_bullyPost_viewed_Time);
-        console.log('when is the last loged time: ', Date.parse(user.log[user.log.length-1].time));
+        // console.log('the user saw this many BULLY post: ', seen_bully_count);
+        console.log('LAST Bully Post: ', user.last_bullyPost_viewed_Time);
+        console.log('LAST LOGING TIME:', Date.parse(user.log[user.log.length-1].time));
+        // console.log('UPDATED LAST LOGING:', Date.parse(user.last_log_time));
+
+
+        
+        // if (user.last_bullyPost_viewed_Time> Date.parse(user.last_log_time))
         if (user.last_bullyPost_viewed_Time> Date.parse(user.log[user.log.length-1].time))
         {
           console.log('The user saw the bullying post before answering the survey!!!');
@@ -1208,7 +1228,8 @@ exports.postUpdateFeedAction = (req, res, next) => {
            cat.bully_post_viewedTime = user.seen_bullyPost_readTime[user.seen_bullyPost_readTime.length-1];
         }
         else{
-           cat.seen_bully_post = 'False';
+          // console.log('The last time the user logedin: ', Date.parse(user.last_log_time))
+          cat.seen_bully_post = 'False';
         }
 
         user.session_survey.push(cat);
@@ -1378,7 +1399,15 @@ exports.postUpdateUserPostFeedAction = (req, res, next) => {
     var feedIndex = _.findIndex(user.posts, function(o) { return o.postID == req.body.postID; });
 
     console.log("User Posts index is  ", feedIndex);
-
+    console.log("what is in request", req.body);
+    // if(req.body.user_last_loging)
+    // {
+    //   var d = new Date();
+    //   n = d.getTime();
+    //   console.log('what is n::::: ', n);
+    //   user.last_log_time = n;
+    //   console.log('loged in ATTTT: ', user.last_log_time);
+    // }
     if(feedIndex==-1)
     {
       //User Post does  not exist yet, This is an error

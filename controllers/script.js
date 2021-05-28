@@ -689,29 +689,24 @@ exports.getScript = (req, res, next) => {
 
 
 
-      res.render('storiesMessageDelay', { script: individual_feed_version});
-      // Current problems:  One of the modal_id is missing and that's why I cannot see the rest of the posts.. 
-      // and I get this is the last post of the day (which is wrong!)
-      // if(scriptFilter == 'var1'){
-      //   res.render('script', { script: control_feed}); //control condition ... /
-
-      // }
-      // else if(scriptFilter == 'var2'){
-      //   res.render('feedIndividualCentric', { script: individual_feed_version}); // ... /
-      // }
-      // else if(scriptFilter == 'var3'){
-      //   res.render('stories',{script:stories_person_feed}) 
-      // }
-      // else if(scriptFilter == 'var4'){
-      //   res.render('storiesIndividualCentric',{script:stories_person_feed})
-      // }
-      // else if(scriptFilter == 'var5'){
-      //   res.render('storiesMessageClick', { script: stry_msg});
-      // }
-
-      // else if(scriptFilter == 'var6'){
-      //   res.render('storiesMessageDelay', { script: stry_msg}); // .... 
-      // }
+      if(scriptFilter == 'var1'){
+        res.render('script', { script: control_feed}); //control condition ... /
+      }
+      else if(scriptFilter == 'var2'){
+        res.render('feedIndividualCentric', { script: individual_feed_version}); // ... /
+      }
+      else if(scriptFilter == 'var3'){
+        res.render('stories',{script:stories_person_feed}) 
+      }
+      else if(scriptFilter == 'var4'){
+        res.render('storiesIndividualCentric',{script:stories_person_feed})
+      }
+      else if(scriptFilter == 'var5'){
+        res.render('storiesMessageClick', { script: stry_msg});
+      }
+      else if(scriptFilter == 'var6'){
+        res.render('storiesMessageDelay', { script: stry_msg}); // .... 
+      }
      
 
       

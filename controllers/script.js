@@ -1165,7 +1165,7 @@ exports.postUpdateFeedAction = (req, res, next) => {
         cat.flags = req.body.session_flags;
         cat.time =req.body.time;
 
-      ‍  cat.unique_bully_count = user.bully_ID.filter(x => x.t>Date.parse(user.log[user.log.length-1].time)).length;
+      // ‍  cat.unique_bully_count = user.bully_ID.filter(x => x.t>Date.parse(user.log[user.log.length-1].time)).length;
         seen_bully_count = user.seen_bully_time.filter(x => x>Date.parse(user.log[user.log.length-1].time)).length; 
         cat.seen_bully_count = seen_bully_count;
         // console.log('LAST Bully Post: ', user.last_bullyPost_viewed_Time);

@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
   email: { type: String, unique: true },
   last_bullyPost_viewed_Time: {type: Number},
   bully_ID:[{id: String, t: Number}],
-  last_log_time:Number,
+  last_loging:{type: Number, default: 0},
   seen_bully_time:{type: [Number]},
   seen_bullyPost_readTime:{type: [Number]},
   password: String,
@@ -208,7 +208,7 @@ userSchema.methods.comparePassword = function comparePassword(candidatePassword,
 };
 
 /**
- * Add Log to User if access is 1 hour from last use.
+ * Add Log to User if access is 1 hour from last use. -- I changed it to half an hour
  */
 userSchema.methods.logUser = function logUser(time, agent, ip) {
   
@@ -216,7 +216,8 @@ userSchema.methods.logUser = function logUser(time, agent, ip) {
   {
     var log_time = new Date(this.log[this.log.length -1].time);
 
-    if(time >= (log_time.getTime() + 3600000))
+    // if(time >= (log_time.getTime() + 3600000))
+    if(time >= (log_time.getTime() + 1800000))
     {
       var log = {};
       log.time = time;

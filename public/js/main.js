@@ -429,7 +429,7 @@ if(typeof total_logedin_time != 'undefined')
   // ZH: Set local variables after loging. ( do I need to set session id here as well?)
   $('button.ui.button').on('click', function(){
     active_flag = 1;
-    var t = 270; //ZHILA: change it back to 270
+    var t = 30; //ZHILA: change it back to 270
     var f =1;
     var logged_time = 15*60;
     window.localStorage.setItem("logged",f);
@@ -438,10 +438,14 @@ if(typeof total_logedin_time != 'undefined')
 
     // if($('button.ui.button').text()=="Login")
     if($('button.ui.button').text()=="Login" || $('button.ui.button').text() =="Signup")
-    {
+    { 
+      // var logingTime = Date.now();
       // send the login time at this point...
-      // $.post("/userPost_feed", {user_last_loging:logged_time, _csrf : $('meta[name="csrf-token"]').attr('content')});
-      // $.post("/feed",{user_last_loging:logged_time, _csrf : $('meta[name="csrf-token"]').attr('content')});
+      // One way to solve it is to store it in a local storage and then send it right when we send the session survey ... 
+      window.localStorage.setItem("last_loging_time", Date.now().toString());
+      $.post("/userPost_feed", {last_loging:Date.now().toString(), _csrf : $('meta[name="csrf-token"]').attr('content')});
+      // $.post("/feed",{ last_loging: Date.now().toString(), _csrf : $('meta[name="csrf-token"]').attr('content') } );
+      // $.post("/feed",{ last_loging: logingTime, _csrf : $('meta[name="csrf-token"]').attr('content') } );
 
       console.log('SET TIMER');
       window.localStorage.setItem("total_seconds", t);
@@ -1061,8 +1065,12 @@ $("#newpost.ui.tiny.post.modal")
     // check if it is feed
     console.log("NUMEBR of seen post in this session is :",localStorage.getItem("session_posts"));
 
-    $.post("/userPost_feed", { time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_unique_posts: check_id, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[compassionate, sympathy, warm, touched, effort, efficacy, closeness], _csrf : $('meta[name="csrf-token"]').attr('content')});
-    $.post("/feed", { time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_unique_posts: check_id, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[compassionate, sympathy, warm, touched, effort, efficacy, closeness], _csrf : $('meta[name="csrf-token"]').attr('content')});
+
+    var last_loging = window.localStorage.getItem("last_loging_time");
+
+
+    $.post("/userPost_feed", { time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_unique_posts: check_id, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[compassionate, sympathy, warm, touched, effort, efficacy, closeness, last_loging], _csrf : $('meta[name="csrf-token"]').attr('content')});
+    $.post("/feed", { time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_unique_posts: check_id, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[compassionate, sympathy, warm, touched, effort, efficacy, closeness, last_loging], _csrf : $('meta[name="csrf-token"]').attr('content')});
     
     // // reset the session variables .. 
     

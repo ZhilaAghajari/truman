@@ -149,9 +149,8 @@ User.find()
           // ss["session_survey_feel_inferior"] = users[i].session_survey[indx].feel_inferior;
           ss["session_survey_likes"] = users[i].session_survey[indx].likes;
           ss["session_survey_flags"] = users[i].session_survey[indx].flags;
-          // ss["session_survey_numPosts"] = users[i].session_survey[indx].posts;
-          // ss["session_survey_time"] = users[i].session_survey[indx].time;
-          ss["unique_bully_count"]=users[i].session_survey[indx].unique_bully_count;
+          // The count is not accurate .. needs to be checked...
+          // ss["unique_bully_count"]=users[i].session_survey[indx].unique_bully_count;
           ss["Bully_count"] = users[i].session_survey[indx].seen_bully_count;
           // // Zhila: next, work on this!!!
           ss["session_survey_seen_bullyPosts"] = users[i].session_survey[indx].seen_bully_post;

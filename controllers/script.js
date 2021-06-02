@@ -1181,7 +1181,7 @@ exports.postUpdateFeedAction = (req, res, next) => {
           cat.bully_post_viewedTime = user.seen_bullyPost_readTime[user.seen_bullyPost_readTime.length-1];
         }
         else{
-          console.log('MISSED THE BULLY')
+          console.log('MISSED THE BULLY before the survey')
           cat.seen_bully_post = 'False';
         }
 

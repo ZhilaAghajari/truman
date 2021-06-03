@@ -443,7 +443,7 @@ if(typeof total_logedin_time != 'undefined')
       // send the login time at this point...
       // One way to solve it is to store it in a local storage and then send it right when we send the session survey ... 
       window.localStorage.setItem("last_loging_time", Date.now().toString());
-      $.post("/userPost_feed", {last_loging:Date.now().toString(), _csrf : $('meta[name="csrf-token"]').attr('content')});
+      // $.post("/userPost_feed", {last_loging:Date.now().toString(), _csrf : $('meta[name="csrf-token"]').attr('content')});
       // $.post("/feed",{ last_loging: Date.now().toString(), _csrf : $('meta[name="csrf-token"]').attr('content') } );
       // $.post("/feed",{ last_loging: logingTime, _csrf : $('meta[name="csrf-token"]').attr('content') } );
 

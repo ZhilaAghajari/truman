@@ -1349,12 +1349,12 @@ exports.postUpdateUserPostFeedAction = (req, res, next) => {
     //somehow user does not exist here
     if (err) { return next(err); }
     console.log('the request in USER FEED: ', req.body);
-    if(req.body.last_loging)
-    { 
-      user.last_loging = parseInt(req.body.last_loging);
-      console.log('########## Here we go - LAST LOGING TIME  in POST FEED ACTION ##########: ', user.last_loging);
+    // if(req.body.last_loging)
+    // { 
+    //   user.last_loging = parseInt(req.body.last_loging);
+    //   console.log('########## Here we go - LAST LOGING TIME  in POST FEED ACTION ##########: ', user.last_loging);
       
-    }
+    // }
 
     //find the object from the right post in feed 
     var feedIndex = _.findIndex(user.posts, function(o) { return o.postID == req.body.postID; });

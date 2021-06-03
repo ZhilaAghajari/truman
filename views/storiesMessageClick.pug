@@ -247,7 +247,8 @@ block content
                             .content
                               a.author(href='/me')=user.profile.name || user.username || user.id
                               .metadata
-                                span.date=(user.createdAt.getTime() + comment.time)
+                                //- span.date= (val.relativeTime + comment.time +user.createdAt.getTime())
+                                span.date= (comment.time +user.createdAt.getTime())
                                 .rating
                                   i.heart.icon
                                   span.num=0
@@ -265,7 +266,8 @@ block content
                             .content
                               a.author(href='/user/'+comment.actor.username)=comment.actor.profile.name
                               .metadata
-                                span.date=(user.createdAt.getTime() + comment.time)
+                                //- span.date= (val.relativeTime + comment.time +user.createdAt.getTime())
+                                span.date= (comment.time +user.createdAt.getTime())
                                 .rating
                                   if comment.liked
                                     i.red.heart.icon

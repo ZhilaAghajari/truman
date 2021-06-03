@@ -43,8 +43,10 @@ block content
       // -console.log(i);
       // -console.log('feed VAL.id: ', val._id)
       // -console.log('postID in feed version: ', val.postID)
+
       if val.relativeTime
         -console.log('FRONT END USER POSTS: ', val.postID)
+        -console.log('what is this valll: ', val);
         -var u_class;
         -if (val.actorAuthor) {u_class = "actorReply"}
         -else if (val.reply) {u_class = "userReply"}
@@ -107,8 +109,8 @@ block content
                           .content
                             a.author(href='/me')=user.profile.name || user.username || user.id
                             .metadata
-                            //- span.date=(user.createdAt.getTime() + comment.time)
-                              span.date=(val.time + comment.time+user.createdAt.getTime())
+                              span.date=(user.createdAt.getTime() + comment.time)
+                              // span.date=(val.relativeTime + comment.time+user.createdAt.getTime())
                               .rating
                                 if comment.liked
                                   i.red.heart.icon
@@ -137,9 +139,8 @@ block content
                             if comment.actor.profile
                               a.author(href='/user/'+comment.actor.username)=comment.actor.profile.name
                             .metadata
-                              //- span.date=(user.createdAt.getTime() + comment.time)
-                              span.date= (val.time + comment.time +user.createdAt.getTime())
-                              -console.log('what is this span date2 : ', (val.time + comment.time))
+                              span.date=(user.createdAt.getTime() + comment.time)
+                              //- span.date= (val.relativeTime + comment.time +user.createdAt.getTime())
                               .rating
                                 if comment.liked
                                   i.red.heart.icon

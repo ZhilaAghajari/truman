@@ -147,14 +147,14 @@ User.find()
           // ss["session_survey_lonely"] = users[i].session_survey[indx].lonely;
           // ss["session_survey_feel"] = users[i].session_survey[indx].feel;
           // ss["session_survey_feel_inferior"] = users[i].session_survey[indx].feel_inferior;
-          ss["session_survey_likes"] = users[i].session_survey[indx].likes;
-          ss["session_survey_flags"] = users[i].session_survey[indx].flags;
+          ss["ss_survey_likes"] = users[i].session_survey[indx].likes;
+          ss["ss_survey_flags"] = users[i].session_survey[indx].flags;
           // The count is not accurate .. needs to be checked...
           // ss["unique_bully_count"]=users[i].session_survey[indx].unique_bully_count;
           // we don't need this anymore...
           ss["Bully_count"] = users[i].session_survey[indx].seen_bully_count;
           // // Zhila: next, work on this!!!
-          ss["session_survey_seen_bullyPosts"] = users[i].session_survey[indx].seen_bully_post;
+          ss["ss_seen_bullyPosts"] = users[i].session_survey[indx].seen_bully_post;
           // ss["session_survey_timeSpentOnBullyPost"] =  users[i].session_survey[indx].bully_post_viewedTime;
           
           ss_writer.write(ss);
@@ -271,11 +271,11 @@ User.find()
         {
           mlm.DayOneVists = users[i].study_days[0];
           mlm.DayTwoVists = users[i].study_days[1];
-          mlm.DayThreeVists = users[i].study_days[2];
+          // mlm.DayThreeVists = users[i].study_days[2];
 
           sums.DayOneVists = users[i].study_days[0];
           sums.DayTwoVists = users[i].study_days[1];
-          sums.DayThreeVists = users[i].study_days[2];
+          // sums.DayThreeVists = users[i].study_days[2];
         }
 
         //per feedAction

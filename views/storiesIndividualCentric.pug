@@ -543,8 +543,8 @@ block content
 
 
               .two.fluid.ui.buttons(postID=val.postID)
-                .ui.left.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
-                .ui.right.button(next_id=val.modal_id , postID=val.postID, study_group ='stories')  Next
+                .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
+                .ui.right.disabled.button(next_id=val.modal_id , postID=val.postID, study_group ='stories')  Next
                 
               .ui.tiny.gray.progress(progressing_id=val.modal_id, progressing_type = 'post')
                 .bar

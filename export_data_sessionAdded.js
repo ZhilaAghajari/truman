@@ -41,7 +41,7 @@ Array.prototype.sum = function() {
 
 var victim = "5b4e207817c6a93896fa924d";
 var bully = "5b4e207817c6a93896fa923d";
-var bully_name = "bblueberryy";
+var bully_name = "jonnyboyca";
 
 var mlm_array = [];
 
@@ -240,14 +240,19 @@ User.find()
         mlm.generalpagevisit = 0;
         // what is this pagelog variable?
         for(var z = 0; z < users[i].pageLog.length; ++z){
-            if(users[i].pageLog[z].page == "Notifications")
-              mlm.notificationpage++;
-            else if (users[i].pageLog[z].page == bully_name)
-              mlm.numberbullypage++;
-            else if (users[i].pageLog[z].page == "casssssssssie")
-              mlm.numbervictimpage++;
-            else
-              mlm.generalpagevisit++;
+          if(users[i].pageLog[z].page == "Notifications")
+            mlm.notificationpage++;
+          else if (users[i].pageLog[z].page == bully_name)
+            mlm.numberbullypage++;
+          else if (users[i].pageLog[z].page == "dominguez2")
+            mlm.numbervictimpage++;
+          else
+            mlm.generalpagevisit++;
+        }
+        if(users[i].email == "zhila999@gmail.com")
+        {
+          console.log('bully page visit: ', mlm.numberbullypage);
+          console.log('victim page visit: ', mlm.numbervictimpage);
         }
         
 
@@ -313,7 +318,7 @@ User.find()
           //console.log(util.inspect(users[i].feedAction[k], false, null))
           if(users[i].feedAction[k].post == null)
           {
-            //console.log("@$@$@$@$@ action ID NOT FOUND: "+users[i].feedAction[k].id);
+            console.log("@$@$@$@$@ action ID NOT FOUND: "+users[i].feedAction[k].id);
           }
 
           if(users[i].feedAction[k].post != null && (users[i].feedAction[k].post.id == bully_messages[0] || users[i].feedAction[k].post.id == bully_messages[1] || users[i].feedAction[k].post.id == bully_messages[2]||users[i].feedAction[k].post.id == bully_messages[3]))   
@@ -465,13 +470,13 @@ User.find()
         {
           var report_index = _.findIndex(users[i].blockAndReportLog, function(o) { return (o.actorName == bully_name && o.action =="report"); });
           mlm.BULLY_reported = 1;
-          mlm.BULLY_ReportMilliSeconds = users[i].blockAndReportLog[report_index].time - users[i].createdAt;
+          // mlm.BULLY_ReportMilliSeconds = users[i].blockAndReportLog[report_index].time - users[i].createdAt;
           mlm.BULLY_reportIssue = users[i].blockAndReportLog[report_index].report_issue;
         }
         else
         {
           mlm.BULLY_reported = 0;
-          mlm.BULLY_ReportMilliSeconds = 259200000;
+          // mlm.BULLY_ReportMilliSeconds = 259200000;
           mlm.BULLY_reportIssue = "";
         }
 
@@ -610,14 +615,14 @@ User.find()
               //temp_mlm.BULLY_VictimPostLike = 1;
               mlm["BULLY_VictimPostLike"+bin] = 1;
               //temp_mlm.BULLY_VictimPostLikeTime = users[i].feedAction[feedIndex].likeTime[0];
-              mlm["BULLY_VictimPostLikeTime"+bin] = users[i].feedAction[feedIndex].likeTime[0];
+              // mlm["BULLY_VictimPostLikeTime"+bin] = users[i].feedAction[feedIndex].likeTime[0];
             }
             else 
             {
               //temp_mlm.BULLY_VictimPostLike = 0;
               mlm["BULLY_VictimPostLike"+bin] = 0;
               //temp_mlm.BULLY_VictimPostLikeTime = 0;
-              mlm["BULLY_VictimPostLikeTime"+bin] = 0;
+              // mlm["BULLY_VictimPostLikeTime"+bin] = 0;
             }
 
             
@@ -650,14 +655,14 @@ User.find()
                   //temp_mlm.BULLY_Like = 1;
                   mlm["BULLY_Like"+bin] = 1;
                   //temp_mlm.BULLY_LikeTime = users[i].feedAction[feedIndex].comments[cc].likeTime[0];
-                  mlm["BULLY_LikeTime"+bin] = users[i].feedAction[feedIndex].comments[cc].likeTime[0];
+                  // mlm["BULLY_LikeTime"+bin] = users[i].feedAction[feedIndex].comments[cc].likeTime[0];
                 }
                 else
                 {
                   //temp_mlm.BULLY_Like = 0;
                   mlm["BULLY_Like"+bin] = 0;
                   //temp_mlm.BULLY_LikeTime = 0; 
-                  mlm["BULLY_LikeTime"+bin] = 0;
+                  // mlm["BULLY_LikeTime"+bin] = 0;
                 }
                 //flagged bully comment
                 if(users[i].feedAction[feedIndex].comments[cc].flagTime[0])
@@ -666,14 +671,14 @@ User.find()
                   //temp_mlm.BULLY_Flag = 1;
                   mlm["BULLY_Flag"+bin] = 1;
                   //temp_mlm.BULLY_FlagTime = users[i].feedAction[feedIndex].comments[cc].flagTime[0];
-                  mlm["BULLY_FlagTime"+bin] = users[i].feedAction[feedIndex].comments[cc].flagTime[0];
+                  // mlm["BULLY_FlagTime"+bin] = users[i].feedAction[feedIndex].comments[cc].flagTime[0];
                 }
                 else
                 {
                   //temp_mlm.BULLY_Flag = 0;
                   mlm["BULLY_Flag"+bin] = 0;
                   //temp_mlm.BULLY_FlagTime = 0;
-                  mlm["BULLY_FlagTime"+bin] = 0; 
+                  // mlm["BULLY_FlagTime"+bin] = 0; 
                 }
               }//end of BULLY COMMENT
               
@@ -685,7 +690,7 @@ User.find()
                 //temp_mlm.BULLY_Reply++;
                 mlm["BULLY_Reply"+bin] = mlm["BULLY_Reply"+bin] + 1;
                 //temp_mlm.BULLY_ReplyTime = users[i].feedAction[feedIndex].comments[cc].time;
-                mlm["BULLY_ReplyTime"+bin] = users[i].feedAction[feedIndex].comments[cc].time;
+                // mlm["BULLY_ReplyTime"+bin] = users[i].feedAction[feedIndex].comments[cc].time;
 
                 if (!mlm["BULLY_commentMessage"+bin])
                   mlm["BULLY_commentMessage"+bin] = users[i].feedAction[feedIndex].comments[cc].comment_body;

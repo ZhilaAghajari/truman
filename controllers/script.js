@@ -327,7 +327,7 @@ exports.getScript = (req, res, next) => {
                 console.log("%$%$%$%$%$%$%$Found a bully post and will push it^2 :",bully_post._id );
                 bully_count = 1;
                 script_feed.splice(0,1);
-                if ( (scriptFilter =="var5" || scriptFilter == "var6" || scriptFilter == 'var3' || scriptFilter == 'var4') && bully_story_count == 0)
+                if ( (scriptFilter =="var3" || scriptFilter == "var4" || scriptFilter == 'var5' || scriptFilter == 'var6') && bully_story_count == 0)
                 {
                   bully_story_count == 1
                   bully_story = bully_post

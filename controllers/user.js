@@ -720,11 +720,12 @@ exports.stillActive = () => {
       for (var i = users.length - 1; i >= 0; i--) {
         console.log("Looking at user "+users[i].email);      
         var time_diff = Date.now() - users[i].createdAt;
-        var three_days = 259200000;
+        // var three_days = 259200000;
+        var two_days = 172800000;
 
         console.log("Time period is  "+time_diff);  
-        console.log("Three days is  "+three_days);
-        if (time_diff >= three_days)
+        console.log("Three days is  "+two_days);
+        if (time_diff >= two_days)
         {
             if (users[i].isAdmin)
             {
@@ -817,7 +818,7 @@ exports.userTestResults = (req, res) => {
             console.log("@@@@@@@@days are d1:"+day[0]+" d2:"+day[1]+" d3:"+day[2]);
             //Logged in at least twice a day, and posted at least 3 times
             */
-            if (users[i].study_days[0] >=2 && users[i].study_days[1] >=2 && users[i].study_days[2] >=2 && users[i].numPosts >= 2)
+            if (users[i].study_days[0] >=2 && users[i].study_days[1] >=2 && users[i].numPosts >= 2)
             {
               users[i].completed = true;
               users[i].save((err) => {

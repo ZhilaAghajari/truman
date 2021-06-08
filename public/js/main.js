@@ -349,10 +349,10 @@ if(typeof total_logedin_time != 'undefined')
           if(localStorage.getItem("survey_flag") ==1)
           {
             show_survey();
-            alert('This is the last post of this session!');
+            // alert('This is the last post of this session!');
           }
           else{
-            alert('This is the last post of this session!');
+            // alert('This is the last post of this session!');
             window.location.href='/'; //maybe go to tour site??? or redirect 
           }
           

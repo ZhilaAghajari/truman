@@ -1089,7 +1089,7 @@ $("#newpost.ui.tiny.post.modal")
       // no more posts to show .. 
       if($("[next_id='"+check_id+"']").length===0)
       {
-        alert('This is the last post of this session!');
+        // alert('This is the last post of this session!');
         window.location.href='/'; //maybe go to tour site??? or redirect 
       }
       //2- if it is activated after some amount of time !

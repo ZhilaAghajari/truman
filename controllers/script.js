@@ -675,16 +675,16 @@ exports.getScript = (req, res, next) => {
       else if(scriptFilter == 'var2'){
         res.render('feedIndividualCentric', { script: individual_feed_version}); // ... /
       }
-      else if(scriptFilter == 'var3'){
+      else if(scriptFilter == 'var3'){ //stories-person-delay??
         res.render('stories',{script:stories_person_feed}) 
       }
-      else if(scriptFilter == 'var4'){
+      else if(scriptFilter == 'var4'){//stories-person-NO-delay
         res.render('storiesIndividualCentric',{script:stories_person_feed})
       }
-      else if(scriptFilter == 'var5'){
+      else if(scriptFilter == 'var5'){ //no delay
         res.render('storiesMessageClick', { script: stry_msg});
       }
-      else if(scriptFilter == 'var6'){
+      else if(scriptFilter == 'var6'){//delay
         res.render('storiesMessageDelay', { script: stry_msg}); // .... 
       }
      

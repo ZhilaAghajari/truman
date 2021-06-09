@@ -138,9 +138,9 @@ block content
               //     .ui.left.button(pre_id=val.modal_id, postID=val.postID, study_group ='clickThrough') Previous
               //     .ui.right.button(next_id=val.modal_id, postID=val.postID, study_group ='clickThrough')  Next
                    
-                .ui.tiny.red.progress(progressing_id=val.modal_id, progressing_type = 'profile')
-                  .bar
-                  .label ... 
+                // .ui.tiny.red.progress(progressing_id=val.modal_id, progressing_type = 'profile')
+                //   .bar
+                //   .label ... 
 
       //- this is a user post ..
       if val.relativeTime 
@@ -327,9 +327,9 @@ block content
                 .ui.left.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
                 .ui.right.button(next_id=val.modal_id, postID=val.postID, study_group ='stories')  Next
                  
-              .ui.tiny.gray.progress(progressing_id=val.modal_id, progressing_type = 'post')
-                .bar
-                .label ... 
+              //- .ui.tiny.gray.progress(progressing_id=val.modal_id, progressing_type = 'post')
+              //-   .bar
+              //-   .label ... 
 
 
 
@@ -543,12 +543,12 @@ block content
 
 
               .two.fluid.ui.buttons(postID=val.postID)
-                .ui.left.disabled.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
-                .ui.right.disabled.button(next_id=val.modal_id , postID=val.postID, study_group ='stories')  Next
+                .ui.left.button(pre_id=val.modal_id, postID=val.postID, study_group ='stories') Previous
+                .ui.right.button(next_id=val.modal_id , postID=val.postID, study_group ='stories')  Next
                 
-              .ui.tiny.gray.progress(progressing_id=val.modal_id, progressing_type = 'post')
-                .bar
-                .label ... 
+              //- .ui.tiny.gray.progress(progressing_id=val.modal_id, progressing_type = 'post')
+              //-   .bar
+              //-   .label ... 
 
               //- .fluid.ui.button
               //-   #sessionSurvey.ui.left.disabled.button(survey_button='survey_button') Session Survey

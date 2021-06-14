@@ -26,7 +26,7 @@ $(window).on("load", function() {
   }
   // 
 
-  $('.modal').modal({
+  $('.ui.tiny.post.modal').modal({
     // this parameter will enable/disable the closing for the previous .united modals when the next modal is opened :)
     allowMultiple: false,
   });
@@ -242,7 +242,11 @@ if(typeof total_logedin_time != 'undefined')
 
   function move(j) {
     console.log('modal id is: ', j);
-    mdltype = $("[progressing_id='"+j+"']")[0].attributes[2].value;
+    var mdltype='post';
+    if(typeof ($("[progressing_id='"+j+"']")[0])!='undefined') 
+    {
+      mdltype = $("[progressing_id='"+j+"']")[0].attributes[2].value;
+    }
     if(mdltype =='post')
     {
       progressing_id = $("[progressing_id='"+j+"']");

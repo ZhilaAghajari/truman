@@ -422,12 +422,14 @@ User.find()
             }
 
             //total read times, and average of all reads
-            if(users[i].feedAction[k].readTime[0])
+            //Zhila: seems I need to replace readtime with viewedTime ? 
+            // if(users[i].feedAction[k].readTime[0])
+            if(users[i].feedAction[k].viewedTime[0])
             {
               mlm.TotalNonBullyPostRead++;
-              //console.log("before avg read is "+mlm.AveReadTime);
-              mlm.AveReadTime += users[i].feedAction[k].readTime.sum() / users[i].feedAction[k].readTime.length;
-              //console.log("after avg read is "+mlm.AveReadTime);
+              console.log("before avg read is "+mlm.AveReadTime);
+              mlm.AveReadTime += users[i].feedAction[k].viewedTime.sum() / users[i].feedAction[k].viewedTime.length;
+              console.log("after avg read is "+mlm.AveReadTime);
             }
           }
 

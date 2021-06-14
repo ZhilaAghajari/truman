@@ -383,9 +383,8 @@ exports.getScript = (req, res, next) => {
         var bully_index = Math.floor(Math.random() * 4) + 1 
         control_feed.splice(bully_index, 0, bully_post);
         console.log('bullying post added ***Control Condition*** ');
-
       }
-
+      
 
       // Condition: stories message centric
       var stry_msg =JSON.parse(JSON.stringify(finalfeed));
@@ -529,7 +528,7 @@ exports.getScript = (req, res, next) => {
           
         }
 
-        // Add the user's recent post on the top in case he/she recently posted something
+        // Add the user's recent post on the top in case they recently posted something
         if(typeof last_user_post!== 'undefined')
         {
           if(last_user_post.relativeTime>individual_feed_version[1].time)
@@ -610,28 +609,11 @@ exports.getScript = (req, res, next) => {
           bully_index = bully_index+1;
         }
         
-        // add the profile of the bullied actor at the index "bully_index"
-        // for(var i=0; i<stories_person_feed.length; i++)
-        // {
-        //   if(stories_person_feed[i].hasOwnProperty('type') && stories_person_feed[i].type ==='actor' && stories_person_feed[i].username === bully_post.actor.username)
-        //   {
-        //     var a = stories_person_feed.splice(i, 1);
-        //     stories_person_feed.splice(bully_index, 0, bullied_actor_stories[0]);
-        //     break;
-        //   }
-        // }
         // add the posts created by the bullied actor .. [is there a better way to do it? I had to use a 2 for loop because I wanted to remove the posts, then add them to the front]
         for(var i=1; i<=bullied_actor_stories.length; i++)
         {
           stories_person_feed.splice(bully_index+i-1, 0, bullied_actor_stories[i-1]);
-          // for(var j=1; j<stories_person_feed.length; j++)
-          // {            
-          //   if( (typeof stories_person_feed[j]['type']=='undefined') && bullied_actor_stories[i-1].actor.username ===stories_person_feed[j].actor.username)
-          //   {
-          //     var a = stories_person_feed.splice(j, 1);
-          //     stories_person_feed.splice(bully_index+i-1, 0, bullied_actor_stories[i-1]);
-          //   }
-          // }
+ 
           
         }
       }

@@ -121,9 +121,8 @@ exports.postLogin = (req, res, next) => {
       req.flash('errors', info); 
       return res.redirect('/login');
     }
-    if (!(user.active)) { //? how can it access attributes of user object.. it has something to do with session from 'express-session' in app.js?
+    if (!(user.active)) { //
       console.log("FINAL");
-      //Need to capture this in a var
       var post_url = process.env.POST_SURVEY+'?id='+user.mturkID;
       console.log("last url is "+post_url)
       req.flash('final', { msg: post_url });
@@ -617,7 +616,8 @@ var sendReminderEmail = function(user){
       Your participation in our study is a huge help in beta testing the app.
       Remember to fully participate in the study you must:\n
       * create one new post each day\n 
-      * login and view posts twice a day\n\n
+      * login and view posts twice a day\n
+      * complete the on-site survey\n\n
       Thanks again for all your help and participation!\n
       Keep Eating, Snapping and Loving!\n 
       🍴📷.❤️ Team
@@ -778,8 +778,9 @@ exports.userTestResults = (req, res) => {
         for (var i = users.length - 1; i >= 0; i--) {  
           console.log("@@@@@@@@@@Looking at user "+users[i].email);      
           var time_diff = Date.now() - users[i].createdAt;
-          var three_days = 259200000;
-          var one_day =     86400000;
+          // var three_days = 259200000;
+          var two_days = 172800000;
+          var one_day =  86400000;
 
           //check if completed or not yet 
           if (!users[i].completed)

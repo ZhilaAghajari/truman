@@ -183,8 +183,7 @@ app.use(session({
   })
 }));
 app.use(passport.initialize()); //?: do we use these methods whenever we want to set password in our app .. 
-app.use(passport.session()); //?: but passport doesn't have session method .. 
-app.use(flash());
+app.use(passport.session()); //
 
 
 

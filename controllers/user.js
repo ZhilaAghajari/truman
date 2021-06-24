@@ -660,7 +660,7 @@ var sendFinalEmail = function(user){
       text: `Hey ${u_name},\n\n
       Thank you so much for participating in our study!\n
       Your participation has been a huge help in beta testing our app.
-      You have one last task to finish the study, and that is to take the final survey here at  `+process.env.POST_SURVEY+user.mturkID+`\n\n
+      You have one last task to finish the study, and that is to take the final survey here at  `+process.env.POST_SURVEY+'?id='+user.mturkID+`\n\n
       Thanks again for all your help and participation!\n
       Keep Eating, Snapping and Loving!\n 
       🍴📷.❤️ Team
@@ -747,6 +747,10 @@ exports.stillActive = () => {
               console.log("Success in turning off");
               });
             }
+        }
+        else
+        {
+          console.log('just want to know you are working !!');
         }
         
       }  

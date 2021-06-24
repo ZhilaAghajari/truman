@@ -21,7 +21,8 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
   User.findOne({ email: email.toLowerCase() }, (err, user) => {
     if (err) { return done(err); }
     if (!user) {
-      return done(null, false, { msg: `Email ${email} not found.` });
+      return done(null, false, { 
+        msg: `Email ${email} not found.` });
     }
     user.comparePassword(password, (err, isMatch) => {
       if (err) { return done(err); }
@@ -32,6 +33,12 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
     });
   });
 }));
+
+//ZHI: rule for the survey item... find one ... session_survey and the last ite, ... .. IDK yet...
+// passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
+//   .....
+// }));
+
 
 /**
  * OAuth Strategy Overview

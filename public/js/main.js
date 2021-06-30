@@ -205,6 +205,17 @@ if(typeof total_logedin_time != 'undefined')
     show_survey();
   });
 
+  function eventFire(el, etype){
+   if (el.fireEvent) {
+     (el.fireEvent('on' + etype));
+   }
+   else {
+     var evObj = document.createEvent('Events');
+     evObj.initEvent(etype, true, false);
+     el.dispatchEvent(evObj);
+   }
+  }
+
 
   function show_survey(){
     $(".ui.large.post.modal[modal_id='"+'321'+"']")
@@ -1040,7 +1051,29 @@ $("#newpost.ui.tiny.post.modal")
 })
 ;
 
-  $('#submitSession.ui.blue.fluid.button').on('click', function(){
+
+
+// form validation...
+
+
+
+  $('#submitSession.ui.blue.fluid.button').on('click', function(event){
+
+    // $('#survey.ui.form')
+  //   $('table.ui.large.seven.column.table')
+  //   .form({
+  //     inline: true,
+  //     on: "blur",
+  //     fields: {
+  //       compassionate: {
+  //         identifier: "compassionate",
+  //         rules: [{
+  //           type: 'checked',
+  //           prompt: ' Please select your answer'
+  //         }]
+  //       }
+  //   }
+  // });
     var post = $(this).closest( ".ui.fluid.card.dim");
     var session_time = Date.now();
 
@@ -1071,56 +1104,98 @@ $("#newpost.ui.tiny.post.modal")
 
 
     var last_loging = window.localStorage.getItem("last_loging_time");
-
-
-    $.post("/userPost_feed", { time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_unique_posts: check_id, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[compassionate, sympathy, warm, touched, effort, efficacy, closeness, last_loging], _csrf : $('meta[name="csrf-token"]').attr('content')});
-    $.post("/feed", { time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_unique_posts: check_id, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[compassionate, sympathy, warm, touched, effort, efficacy, closeness, last_loging], _csrf : $('meta[name="csrf-token"]').attr('content')});
-    
-    // // reset the session variables .. 
-    
-    console.log('session likes stored : ', localStorage.getItem("session_likes"));
-    window.localStorage.setItem("session_likes",0);
-    window.localStorage.setItem("session_flags",0);
-    window.localStorage.setItem("session_posts",0);
-    window.localStorage.setItem("session_userComments",0);
-    console.log('reset likes of this session: ', localStorage.getItem("session_likes"));
-
-    // if the experimental group is stories-based, do the following, otherwise, just close the modal...
-    if($('.ui.blue.fluid.button')[0].attributes[2].value==="stories")
-    // 1- if the user reached the end of the posts for today, direct them to a link or to the login page 
-    {
-      console.log('Check_id: ', check_id);
-      // no more posts to show .. 
-      if($("[next_id='"+check_id+"']").length===0)
-      {
-        // alert('This is the last post of this session!');
-        window.location.href='/'; //maybe go to tour site??? or redirect 
-      }
-      //2- if it is activated after some amount of time !
-      else 
-      {
-        $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','#submitSession.ui.blue.fluid.button');
-        // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events',$(".ui.small.post.modal[modal_id='"+j+"']"));
-        $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
-        // if(check_id=='1' && $("[pre_id='"+1+"']")[0].attributes[2].value=="stories")
-        if(check_id=='1' && $("[pre_id='"+1+"']").attr('study_group') =="stories")
-        {
-          move(1);
-        }
-      }
+    if (typeof ($('input:radio[name=compassionate]:checked').val())=== 'undefined') {
+      $('table.ui.large.seven.column.table')[0].style.backgroundColor = "#F3EEC7";
+      return false;
+      // document.getElementById('submitSession').click() 
 
     }
-    else //if this is the feed version.. just close the modal...
+    else if (typeof ($('input:radio[name=sympathetic]:checked').val())=== 'undefined')
     {
-      console.log('Not sure what to do here yet!'); // in this case we only need to close the modal after submit
-      j='321';
-      $(".ui.large.post.modal[modal_id='"+j+"']")
-      .modal({
-        selector: { 
-          close: '#submitSession.ui.blue.fluid'
-        } 
-      })
-    ;
+      $('table.ui.large.seven.column.table')[1].style.backgroundColor = "#F3EEC7";
+      return false;
+      // document.getElementById('submitSession').click() 
+    }
+    else if (typeof ($('input:radio[name=warm]:checked').val())=== 'undefined')
+    {
+      $('table.ui.large.seven.column.table')[2].style.backgroundColor = "#F3EEC7"
+      return false;
+    }
+    else if (typeof ($('input:radio[name=touched]:checked').val())=== 'undefined')
+    {
+      $('table.ui.large.seven.column.table')[3].style.backgroundColor = "#F3EEC7"
+      return false;
+    }
+    else if (typeof ($('input:radio[name=closeness]:checked').val())=== 'undefined')
+    {
+      $('table.ui.large.seven.column.table')[4].style.backgroundColor = "#F3EEC7"
+      return false;
+    }
+    else if (typeof ($('input:radio[name=Effort]:checked').val())=== 'undefined')
+    {
+      $('table.ui.large.seven.column.table')[5].style.backgroundColor = "#F3EEC7"
+      return false;
+    }
+    else if (typeof ($('input:radio[name=Efficacy]:checked').val())=== 'undefined')
+    {
+      $('table.ui.large.seven.column.table')[6].style.backgroundColor = "#F3EEC7"
+      return false;
+    }
+    
+
+    else
+    {
+
+
+      $.post("/userPost_feed", { time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_unique_posts: check_id, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[compassionate, sympathy, warm, touched, effort, efficacy, closeness, last_loging], _csrf : $('meta[name="csrf-token"]').attr('content')});
+      $.post("/feed", { time: session_time, modalID: modal_id, session_userComments: localStorage.getItem("session_userComments"), session_posts: localStorage.getItem("session_posts"), session_unique_posts: check_id, session_flags: localStorage.getItem("session_flags"), session_likes: localStorage.getItem("session_likes"), session_survey:[compassionate, sympathy, warm, touched, effort, efficacy, closeness, last_loging], _csrf : $('meta[name="csrf-token"]').attr('content')});
+      
+      // // reset the session variables .. 
+      
+      console.log('session likes stored : ', localStorage.getItem("session_likes"));
+      window.localStorage.setItem("session_likes",0);
+      window.localStorage.setItem("session_flags",0);
+      window.localStorage.setItem("session_posts",0);
+      window.localStorage.setItem("session_userComments",0);
+      console.log('reset likes of this session: ', localStorage.getItem("session_likes"));
+
+      // if the experimental group is stories-based, do the following, otherwise, just close the modal...
+      if($('.ui.blue.fluid.button')[0].attributes[2].value==="stories")
+      // 1- if the user reached the end of the posts for today, direct them to a link or to the login page 
+      {
+        console.log('Check_id: ', check_id);
+        // no more posts to show .. 
+        if($("[next_id='"+check_id+"']").length===0)
+        {
+          // alert('This is the last post of this session!');
+          window.location.href='/'; //maybe go to tour site??? or redirect 
+        }
+        //2- if it is activated after some amount of time !
+        else 
+        {
+          $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events','#submitSession.ui.blue.fluid.button');
+          // $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('attach events',$(".ui.small.post.modal[modal_id='"+j+"']"));
+          $(" .ui.tiny.post.modal[modal_id='"+check_id+"']").modal('show');
+          // if(check_id=='1' && $("[pre_id='"+1+"']")[0].attributes[2].value=="stories")
+          if(check_id=='1' && $("[pre_id='"+1+"']").attr('study_group') =="stories")
+          {
+            move(1);
+          }
+        }
+
+      }
+      else //if this is the feed version.. just close the modal...
+      {
+        console.log('Not sure what to do here yet!'); // in this case we only need to close the modal after submit
+        j='321';
+        $(".ui.large.post.modal[modal_id='"+j+"']")
+        .modal({
+          selector: { 
+            close: '#submitSession.ui.blue.fluid'
+          } 
+        })
+      ;
+    }
       
     } 
   });

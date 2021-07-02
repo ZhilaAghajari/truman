@@ -1106,6 +1106,7 @@ $("#newpost.ui.tiny.post.modal")
     var last_loging = window.localStorage.getItem("last_loging_time");
     if (typeof ($('input:radio[name=compassionate]:checked').val())=== 'undefined') {
       $('table.ui.large.seven.column.table')[0].style.backgroundColor = "#F3EEC7";
+      alert('Please answer the unanswered questions.');
       return false;
       // document.getElementById('submitSession').click() 
 
@@ -1113,32 +1114,38 @@ $("#newpost.ui.tiny.post.modal")
     else if (typeof ($('input:radio[name=sympathetic]:checked').val())=== 'undefined')
     {
       $('table.ui.large.seven.column.table')[1].style.backgroundColor = "#F3EEC7";
+      alert('Please answer the unanswered questions.');
       return false;
       // document.getElementById('submitSession').click() 
     }
     else if (typeof ($('input:radio[name=warm]:checked').val())=== 'undefined')
     {
-      $('table.ui.large.seven.column.table')[2].style.backgroundColor = "#F3EEC7"
+      $('table.ui.large.seven.column.table')[2].style.backgroundColor = "#F3EEC7";
+      alert('Please answer the unanswered questions.');
       return false;
     }
     else if (typeof ($('input:radio[name=touched]:checked').val())=== 'undefined')
     {
-      $('table.ui.large.seven.column.table')[3].style.backgroundColor = "#F3EEC7"
+      $('table.ui.large.seven.column.table')[3].style.backgroundColor = "#F3EEC7";
+      alert('Please answer the unanswered questions.');
       return false;
     }
     else if (typeof ($('input:radio[name=closeness]:checked').val())=== 'undefined')
     {
-      $('table.ui.large.seven.column.table')[4].style.backgroundColor = "#F3EEC7"
+      $('table.ui.large.seven.column.table')[4].style.backgroundColor = "#F3EEC7";
+      alert('Please answer the unanswered questions.');
       return false;
     }
     else if (typeof ($('input:radio[name=Effort]:checked').val())=== 'undefined')
     {
-      $('table.ui.large.seven.column.table')[5].style.backgroundColor = "#F3EEC7"
+      $('table.ui.large.seven.column.table')[5].style.backgroundColor = "#F3EEC7";
+      alert('Please answer the unanswered questions.');
       return false;
     }
     else if (typeof ($('input:radio[name=Efficacy]:checked').val())=== 'undefined')
     {
-      $('table.ui.large.seven.column.table')[6].style.backgroundColor = "#F3EEC7"
+      $('table.ui.large.seven.column.table')[6].style.backgroundColor = "#F3EEC7";
+      alert('Please answer the unanswered questions.');
       return false;
     }
     

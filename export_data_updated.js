@@ -25,7 +25,9 @@ var summary_writer = csvWriter();
 //5bb3a93ad9fd14471bf39791
 //5bb3a93ad9fd14471bf39792
 //5bb3a93ad9fd14471bf397c8
+// var bully_messages =["60c7be8dbca161301827e30d","60c7be8ebca161301827e31d","60c7be8ebca161301827e338","60c7be8dbca161301827e2bc"];
 var bully_messages =["60df691ec4d2c177c5eea714","60df691ec4d2c177c5eea6fa","60df691ec4d2c177c5eea69f","60df691ec4d2c177c5eea6d3"];
+
 
 // var bully_messages = ["5bb3a93ad9fd14471bf3977d",
 // "5bb3a93ad9fd14471bf39791",
@@ -38,7 +40,7 @@ Array.prototype.sum = function() {
 };
 
 
-
+// ... this is the id of the actor
 var victim = "60df68d41dd36f77b6db88c2"; 
 var bully = "60df68d41dd36f77b6db88c3";
 var bully_name = "jonnyboyca";
@@ -112,6 +114,7 @@ User.find()
 
 
         mlm.email = users[i].email;
+        mlm.experimental_condition = users[i].group;
         ss.email = users[i].email;
         //sur.email = users[i].email;
         ss.experimental_condition = users[i].group;
@@ -315,7 +318,7 @@ User.find()
           //console.log("Look up action ID: "+users[i].feedAction[k].id);
           //console.log("Look up action POST : "+users[i].feedAction[k].post);
           
-          
+          //console.log(util.inspect(users[i].feedAction[k], false, null))
           // if(users[i].feedAction[k].post == null)
           // {
           //   console.log("@$@$@$@$@ action ID NOT FOUND: "+users[i].feedAction[k].id);
@@ -344,10 +347,10 @@ User.find()
               bullyVictumFlag++;
             }
 
-            if(users[i].feedAction[k].readTime[0])
+            if(users[i].feedAction[k].viewedTime[0])
             {
               bullyVictumReads++;
-              bullyVictumReadTimes += users[i].feedAction[k].readTime.sum() / users[i].feedAction[k].readTime.length; 
+              bullyVictumReadTimes += users[i].feedAction[k].viewedTime.sum() / users[i].feedAction[k].viewedTime.length; 
             }
 
             //check bully comments
@@ -577,14 +580,14 @@ User.find()
             }
 
             //last read time
-            if(users[i].feedAction[feedIndex].readTime[0])
+            if(users[i].feedAction[feedIndex].viewedTime[0])
             {
               //temp_mlm.BullyPostLastReadTime = users[i].feedAction[feedIndex].readTime[users[i].feedAction[feedIndex].readTime.length - 1];
-              mlm["BullyPostLastReadTime"+bin] = users[i].feedAction[feedIndex].readTime[users[i].feedAction[feedIndex].readTime.length - 1];
+              mlm["BullyPostLastReadTime"+bin] = users[i].feedAction[feedIndex].viewedTime[users[i].feedAction[feedIndex].viewedTime.length - 1];
               //temp_mlm.BullyPostAverageReadTime = users[i].feedAction[feedIndex].readTime.sum() / users[i].feedAction[feedIndex].readTime.length;
-              mlm["BullyPostAverageReadTime"+bin] = users[i].feedAction[feedIndex].readTime.sum() / users[i].feedAction[feedIndex].readTime.length;
+              mlm["BullyPostAverageReadTime"+bin] = users[i].feedAction[feedIndex].viewedTime.sum() / users[i].feedAction[feedIndex].viewedTime.length;
               //temp_mlm.BullyPostNumOfReadTimes = users[i].feedAction[feedIndex].readTime.length;
-              mlm["BullyPostNumOfReadTimes"+bin] = users[i].feedAction[feedIndex].readTime.length;
+              mlm["BullyPostNumOfReadTimes"+bin] = users[i].feedAction[feedIndex].viewedTime.length;
             }
             else 
             {

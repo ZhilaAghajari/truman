@@ -1073,10 +1073,10 @@ exports.postUpdateFeedAction = (req, res, next) => {
         console.log('add the viewedTime: ', viewedTime)
         console.log('ID of the viewed post: ??: ', req.body.postID)
 
-        var bully_messages =["60b0ed6c42961f56f9dac468","60b0ed6d42961f56f9dac4d5","60b0ed6c42961f56f9dac4ae","60b0ed6e42961f56f9dac566"];
+        var bully_messages =["60df691ec4d2c177c5eea714","60df691ec4d2c177c5eea6fa","60df691ec4d2c177c5eea69f","60df691ec4d2c177c5eea6d3"];
+        // var bully_messages =["60c7be8dbca161301827e30d","60c7be8ebca161301827e31d","60c7be8ebca161301827e338","60c7be8dbca161301827e2bc"];
 
-
-        if(req.body.postID=='60b0ed6c42961f56f9dac468' || req.body.postID == "60b0ed6d42961f56f9dac4d5" || req.body.postID =="60b0ed6c42961f56f9dac4ae" || req.body.postID =="60b0ed6e42961f56f9dac566")
+        if(req.body.postID=='60df691ec4d2c177c5eea714' || req.body.postID == "60df691ec4d2c177c5eea6fa" || req.body.postID =="60df691ec4d2c177c5eea69f" || req.body.postID =="60df691ec4d2c177c5eea6d3")
         {
 
           // console.log('SEEN BULLY !!!!!!!!! ', user);
@@ -1098,7 +1098,11 @@ exports.postUpdateFeedAction = (req, res, next) => {
         user.feedAction[feedIndex].viewedTime.push(viewedTime);
         console.log('add the viewedTime^2 ', viewedTime);
         console.log('ID of the viewed post^2: ??: ', req.body.postID);
-        if(req.body.postID=='60b0ed6c42961f56f9dac468' || req.body.postID == "60b0ed6d42961f56f9dac4d5" || req.body.postID =="60b0ed6c42961f56f9dac4ae" || req.body.postID =="60b0ed6e42961f56f9dac566")
+
+        
+        // if(req.body.postID=='60b0ed6c42961f56f9dac468' || req.body.postID == "60b0ed6d42961f56f9dac4d5" || req.body.postID =="60b0ed6c42961f56f9dac4ae" || req.body.postID =="60b0ed6e42961f56f9dac566")
+        // var bully_messages =["60df691ec4d2c177c5eea714","60df691ec4d2c177c5eea6fa","60df691ec4d2c177c5eea69f","60df691ec4d2c177c5eea6d3"];
+        if(req.body.postID=='60df691ec4d2c177c5eea714' || req.body.postID == "60df691ec4d2c177c5eea6fa" || req.body.postID =="60df691ec4d2c177c5eea69f" || req.body.postID =="60df691ec4d2c177c5eea6d3")
         {
           // console.log('SEEN BULLY !!!!!!!!! ', user);
           var d = new Date();
@@ -1132,7 +1136,9 @@ exports.postUpdateFeedAction = (req, res, next) => {
         // console.log("what is in request000", req.body);
         var cat = new Object(); 
 
-        var bully_messages =["60b0ed6c42961f56f9dac468","60b0ed6d42961f56f9dac4d5","60b0ed6c42961f56f9dac4ae","60b0ed6e42961f56f9dac566"];
+        // var bully_messages =["60b0ed6c42961f56f9dac468","60b0ed6d42961f56f9dac4d5","60b0ed6c42961f56f9dac4ae","60b0ed6e42961f56f9dac566"];
+        // var bully_messages =["60c7be8dbca161301827e30d","60c7be8ebca161301827e31d","60c7be8ebca161301827e338","60c7be8dbca161301827e2bc"];
+        var bully_messages =["60df691ec4d2c177c5eea714","60df691ec4d2c177c5eea6fa","60df691ec4d2c177c5eea69f","60df691ec4d2c177c5eea6d3"];
 
 
         cat.compassionate =req.body.session_survey[0];

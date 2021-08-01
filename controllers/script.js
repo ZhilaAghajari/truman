@@ -1148,7 +1148,7 @@ exports.postUpdateFeedAction = (req, res, next) => {
         cat.effort = req.body.session_survey[4];
         cat.efficacy = req.body.session_survey[5];
         cat.closeness = req.body.session_survey[6];
-        var last_loging = req.body.session_survey[7];
+        var last_session_respondTime = req.body.session_survey[7];
         cat.likes = req.body.session_likes;
         cat.flags = req.body.session_flags;
         cat.time =req.body.time;
@@ -1161,8 +1161,9 @@ exports.postUpdateFeedAction = (req, res, next) => {
         
         // Zhila: this is not true!! Log is not accurate
         // if (user.last_bullyPost_viewed_Time> Date.parse(user.log[user.log.length-1].time))
-        console.log('the second approach for last_loging: ', last_loging);
-        if (user.last_bullyPost_viewed_Time< last_loging)
+        console.log('the second approach for last_session_respondTime: ', last_session_respondTime);
+        // if (user.last_bullyPost_viewed_Time<= last_session_respondTime)
+        if (seen_bully_count>0)
         {
           console.log('SAW THE BULLY before the survey');
           cat.seen_bully_post = 'True';

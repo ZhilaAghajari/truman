@@ -1162,7 +1162,7 @@ exports.postUpdateFeedAction = (req, res, next) => {
         // Zhila: this is not true!! Log is not accurate
         // if (user.last_bullyPost_viewed_Time> Date.parse(user.log[user.log.length-1].time))
         console.log('the second approach for last_loging: ', last_loging);
-        if (user.last_bullyPost_viewed_Time> last_loging)
+        if (user.last_bullyPost_viewed_Time< last_loging)
         {
           console.log('SAW THE BULLY before the survey');
           cat.seen_bully_post = 'True';
